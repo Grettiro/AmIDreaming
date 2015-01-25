@@ -41,15 +41,11 @@ namespace UnitySampleAssets._2D
         }
 
 
-        public void Move(float move, bool jump, bool gravity)
+        public void Move(float move, bool jump, bool gravity, bool dash)
         {
-
-
-
             //only control the player if grounded or airControl is turned on
             if (grounded || airControl)
             {
-
                 // The Speed animator parameter is set to the absolute value of the horizontal input.
                 anim.SetFloat("Speed", Mathf.Abs(move));
 
@@ -68,7 +64,7 @@ namespace UnitySampleAssets._2D
             // If the player should jump...
             if (grounded && jump && anim.GetBool("Ground"))
             {
-				if(rigidbody2D.gravityScale == 2)
+				if(rigidbody2D.gravityScale == 1.5f)
 				{
 	                // Add a vertical force to the player.
 	                grounded = false;
@@ -87,14 +83,23 @@ namespace UnitySampleAssets._2D
 				Vector3 theScale = transform.localScale;
 				theScale.y *= -1;
 				transform.localScale= theScale;
-				if(rigidbody2D.gravityScale == 2)
+				if(rigidbody2D.gravityScale == 1.5f)
 				{
-					rigidbody2D.gravityScale = -2;
+					rigidbody2D.gravityScale = -1.5f;
 				}
 				else
 				{
-					rigidbody2D.gravityScale = 2;
+					rigidbody2D.gravityScale = 1.5f;
 				}
+			}
+			else if(dash)// && (grounded || airControl))
+			{
+				anim.SetFloat("Speed", Mathf.Abs(move));
+				// do stuff to "teleport" the character a short range
+				if(facingRight)
+					rigidbody2D.velocity = new Vector2(200.0f, rigidbody2D.velocity.y);
+				else
+					rigidbody2D.velocity = new Vector2(-200.0f, rigidbody2D.velocity.y);
 			}
         }
 

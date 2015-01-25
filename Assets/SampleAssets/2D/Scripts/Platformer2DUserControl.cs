@@ -9,6 +9,7 @@ namespace UnitySampleAssets._2D
         private PlatformerCharacter2D character;
         private bool jump;
 		private bool gravity;
+		private bool dash;
 
         private void Awake()
         {
@@ -17,12 +18,18 @@ namespace UnitySampleAssets._2D
 
         private void Update()
         {
-			if (Input.GetButtonDown ("Jump"))
-								jump = true;
+			if (Input.GetButtonDown("Jump")) 
+			{
+				jump = true;
+			}
 			if (Input.GetKeyDown("d"))
 			{
-					gravity = true;
-			}	
+				gravity = true;
+			}
+			if (Input.GetKeyDown("e"))
+			{
+				dash = true;
+			}
         }
 
         private void FixedUpdate()
@@ -30,9 +37,10 @@ namespace UnitySampleAssets._2D
             // Read the inputs.
 			float h = Input.GetAxis ("Horizontal");
             // Pass all parameters to the character control script.
-            character.Move(h, jump, gravity);
+            character.Move(h, jump, gravity, dash);
 			gravity = false;
             jump = false;
+			dash = false;
         }
     }
 }
