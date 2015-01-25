@@ -37,7 +37,16 @@ namespace UnitySampleAssets._2D
             anim.SetBool("Ground", grounded);
 
             // Set the vertical animation
-            anim.SetFloat("vSpeed", rigidbody2D.velocity.y);
+			if (rigidbody2D.gravityScale < 0) 
+			{
+				Vector2 gScale = rigidbody2D.velocity;
+				gScale.y *= -1;
+				anim.SetFloat ("vSpeed", gScale.y);
+			} 
+			else 
+			{
+				anim.SetFloat ("vSpeed", rigidbody2D.velocity.y);
+			}
         }
 
 
@@ -64,7 +73,7 @@ namespace UnitySampleAssets._2D
             // If the player should jump...
             if (grounded && jump && anim.GetBool("Ground"))
             {
-				if(rigidbody2D.gravityScale == 1.5f)
+				if(rigidbody2D.gravityScale > 0)
 				{
 	                // Add a vertical force to the player.
 	                grounded = false;
@@ -78,18 +87,20 @@ namespace UnitySampleAssets._2D
 					rigidbody2D.AddForce(new Vector2(0f, -jumpForce));
 				}
             }
-			else if(gravity)
+			if(gravity)
 			{
 				Vector3 theScale = transform.localScale;
 				theScale.y *= -1;
 				transform.localScale= theScale;
-				if(rigidbody2D.gravityScale == 1.5f)
+				if(rigidbody2D.gravityScale > 0)
 				{
-					rigidbody2D.gravityScale = -1.5f;
+					rigidbody2D.gravityScale *= -1;
+					anim.SetBool("Ground", false);
 				}
 				else
 				{
-					rigidbody2D.gravityScale = 1.5f;
+					rigidbody2D.gravityScale *= -1;
+					anim.SetBool("Ground", false);
 				}
 			}
 			else if(dash)// && (grounded || airControl))

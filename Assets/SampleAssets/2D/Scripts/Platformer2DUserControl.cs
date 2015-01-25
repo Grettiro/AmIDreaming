@@ -8,6 +8,7 @@ namespace UnitySampleAssets._2D
     {
         private PlatformerCharacter2D character;
         private bool jump;
+		private int doubleJump;
 		private bool gravity;
 		private bool dash;
 
