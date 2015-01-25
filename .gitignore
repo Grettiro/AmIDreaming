@@ -5,6 +5,7 @@ Build/*
 *.csproj
 *.pidb
 *.sln
+*.userprefs
 
 # Windows image file caches
 Thumbs.db
