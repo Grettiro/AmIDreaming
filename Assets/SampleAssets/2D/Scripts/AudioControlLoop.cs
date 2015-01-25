@@ -23,16 +23,17 @@ public class AudioControlLoop : MonoBehaviour {
 			instance = this;
 		}
 		DontDestroyOnLoad(this.gameObject);
-		}
-	IEnumerator Start() {
-						audioSource = GetComponents<AudioSource> ();
-						audioStart = audioSource [0];
-						audioStart.Play ();
-						yield return new WaitForSeconds (audioStart.clip.length);
-						audioLoop = audioSource [1];
-						audioLoop.loop = true;
-						audioLoop.Play ();
-		}
+	}
+	IEnumerator Start()
+	{
+		audioSource = GetComponents<AudioSource>();
+		audioStart = audioSource[0];
+		audioStart.Play();
+		yield return new WaitForSeconds (audioStart.clip.length);
+		audioLoop = audioSource[1];
+		audioLoop.loop = true;
+		audioLoop.Play();
+	}
 	
 	// Update is called once per frame
 	void Update () {
