@@ -77,7 +77,7 @@ namespace UnitySampleAssets._2D
             // If the player should jump...
             if (grounded && jump && anim.GetBool("Ground"))
             {
-				if(rigidbody2D.gravityScale == 2)
+				if(rigidbody2D.gravityScale > 0)
 				{
 	                // Add a vertical force to the player.
 	                grounded = false;
@@ -98,12 +98,12 @@ namespace UnitySampleAssets._2D
 				transform.localScale= theScale;
 				if(rigidbody2D.gravityScale > 0)
 				{
-					rigidbody2D.gravityScale = -2;
+					rigidbody2D.gravityScale *= -1;
 					anim.SetBool("Ground", false);
 				}
 				else
 				{
-					rigidbody2D.gravityScale = 2;
+					rigidbody2D.gravityScale *= -1;
 					anim.SetBool("Ground", false);
 				}
 			}
