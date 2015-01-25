@@ -7,8 +7,8 @@ namespace UnitySampleAssets._2D
     {
         private bool facingRight = true; // For determining which way the player is currently facing.
 
-        [SerializeField] private float maxSpeed = 10f; // The fastest the player can travel in the x axis.
-        [SerializeField] private float jumpForce = 300f; // Amount of force added when the player jumps.	
+        [SerializeField] private float maxSpeed = 12f; // The fastest the player can travel in the x axis.
+        [SerializeField] private float jumpForce = 950f; // Amount of force added when the player jumps.	
 
         [SerializeField] private bool airControl = false; // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask whatIsGround; // A mask determining what is ground to the character
@@ -91,7 +91,7 @@ namespace UnitySampleAssets._2D
 			{
 				Vector3 theScale = transform.localScale;
 				theScale.y *= -1;
-				transform.localScale= theScale;
+				transform.localScale = theScale;
 				if(rigidbody2D.gravityScale > 0)
 				{
 					rigidbody2D.gravityScale *= -1;
