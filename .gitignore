@@ -1,3 +1,11 @@
+# Directores that aren't required.
+Library/*
+Temp/*
+Build/*
+*.csproj
+*.pidb
+*.sln
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
@@ -27,12 +35,6 @@ $RECYCLE.BIN/
 .DS_Store
 .AppleDouble
 .LSOverride
-Library/*
-Temp/*
-Build/*
-*.csproj
-*.pidb
-*.sln
 
 # Thumbnails
 ._*
