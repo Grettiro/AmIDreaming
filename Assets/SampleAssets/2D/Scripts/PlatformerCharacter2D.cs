@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace UnitySampleAssets._2D
 {
@@ -8,14 +8,21 @@ namespace UnitySampleAssets._2D
         private bool facingRight = true; // For determining which way the player is currently facing.
 
         [SerializeField] private float maxSpeed = 12f; // The fastest the player can travel in the x axis.
-        [SerializeField] private float jumpForce = 950f; // Amount of force added when the player jumps.	
+        [SerializeField] private float jumpForce = 900f; // Amount of force added when the player jumps.	
 
         [SerializeField] private bool airControl = false; // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask whatIsGround; // A mask determining what is ground to the character
+		[SerializeField] private LayerMask whatIsWall; // A mask determining what is a wall to the character
 
+		// Checking if grounded.
         private Transform groundCheck; // A position marking where to check if the player is grounded.
         private float groundedRadius = .2f; // Radius of the overlap circle to determine if grounded
         private bool grounded = false; // Whether or not the player is grounded.
+		// Checking if teleporting into a wall.
+		private Transform wallCheck;	 // A position marking where to check if the player is inside a wall.
+		private float wallRadius = .2f;  // Radius of the overlap circle to determine if inside a wall.
+		private bool atWall = false; // Whether or not the player is inside a wall.
+		// Checking if hitting a ceiling.
         //private Transform ceilingCheck; // A position marking where to check for ceilings
         //private float ceilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Animator anim; // Reference to the player's animator component.
@@ -25,6 +32,7 @@ namespace UnitySampleAssets._2D
         {
             // Setting up references.
             groundCheck = transform.Find("GroundCheck");
+			wallCheck = transform.Find("WallCheck");
             //ceilingCheck = transform.Find("CeilingCheck");
             anim = GetComponent<Animator>();
         }
@@ -35,6 +43,8 @@ namespace UnitySampleAssets._2D
             // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
             grounded = Physics2D.OverlapCircle(groundCheck.position, groundedRadius, whatIsGround);
             anim.SetBool("Ground", grounded);
+
+			atWall = Physics2D.OverlapCircle(wallCheck.position, wallRadius, whatIsWall);
 
             // Set the vertical animation
 			if (rigidbody2D.gravityScale < 0) 
@@ -50,7 +60,7 @@ namespace UnitySampleAssets._2D
         }
 
 
-        public void Move(float move, bool jump, bool gravity, bool dash)
+		public void Move(float move, bool jump, bool gravity, bool teleport)
         {
             //only control the player if grounded or airControl is turned on
             if (grounded || airControl)
@@ -87,30 +97,39 @@ namespace UnitySampleAssets._2D
 					rigidbody2D.AddForce(new Vector2(0f, -jumpForce));
 				}
             }
+
 			if(gravity)
 			{
 				Vector3 theScale = transform.localScale;
+
 				theScale.y *= -1;
 				transform.localScale = theScale;
-				if(rigidbody2D.gravityScale > 0)
-				{
-					rigidbody2D.gravityScale *= -1;
-					anim.SetBool("Ground", false);
-				}
-				else
-				{
-					rigidbody2D.gravityScale *= -1;
-					anim.SetBool("Ground", false);
-				}
+
+				rigidbody2D.gravityScale *= -1;
+				anim.SetBool("Ground", false);
 			}
-			else if(dash)// && (grounded || airControl))
+			if(teleport && !atWall)
 			{
-				anim.SetFloat("Speed", Mathf.Abs(move));
-				// do stuff to "teleport" the character a short range
+				Vector3 dashScale = new Vector3(10.0f, 0.0f);
+
 				if(facingRight)
-					rigidbody2D.velocity = new Vector2(200.0f, rigidbody2D.velocity.y);
+				{
+					//if(Physics2D.OverlapCircle(wallCheck.position + dashScale, wallRadius, whatIsWall))
+						//dashScale = wallCheck.position - (wallCheck.position - dashScale);
+					transform.position += transform.right + dashScale;
+					/*Debug.Log("Right:\n\tdashScale" + dashScale + 
+					          "\n\twallCheck: "+ wallCheck.position +
+					          "\n\ttransform: " + transform.position);*/
+				}
 				else
-					rigidbody2D.velocity = new Vector2(-200.0f, rigidbody2D.velocity.y);
+				{
+					//if(Physics2D.OverlapCircle(wallCheck.position - dashScale, wallRadius, whatIsWall))
+						//dashScale = wallCheck.position + (wallCheck.position + dashScale);
+					transform.position -= transform.right + dashScale;
+					/*Debug.Log("Left:\n\tdashScale" + dashScale + 
+					          "\n\twallCheck: "+ wallCheck.position +
+					          "\n\ttransform: " + transform.position);*/
+				}
 			}
         }
 

@@ -10,7 +10,7 @@ namespace UnitySampleAssets._2D
         private bool jump;
 		private int doubleJump;
 		private bool gravity;
-		private bool dash;
+		private bool teleport;
 
         private void Awake()
         {
@@ -29,7 +29,7 @@ namespace UnitySampleAssets._2D
 			}
 			if (Input.GetKeyDown("e"))
 			{
-				dash = true;
+				teleport = true;
 			}
         }
 
@@ -38,10 +38,10 @@ namespace UnitySampleAssets._2D
             // Read the inputs.
 			float h = Input.GetAxis ("Horizontal");
             // Pass all parameters to the character control script.
-            character.Move(h, jump, gravity, dash);
+			character.Move(h, jump, gravity, teleport);
 			gravity = false;
             jump = false;
-			dash = false;
+			teleport = false;
         }
     }
 }
