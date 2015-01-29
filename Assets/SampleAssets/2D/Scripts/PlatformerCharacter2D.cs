@@ -20,6 +20,7 @@ namespace UnitySampleAssets._2D
         //private float ceilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Animator anim; // Reference to the player's animator component.
 
+		public int jumpCount = 0;
 
         private void Awake()
         {
@@ -71,6 +72,37 @@ namespace UnitySampleAssets._2D
                     Flip();
             }
             // If the player should jump...
+			if (grounded)
+				jumpCount = 0;
+			if (jump) {
+				if (jumpCount < 1) {
+					jumpCount++;
+					if(rigidbody2D.gravityScale > 0)
+					{
+						// Add a vertical force to the player.
+						grounded = false;
+						anim.SetBool("Ground", false);
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+						rigidbody2D.AddForce(new Vector2(0f, jumpForce));
+						if (grounded) {
+							anim.SetBool("Ground", false);                
+							grounded = false;
+						}
+					}
+					else
+					{
+						grounded = false;
+						anim.SetBool("Ground", false);
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+						rigidbody2D.AddForce(new Vector2(0f, -jumpForce));
+						if (grounded) {
+							anim.SetBool("Ground", false);                
+							grounded = false;
+						}
+					}
+
+				}
+			}
             if (grounded && jump && anim.GetBool("Ground"))
             {
 				if(rigidbody2D.gravityScale > 0)
@@ -78,12 +110,14 @@ namespace UnitySampleAssets._2D
 	                // Add a vertical force to the player.
 	                grounded = false;
 	                anim.SetBool("Ground", false);
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
 	                rigidbody2D.AddForce(new Vector2(0f, jumpForce));
 				}
 				else
 				{
 					grounded = false;
 					anim.SetBool("Ground", false);
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
 					rigidbody2D.AddForce(new Vector2(0f, -jumpForce));
 				}
             }

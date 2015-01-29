@@ -16,13 +16,12 @@ public class AudioControlLoop : MonoBehaviour {
 	void Awake()
 	{
 		if (instance != null && instance != this) {
-			Destroy(this.gameObject);
-			return;
-		} 
-		else {
-			instance = this;
+				Destroy (this.gameObject);
+				return;
+		} else {
+				instance = this;
 		}
-		DontDestroyOnLoad(this.gameObject);
+		DontDestroyOnLoad (this.gameObject);	
 	}
 	IEnumerator Start()
 	{
@@ -37,6 +36,9 @@ public class AudioControlLoop : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if(Application.loadedLevel != 1)
+		{
+			Destroy (this.gameObject);
+		}
 	}
 }
