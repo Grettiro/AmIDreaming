@@ -142,28 +142,42 @@ namespace UnitySampleAssets._2D
 				rigidbody2D.gravityScale *= -1;
 				anim.SetBool("Ground", false);
 			}
-			if(teleport && !atWall)
+			if(teleport)
 			{
+				/*
+				 * Still needs some cleaning up to do, proooobably don't need 3 vectors..
+				 */
 				Vector3 dashScale = new Vector3(10.0f, 0.0f);
+				Vector3 loopCheck = new Vector3(0.0f, 0.0f);
+				Vector3 wallEdge = new Vector3(0.0f, 0.0f);
+				int wallCounter = 0;
 
 				if(facingRight)
 				{
-					//if(Physics2D.OverlapCircle(wallCheck.position + dashScale, wallRadius, whatIsWall))
-						//dashScale = wallCheck.position - (wallCheck.position - dashScale);
-					transform.position += transform.right + dashScale;
-					/*Debug.Log("Right:\n\tdashScale" + dashScale + 
-					          "\n\twallCheck: "+ wallCheck.position +
-					          "\n\ttransform: " + transform.position);*/
+					// Check how many collisions there will be along the way (how many units into the wall,
+					// if there is a wall, the character would travel).
+					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x++)
+						if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), wallRadius, whatIsWall))
+							wallCounter++;
+
+					// Update how long the teleport will take the character, full distance - how many units 
+					// into the wall).
+					wallEdge.x = (dashScale.x - wallCounter);
+
+					// Move the character!
+					transform.position += transform.right + wallEdge;
 				}
 				else
 				{
-					//if(Physics2D.OverlapCircle(wallCheck.position - dashScale, wallRadius, whatIsWall))
-						//dashScale = wallCheck.position + (wallCheck.position + dashScale);
-					transform.position -= transform.right + dashScale;
-					/*Debug.Log("Left:\n\tdashScale" + dashScale + 
-					          "\n\twallCheck: "+ wallCheck.position +
-					          "\n\ttransform: " + transform.position);*/
+					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x++)
+						if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), wallRadius, whatIsWall))
+							wallCounter++;
+					
+					wallEdge.x = (dashScale.x - wallCounter);
+
+					transform.position -= transform.right + wallEdge;
 				}
+				wallCounter = 0;
 			}
         }
 
