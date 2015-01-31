@@ -23,8 +23,8 @@ namespace UnitySampleAssets._2D
 		private float wallRadius = .2f;  // Radius of the overlap circle to determine if inside a wall.
 		private bool atWall = false; // Whether or not the player is inside a wall.
 		// Checking if hitting a ceiling.
-        //private Transform ceilingCheck; // A position marking where to check for ceilings
-        //private float ceilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
+        private Transform ceilingCheck; // A position marking where to check for ceilings
+        private float ceilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Animator anim; // Reference to the player's animator component.
 
 		public int jumpCount = 0;
@@ -34,7 +34,7 @@ namespace UnitySampleAssets._2D
             // Setting up references.
             groundCheck = transform.Find("GroundCheck");
 			wallCheck = transform.Find("WallCheck");
-            //ceilingCheck = transform.Find("CeilingCheck");
+            ceilingCheck = transform.Find("CeilingCheck");
             anim = GetComponent<Animator>();
         }
 
