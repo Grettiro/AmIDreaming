@@ -36,9 +36,9 @@ public class AudioControlLoop : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Application.loadedLevel < 1)
+		if(Application.loadedLevel == 0)
 		{
-			Destroy (this.gameObject);
+			audioLoop.Stop ();
 		}
 	}
 }
