@@ -38,7 +38,7 @@ public class AudioControlLoop : MonoBehaviour {
 	void Update () {
 		if(Application.loadedLevel == 0)
 		{
-			audioLoop.Stop ();
+			Destroy (this.gameObject);
 		}
 	}
 }
