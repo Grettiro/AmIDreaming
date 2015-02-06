@@ -61,7 +61,7 @@ namespace UnitySampleAssets._2D
         }
 
 
-		public void Move(float move, bool jump, bool gravity, bool teleport)
+		public void Move(float move, bool jump, bool gravity, bool teleport, bool slowTime)
         {
             //only control the player if grounded or airControl is turned on
             if (grounded || airControl)
@@ -82,6 +82,18 @@ namespace UnitySampleAssets._2D
                     Flip();
             }
             // If the player should jump...
+			if (slowTime)
+			{
+				var audioStop = GameObject.Find("AudioController");
+				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+				audioPitch.pitchChangeDown();
+
+			}
+			if (!slowTime) {
+				var audioStop = GameObject.Find("AudioController");
+				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+				audioPitch.pitchChangeUp();
+						}
 			if (grounded)
 				jumpCount = 0;
 			if (jump) {

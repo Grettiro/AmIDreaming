@@ -6,8 +6,8 @@ public class AudioControlLoop : MonoBehaviour {
 
 	// Use this for initialization
 	public AudioSource[] audioSource;
-	AudioSource audioStart;
-	AudioSource audioLoop;
+	public AudioSource audioStart;
+	public AudioSource audioLoop;
 
 	private static AudioControlLoop instance = null;
 	public static AudioControlLoop Instance {
@@ -25,11 +25,8 @@ public class AudioControlLoop : MonoBehaviour {
 	}
 	IEnumerator Start()
 	{
-		audioSource = GetComponents<AudioSource>();
-		audioStart = audioSource[0];
 		audioStart.Play();
 		yield return new WaitForSeconds (audioStart.clip.length);
-		audioLoop = audioSource[1];
 		audioLoop.loop = true;
 		audioLoop.Play();
 	}
@@ -40,5 +37,16 @@ public class AudioControlLoop : MonoBehaviour {
 		{
 			Destroy (this.gameObject);
 		}
+	}
+
+	public void pitchChangeDown()
+	{
+		audioStart.pitch = 0.6f;
+		audioLoop.pitch = 0.6f;
+		}
+	public void pitchChangeUp()
+	{
+		audioStart.pitch = 1;
+		audioLoop.pitch = 1;
 	}
 }

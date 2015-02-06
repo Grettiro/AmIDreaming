@@ -11,6 +11,7 @@ namespace UnitySampleAssets._2D
 		private int doubleJump;
 		private bool gravity;
 		private bool teleport;
+		private bool slowTime;
 
         private void Awake()
         {
@@ -31,6 +32,14 @@ namespace UnitySampleAssets._2D
 			{
 				teleport = true;
 			}
+			if (Input.GetKeyDown("s"))
+			{
+				slowTime = true;
+			}
+			if (Input.GetKeyUp("s"))
+			{
+				slowTime = false;
+			}
         }
 
         private void FixedUpdate()
@@ -38,7 +47,7 @@ namespace UnitySampleAssets._2D
             // Read the inputs.
 			float h = Input.GetAxis ("Horizontal");
             // Pass all parameters to the character control script.
-			character.Move(h, jump, gravity, teleport);
+			character.Move(h, jump, gravity, teleport, slowTime);
 			gravity = false;
             jump = false;
 			teleport = false;
