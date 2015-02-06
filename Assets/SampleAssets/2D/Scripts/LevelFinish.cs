@@ -13,7 +13,7 @@ public class LevelFinish : MonoBehaviour
 						{
 							Application.LoadLevel (0);
 						}
-						else if(Application.loadedLevel == 5)
+						else if(Application.loadedLevel == 6)
 						{
 							Application.LoadLevel (0);
 						}

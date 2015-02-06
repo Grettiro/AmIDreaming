@@ -87,12 +87,18 @@ namespace UnitySampleAssets._2D
 				var audioStop = GameObject.Find("AudioController");
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeDown();
+				var enemySlow = GameObject.Find ("Spikes");
+				var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+				//slowEnemy.speed /= 2;
 
 			}
 			if (!slowTime) {
 				var audioStop = GameObject.Find("AudioController");
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeUp();
+				var enemySlow = GameObject.Find ("Spikes");
+				var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+				//slowEnemy.speed *= 2;
 						}
 			if (grounded)
 				jumpCount = 0;

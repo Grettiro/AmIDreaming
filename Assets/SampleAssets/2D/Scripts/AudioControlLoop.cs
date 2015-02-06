@@ -19,23 +19,28 @@ public class AudioControlLoop : MonoBehaviour {
 				Destroy (this.gameObject);
 				return;
 		} else {
+				audioStart.Play();
 				instance = this;
 		}
 		DontDestroyOnLoad (this.gameObject);	
 	}
-	IEnumerator Start()
-	{
-		audioStart.Play();
-		yield return new WaitForSeconds (audioStart.clip.length);
-		audioLoop.loop = true;
-		audioLoop.Play();
-	}
+
 	
 	// Update is called once per frame
 	void Update () {
 		if(Application.loadedLevel == 0)
 		{
 			Destroy (this.gameObject);
+		}
+		else
+		{
+			if(!audioStart.isPlaying) {
+			if(!audioLoop.isPlaying)
+			{
+				audioLoop.loop = true;
+				audioLoop.Play();
+			}
+			}
 		}
 	}
 
