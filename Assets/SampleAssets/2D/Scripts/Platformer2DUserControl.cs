@@ -35,16 +35,32 @@ namespace UnitySampleAssets._2D
 			if (Input.GetKeyDown("s"))
 			{
 				slowTime = true;
-				var enemySlow = GameObject.Find ("Spikes");
-				var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
-				slowEnemy.speed /= 2;
+				var enemySlow = GameObject.Find ("Enemies");
+				Animator slow;
+				if(enemySlow != null)
+				{
+					foreach(Transform enemies in enemySlow.transform)
+					{
+						slow = GameObject.Find(enemies.name).GetComponent<Animator>();
+						slow.speed /= 2.5f;
+					}
+				}
+
 			}
 			if (Input.GetKeyUp("s"))
 			{
-				var enemySlow = GameObject.Find ("Spikes");
-				var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
-				slowEnemy.speed *= 2;
 				slowTime = false;
+				var enemySlow = GameObject.Find ("Enemies");
+				Animator slow;
+				
+				if(enemySlow != null)
+				{
+					foreach(Transform enemies in enemySlow.transform)
+					{
+						slow = GameObject.Find(enemies.name).GetComponent<Animator>();
+						slow.speed *= 2.5f;
+					}
+				}
 			}
         }
 
