@@ -2,11 +2,21 @@
 using System.Collections;
 
 public class PlayerFollowPlatform : MonoBehaviour {
+	public Vector3 previousPosition;
+	public Vector3 currentPosition;
+	public Vector2 v2CurrentPosition;
 
-	void OnCollisionEnter2D(Collision2D coll)
+	void FixedUpdate () {
+		previousPosition = transform.position;
+	}
+	
+	void LateUpdate () {
+		currentPosition = (previousPosition - transform.position);
+	}
+	void OnTriggerStay2D(Collider2D coll)
 	{
 		if (coll.gameObject.tag == "Player") {
-			//Not Working atm
+			coll.gameObject.transform.position += -currentPosition;
 		}
 	}
 

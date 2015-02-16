@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\NeuronCount.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\AudioControlLoop.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\Camera2DFollow.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\CameraFollow.cs" />
@@ -56,6 +57,8 @@
      <Compile Include="Assets\SampleAssets\2D\Scripts\PlatformerCharacter2D.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\PlayerFollowPlatform.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\Restarter.cs" />
+     <Compile Include="Assets\SampleAssets\2D\Scripts\UIUpdate.cs" />
+     <Compile Include="Assets\UpdateNeurons.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.1/UnityEngine.UI.dll</HintPath>
  </Reference>
