@@ -2,21 +2,24 @@
 using System.Collections;
 
 public class EnemyBehavior : MonoBehaviour {
-	public int speed = 8;
+	public Vector2 speed = new Vector2(8.0f, 8.0f);
+
 	// Use this for initialization
-	void Start () {
-		rigidbody2D.velocity = new Vector2(0, speed);
+	void Start () 
+	{
+		rigidbody2D.velocity = speed;
 	}
 	
 	// Update is called once per frame
-	void Update () {
-		if (this.rigidbody2D.position.y > 16) {
-				rigidbody2D.velocity = new Vector2(0, speed *-1);
-				} 
-		else if(this.rigidbody2D.position.y < 1.4)
+	void Update () 
+	{
+		if (this.rigidbody2D.position.y > 10.5) 
 		{
-			rigidbody2D.velocity = new Vector2(0, speed);
+			rigidbody2D.velocity = speed * -1;
+		} 
+		else if(this.rigidbody2D.position.y < -3.5)
+		{
+			rigidbody2D.velocity = speed;
 		}
-	
 	}
 }

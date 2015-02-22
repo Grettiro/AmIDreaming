@@ -12,14 +12,23 @@ namespace UnitySampleAssets._2D
 		private bool gravity;
 		private bool teleport;
 		private bool slowTime;
+		private Animator anim;
 
         private void Awake()
         {
             character = GetComponent<PlatformerCharacter2D>();
+			anim = GetComponent<Animator>();
         }
 
         private void Update()
         {
+			if (Input.GetKey("escape"))
+				Application.Quit();
+
+			if (Input.GetKeyDown ("m")) 
+			{
+				anim.SetTrigger ("Die");
+			}
 			if (Input.GetButtonDown("Jump")) 
 			{
 				jump = true;
@@ -35,16 +44,30 @@ namespace UnitySampleAssets._2D
 			if (Input.GetKeyDown("s"))
 			{
 				slowTime = true;
-				var enemySlow = GameObject.Find ("Spikes");
-				var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
-				slowEnemy.speed /= 2;
+				var enemySlow = GameObject.Find("Enemies");
+				if(enemySlow != null)
+				{
+					var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+					slowEnemy.speed /= 2;
+					if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
+						enemySlow.rigidbody2D.velocity = slowEnemy.speed;
+					else
+						enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
+				}
 			}
 			if (Input.GetKeyUp("s"))
 			{
-				var enemySlow = GameObject.Find ("Spikes");
-				var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
-				slowEnemy.speed *= 2;
 				slowTime = false;
+				var enemySlow = GameObject.Find ("Enemies");
+				if(enemySlow != null)
+				{
+					var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+					slowEnemy.speed *= 2;
+					if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
+						enemySlow.rigidbody2D.velocity = slowEnemy.speed;
+					else
+						enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
+				}
 			}
         }
 

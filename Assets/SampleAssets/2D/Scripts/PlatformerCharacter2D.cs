@@ -13,6 +13,7 @@ namespace UnitySampleAssets._2D
         [SerializeField] private bool airControl = false; // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask whatIsGround; // A mask determining what is ground to the character
 		[SerializeField] private LayerMask whatIsWall; // A mask determining what is a wall to the character
+		[SerializeField] private LayerMask whatIsImpassable; // A mask determining what is impassable (teleporting)
 
 		// Checking if grounded.
         private Transform groundCheck; // A position marking where to check if the player is grounded.
@@ -20,11 +21,11 @@ namespace UnitySampleAssets._2D
         private bool grounded = false; // Whether or not the player is grounded.
 		// Checking if teleporting into a wall.
 		private Transform wallCheck;	 // A position marking where to check if the player is inside a wall.
-		private float wallRadius = .2f;  // Radius of the overlap circle to determine if inside a wall.
+		private float wallRadius = .1f;  // Radius of the overlap circle to determine if inside a wall.
 		private bool atWall = false; // Whether or not the player is inside a wall.
 		// Checking if hitting a ceiling.
         private Transform ceilingCheck; // A position marking where to check for ceilings
-        private float ceilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
+        //private float ceilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Animator anim; // Reference to the player's animator component.
 
 		public int jumpCount = 0;
@@ -87,19 +88,13 @@ namespace UnitySampleAssets._2D
 				var audioStop = GameObject.Find("AudioController");
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeDown();
-				var enemySlow = GameObject.Find ("Spikes");
-				var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
-				//slowEnemy.speed /= 2;
-
 			}
-			if (!slowTime) {
+			if (!slowTime) 
+			{
 				var audioStop = GameObject.Find("AudioController");
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeUp();
-				var enemySlow = GameObject.Find ("Spikes");
-				var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
-				//slowEnemy.speed *= 2;
-						}
+			}
 			if (grounded)
 				jumpCount = 0;
 			if (jump) {
@@ -168,34 +163,68 @@ namespace UnitySampleAssets._2D
 				Vector3 dashScale = new Vector3(10.0f, 0.0f);
 				Vector3 loopCheck = new Vector3(0.0f, 0.0f);
 				Vector3 wallEdge = new Vector3(0.0f, 0.0f);
-				int wallCounter = 0;
+
+				float wallCounter = 0.0f;
+				float distanceCounter = 0.0f;
+				bool impassableObject = false;
 
 				if(facingRight)
 				{
 					// Check how many collisions there will be along the way (how many units into the wall,
 					// if there is a wall, the character would travel).
-					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x++)
+					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x += 0.1f)
+					{
+						if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), wallRadius, whatIsImpassable))
+						{
+							impassableObject = true;
+							break;
+						}
 						if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), wallRadius, whatIsWall))
 							wallCounter++;
+						else
+							distanceCounter++;
+					}
 
 					// Update how long the teleport will take the character, full distance - how many units 
 					// into the wall).
-					wallEdge.x = (dashScale.x - wallCounter);
+					if(impassableObject)
+						wallEdge.x = distanceCounter / 10.0f - 1.0f; // Reduce by 1.0f because of the door.
+					else
+						wallEdge.x = (dashScale.x - wallCounter / 10.0f);
 
 					// Move the character!
-					transform.position += transform.right + wallEdge;
+					if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))) {} // do nothing.
+					else
+						transform.position += transform.right + wallEdge;
 				}
 				else
 				{
-					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x++)
+					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x += 0.1f)
+					{
+						if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), wallRadius, whatIsImpassable))
+						{
+							impassableObject = true;
+							break;
+						}
 						if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), wallRadius, whatIsWall))
 							wallCounter++;
-					
-					wallEdge.x = (dashScale.x - wallCounter);
+						else
+							distanceCounter++;
+					}
 
-					transform.position -= transform.right + wallEdge;
+					if(impassableObject)
+						wallEdge.x = distanceCounter / 10.0f - 1.0f; // Reduce by 1.0f because of the door.
+					else
+						wallEdge.x = (dashScale.x - wallCounter / 10.0f);
+
+					if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))){} // do nothing.
+					else
+						transform.position -= transform.right + wallEdge;
 				}
+
 				wallCounter = 0;
+				distanceCounter = 0;
+				impassableObject = false;
 			}
         }
 
