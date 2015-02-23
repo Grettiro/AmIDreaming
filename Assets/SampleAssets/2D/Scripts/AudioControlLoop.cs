@@ -5,7 +5,6 @@ using System.Collections;
 public class AudioControlLoop : MonoBehaviour {
 
 	// Use this for initialization
-	public AudioSource[] audioSource;
 	public AudioSource audioStart;
 	public AudioSource audioLoop;
 
