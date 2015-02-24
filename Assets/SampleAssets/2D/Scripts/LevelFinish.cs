@@ -10,19 +10,20 @@ public class LevelFinish : MonoBehaviour
 		int currLevel = Application.loadedLevel;
 
 		Destroy(other);
-		/*if (other.tag == "Player") {
-						/*if(Application.levelCount == currLevel+1)
-						{
-							Application.LoadLevel (0);
-						}
-						else if(Application.loadedLevel == 6)
-						{
-							Application.LoadLevel (0);
-						}
-						else
-						Application.LoadLevel (13);
-				}*/
 		if (other.tag == "Player") 
+		{
+			if(Application.levelCount == currLevel+1)
+			{
+				Application.LoadLevel (0);
+			}
+			else if(Application.loadedLevel == 6)
+			{
+				Application.LoadLevel (0);
+			}
+			else
+				Application.LoadLevel (13);
+		}
+		/*if (other.tag == "Player") 
 		{
 			if(Application.levelCount == currLevel+1)
 				Application.LoadLevel(0);
@@ -32,6 +33,6 @@ public class LevelFinish : MonoBehaviour
 				Application.LoadLevel(0);
 			else
 				Application.LoadLevel(currLevel + 1);
-		}
+		}*/
 	}
 }

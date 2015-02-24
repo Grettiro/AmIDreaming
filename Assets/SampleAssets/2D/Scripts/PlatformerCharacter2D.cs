@@ -21,7 +21,7 @@ namespace UnitySampleAssets._2D
         private bool grounded = false; // Whether or not the player is grounded.
 		// Checking if teleporting into a wall.
 		private Transform wallCheck;	 // A position marking where to check if the player is inside a wall.
-		private float wallRadius = .1f;  // Radius of the overlap circle to determine if inside a wall.
+		private float wallRadius = .2f;  // Radius of the overlap circle to determine if inside a wall.
 		private bool atWall = false; // Whether or not the player is inside a wall.
 		// Checking if hitting a ceiling.
         private Transform ceilingCheck; // A position marking where to check for ceilings
@@ -61,6 +61,18 @@ namespace UnitySampleAssets._2D
 			}
         }
 
+		private void Update()
+		{
+			if(atWall && !grounded && rigidbody2D.velocity == new Vector2(0.0f, 0.0f))
+			{
+				Debug.Log("I'm stuck!");
+				airControl = false;
+			}
+
+			if((!atWall || grounded) && !airControl)
+				airControl = true;
+		}
+
 
 		public void Move(float move, bool jump, bool gravity, bool teleport, bool slowTime)
         {
@@ -95,8 +107,11 @@ namespace UnitySampleAssets._2D
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeUp();
 			}
-			if (grounded)
+
+			if (grounded) 
+			{
 				jumpCount = 0;
+			}
 			if (jump) {
 				if (jumpCount < 1) {
 					jumpCount++;

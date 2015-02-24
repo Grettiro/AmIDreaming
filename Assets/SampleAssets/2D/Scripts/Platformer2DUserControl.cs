@@ -48,13 +48,13 @@ namespace UnitySampleAssets._2D
 				var enemySlow = GameObject.Find("Enemies");
 				if(enemySlow != null)
 				{
-					var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+					/*var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
 					slowEnemy.speed /= 2;
 					if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
 						enemySlow.rigidbody2D.velocity = slowEnemy.speed;
 					else
 						enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
-
+					*/
 					foreach(Transform enemies in enemySlow.transform)
 					{
 						slow = GameObject.Find(enemies.name).GetComponent<Animator>();
@@ -69,13 +69,13 @@ namespace UnitySampleAssets._2D
 				var enemySlow = GameObject.Find("Enemies");
 				if(enemySlow != null)
 				{
-					var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+					/*var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
 					slowEnemy.speed *= 2;
 					if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
 						enemySlow.rigidbody2D.velocity = slowEnemy.speed;
 					else
 						enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
-
+					*/
 					foreach(Transform enemies in enemySlow.transform)
 					{
 						slow = GameObject.Find(enemies.name).GetComponent<Animator>();
