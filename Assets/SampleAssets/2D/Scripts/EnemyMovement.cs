@@ -10,6 +10,11 @@ public class EnemyMovement : MonoBehaviour
 	private Transform wallCheck;	 // A position marking where to check if the player is inside a wall.
 	private float wallRadius = .1f;  // Radius of the overlap circle to determine if inside a wall.
 	private bool atWall = false; // Whether or not the player is inside a wall.
+
+	private Transform topCheck;
+	private Transform bottomCheck;
+	private bool atTop = false;
+	private bool atBottom = false;
 	
 	public Vector2 speed = new Vector2(0.0f, 0.0f);
 	
@@ -21,32 +26,57 @@ public class EnemyMovement : MonoBehaviour
 	
 	private void Awake()
 	{
+
 		// Setting up references.
-		wallCheck = transform.FindChild("WallCheck");
+		if(this.tag == "Enemy")
+			wallCheck = transform.FindChild("WallCheck");
+		if(this.tag == "Vertical")
+		{
+			topCheck = transform.FindChild("TopCheck");
+			bottomCheck = transform.FindChild("BottomCheck");
+		}
 	}
 	
 	private void FixedUpdate()
 	{
 		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-		atWall = Physics2D.OverlapCircle(wallCheck.position, wallRadius, whatIsWall);
+		if(wallCheck != null)
+			atWall = Physics2D.OverlapCircle(wallCheck.position, wallRadius, whatIsWall);
+		if(topCheck != null && bottomCheck != null)
+		{
+			atTop = Physics2D.OverlapCircle(topCheck.position, wallRadius, whatIsWall);
+			atBottom = Physics2D.OverlapCircle(bottomCheck.position, wallRadius, whatIsWall);
+		}
 	}
 	
 	// Update is called once per frame
 	void Update()
 	{
-		if(facingRight)
+		if(wallCheck != null)
 		{
-			rigidbody2D.velocity = speed;
-		} 
-		else if(!facingRight)
-		{
-			rigidbody2D.velocity = speed * -1;
+			if(facingRight)
+			{
+				rigidbody2D.velocity = speed;
+			}
+			else if(!facingRight)
+			{
+				rigidbody2D.velocity = speed * -1;
+			}
+			if(atWall)
+			{
+				Flip ();
+			}
 		}
-		
-		if(atWall)
+		else if(topCheck != null && bottomCheck != null)
 		{
-			Debug.Log("Is hit");
-			Flip();
+			if(atTop)
+			{
+				rigidbody2D.velocity = speed * -1;
+			}
+			if(atBottom)
+			{
+				rigidbody2D.velocity = speed;
+			}
 		}
 	}
 	
