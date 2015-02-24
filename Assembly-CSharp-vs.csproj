@@ -5,7 +5,7 @@
 	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
 	<ProductVersion>10.0.20506</ProductVersion>
 	<SchemaVersion>2.0</SchemaVersion>
-	<ProjectGuid>{8EBE0933-E31D-F354-E8F3-01BA4D95E3B6}</ProjectGuid>
+	<ProjectGuid>{488DCB4A-7E72-B5F4-1EEB-92AB471A6563}</ProjectGuid>
 	<OutputType>Library</OutputType>
 	<AppDesignerFolder>Properties</AppDesignerFolder>
 	<RootNamespace></RootNamespace>
@@ -47,13 +47,13 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\EnemyBehavior.cs" />
+     <Compile Include="Assets\LevelEnter.cs" />
      <Compile Include="Assets\NeuronCount.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\AudioControlLoop.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\Button.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\Camera2DFollow.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\CameraFollow.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\Doors.cs" />
-     <Compile Include="Assets\SampleAssets\2D\Scripts\EnemyBehavior.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\LevelFinish.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\LoadOnClick.cs" />
      <Compile Include="Assets\SampleAssets\2D\Scripts\Platformer2DUserControl.cs" />
