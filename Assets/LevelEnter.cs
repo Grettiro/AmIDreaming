@@ -33,7 +33,6 @@ public class LevelEnter : MonoBehaviour {
 	}
 	void Update()
 	{
-		Debug.Log (nextLevel);
 		if (nextLevel == true) {
 						if (Input.GetKeyDown ("return")) {
 								Application.LoadLevel (levelNumber);
