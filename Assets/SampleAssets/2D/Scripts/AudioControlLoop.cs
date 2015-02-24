@@ -36,6 +36,7 @@ public class AudioControlLoop : MonoBehaviour {
 			if(!audioStart.isPlaying) {
 			if(!audioLoop.isPlaying)
 			{
+					audioStart.Stop();
 				audioLoop.loop = true;
 				audioLoop.Play();
 			}

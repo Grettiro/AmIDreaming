@@ -29,6 +29,7 @@ namespace UnitySampleAssets._2D
         private Animator anim; // Reference to the player's animator component.
 
 		public int jumpCount = 0;
+		public int teleportCount = 0;
 
         private void Awake()
         {
@@ -95,8 +96,10 @@ namespace UnitySampleAssets._2D
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeUp();
 			}
-			if (grounded)
-				jumpCount = 0;
+			if (grounded) {
+								jumpCount = 0;
+								teleportCount = 0;
+						}
 			if (jump) {
 				if (jumpCount < 1) {
 					jumpCount++;
@@ -155,8 +158,10 @@ namespace UnitySampleAssets._2D
 				rigidbody2D.gravityScale *= -1;
 				anim.SetBool("Ground", false);
 			}
-			if(teleport)
+			if(teleport && (teleportCount == 0))
 			{
+				teleportCount = teleportCount + 1;
+				Debug.Log(teleportCount);
 				/*
 				 * Still needs some cleaning up to do, proooobably don't need 3 vectors..
 				 */
