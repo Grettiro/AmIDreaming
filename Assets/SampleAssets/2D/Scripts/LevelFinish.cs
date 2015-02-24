@@ -7,7 +7,7 @@ public class LevelFinish : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		int currLevel = Application.loadedLevel;
+		/*int currLevel = Application.loadedLevel;
 
 		Destroy(other);
 		if (other.tag == "Player") 
@@ -34,5 +34,9 @@ public class LevelFinish : MonoBehaviour
 			else
 				Application.LoadLevel(currLevel + 1);
 		}*/
+		if (other.tag == "Player") 
+		{
+				Application.LoadLevel(12);
+		}
 	}
 }

@@ -10,16 +10,13 @@ public class NeuronCount : MonoBehaviour {
 	}
 	void Awake()
 	{
-		if (instance != null && instance != this)
-		{
+		if (instance != null && instance != this) {
 			Destroy (this.gameObject);
 			return;
-		}
-		else
-		{
+		} else {
 			instance = this;
 		}
-		DontDestroyOnLoad (this.gameObject);
+		DontDestroyOnLoad (this.gameObject);	
 	}
 	
 	[SerializeField]
