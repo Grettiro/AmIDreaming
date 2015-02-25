@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UnitySampleAssets._2D
 {
@@ -28,6 +29,7 @@ namespace UnitySampleAssets._2D
         //private float ceilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Animator anim; // Reference to the player's animator component.
 
+		Slider slowTimeSlider;
 		public int jumpCount = 0;
 		public int teleportCount = 0;
 
@@ -95,23 +97,50 @@ namespace UnitySampleAssets._2D
                     // ... flip the player.
                     Flip();
             }
-            // If the player should jump...
+            
 			if (slowTime)
 			{
 				var audioStop = GameObject.Find("AudioController");
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeDown();
+				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
+				if(slowTimeBar != null)
+				{
+					slowTimeSlider = slowTimeBar.GetComponent<Slider>();
+					if(slowTimeSlider.value > 0.010f)
+					{
+						slowTimeSlider.value -= 0.005f;
+					}
+					else
+					{
+						slowTimeSlider.value = 0.0f;
+					}
+				}
 			}
 			if (!slowTime) 
 			{
 				var audioStop = GameObject.Find("AudioController");
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeUp();
+				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
+				if(slowTimeBar != null)
+				{
+					slowTimeSlider = slowTimeBar.GetComponent<Slider>();
+					if(slowTimeSlider.value < 0.95f)
+					{
+					slowTimeSlider.value += 0.002f;
+					}
+					else
+					{
+						slowTimeSlider.value = 1;
+					}
+				}
 			}
 			if (grounded) {
 								jumpCount = 0;
 								teleportCount = 0;
 						}
+			// If the player should jump...
 			if (jump) {
 				if (jumpCount < 1) {
 					jumpCount++;

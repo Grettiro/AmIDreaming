@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 namespace UnitySampleAssets._2D
 {
@@ -13,6 +14,7 @@ namespace UnitySampleAssets._2D
 		private bool teleport;
 		private bool slowTime;
 		private Animator anim;
+		Slider slowTimeSlider;
 
         private void Awake()
         {
@@ -43,45 +45,56 @@ namespace UnitySampleAssets._2D
 			}
 			if (Input.GetKeyDown("s"))
 			{
-				slowTime = true;
-				var enemySlow = GameObject.Find ("Enemies");
-				Animator slow;
-				if(enemySlow != null)
+				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
+				slowTimeSlider = slowTimeBar.GetComponent<Slider>();
+				if(slowTimeBar != null)
 				{
-					/*var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
-					slowEnemy.speed /= 2;
-					if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
-						enemySlow.rigidbody2D.velocity = slowEnemy.speed;
-					else
-						enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
-					*/
-					foreach(Transform enemies in enemySlow.transform)
+					var enemySlow = GameObject.Find ("Enemies");
+					Animator slow;
+					if(slowTimeSlider.value >= 0.1)
 					{
-						slow = GameObject.Find(enemies.name).GetComponent<Animator>();
-						slow.speed /= 2.5f;
+							slowTime = true;
+							if(enemySlow != null)
+							{
+								/*var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+								slowEnemy.speed /= 2;
+								if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
+									enemySlow.rigidbody2D.velocity = slowEnemy.speed;
+								else
+									enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
+								*/
+								foreach(Transform enemies in enemySlow.transform)
+								{
+									slow = GameObject.Find(enemies.name).GetComponent<Animator>();
+									slow.speed /= 2.5f;
+								}
+							}
+						}
 					}
-				}
 				
 			}
 			if (Input.GetKeyUp("s"))
 			{
-				slowTime = false;
-				var enemySlow = GameObject.Find ("Enemies");
-				Animator slow;
-				
-				if(enemySlow != null)
+				if(slowTime == true)
 				{
-					/*var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
-					slowEnemy.speed *= 2;
-					if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
-						enemySlow.rigidbody2D.velocity = slowEnemy.speed;
-					else
-						enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
-					*/
-					foreach(Transform enemies in enemySlow.transform)
+					slowTime = false;
+					var enemySlow = GameObject.Find ("Enemies");
+					Animator slow;
+					
+					if(enemySlow != null)
 					{
-						slow = GameObject.Find(enemies.name).GetComponent<Animator>();
-						slow.speed *= 2.5f;
+						/*var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+						slowEnemy.speed *= 2;
+						if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
+							enemySlow.rigidbody2D.velocity = slowEnemy.speed;
+						else
+							enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
+						*/
+						foreach(Transform enemies in enemySlow.transform)
+						{
+							slow = GameObject.Find(enemies.name).GetComponent<Animator>();
+							slow.speed *= 2.5f;
+						}
 					}
 				}
 			}
