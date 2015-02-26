@@ -66,7 +66,6 @@ namespace UnitySampleAssets._2D
 		{
 			if(atWall && !grounded && rigidbody2D.velocity == new Vector2(0.0f, 0.0f))
 			{
-				Debug.Log("I'm stuck!");
 				airControl = false;
 			}
 

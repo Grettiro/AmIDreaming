@@ -6,13 +6,13 @@ public class EnemyMovement : MonoBehaviour
 	private bool facingRight = true;
 	
 	[SerializeField] private LayerMask whatIsWall; // A mask determining what is a wall to the character
-	
-	private Transform wallCheck;	 // A position marking where to check if the player is inside a wall.
-	private float wallRadius = .1f;  // Radius of the overlap circle to determine if inside a wall.
-	private bool atWall = false; // Whether or not the player is inside a wall.
 
+	private float wallRadius = .1f;
+
+	private Transform wallCheck;
 	private Transform topCheck;
 	private Transform bottomCheck;
+	private bool atWall = false;
 	private bool atTop = false;
 	private bool atBottom = false;
 	
