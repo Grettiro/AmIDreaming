@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UnitySampleAssets._2D
 {
@@ -28,8 +29,11 @@ namespace UnitySampleAssets._2D
         //private float ceilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Animator anim; // Reference to the player's animator component.
 
+		Slider slowTimeSlider;
 		public int jumpCount = 0;
 		public int teleportCount = 0;
+		private int slowTimeAllow = 1;
+		private int slowTimeAllow2 = 1;
 
         private void Awake()
         {
@@ -76,6 +80,7 @@ namespace UnitySampleAssets._2D
 
 		public void Move(float move, bool jump, bool gravity, bool teleport, bool slowTime)
         {
+			Debug.Log (slowTimeAllow);
             //only control the player if grounded or airControl is turned on
             if (grounded || airControl)
             {
@@ -94,23 +99,111 @@ namespace UnitySampleAssets._2D
                     // ... flip the player.
                     Flip();
             }
-            // If the player should jump...
+            
 			if (slowTime)
 			{
 				var audioStop = GameObject.Find("AudioController");
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
-				audioPitch.pitchChangeDown();
+				var enemySlow = GameObject.Find ("Enemies");
+				Animator slow;
+				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
+				if(slowTimeBar != null)
+				{
+					slowTimeSlider = slowTimeBar.GetComponent<Slider>();
+					if(slowTimeSlider.value > 0.010f)
+					{
+						slowTimeSlider.value -= 0.005f;
+					}
+					else
+					{
+						slowTimeSlider.value = 0.0f;
+					}
+				}
+				if(slowTimeSlider.value >= 0.1)
+				{
+					slowTime = true;
+					if(enemySlow != null)
+					{
+						/*var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+								slowEnemy.speed /= 2;
+								if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
+									enemySlow.rigidbody2D.velocity = slowEnemy.speed;
+								else
+									enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
+								*/
+						if(slowTimeAllow == 1)
+						{
+							audioPitch.pitchChangeDown();
+							foreach(Transform enemies in enemySlow.transform)
+							{
+								slowTimeAllow = 2;
+								slowTimeAllow2 = 1;
+								slow = GameObject.Find(enemies.name).GetComponent<Animator>();
+								slow.speed /= 2.5f;
+							}
+						}
+					}
+				}
+				if(slowTimeSlider.value < 0.01)
+				{
+					if(slowTimeAllow2 == 1)
+					{
+						foreach(Transform enemies in enemySlow.transform)
+						{
+							slowTimeAllow2 = 2;
+							slowTimeAllow = 1;
+							slow = GameObject.Find(enemies.name).GetComponent<Animator>();
+							slow.speed *= 2.5f;
+							audioPitch.pitchChangeUp();
+						}
+					}
+				}
 			}
 			if (!slowTime) 
 			{
 				var audioStop = GameObject.Find("AudioController");
 				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
-				audioPitch.pitchChangeUp();
+				var enemySlow = GameObject.Find ("Enemies");
+				Animator slow;
+				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
+				if(slowTimeBar != null)
+				{
+					slowTimeSlider = slowTimeBar.GetComponent<Slider>();
+					if(slowTimeSlider.value < 0.95f)
+					{
+					slowTimeSlider.value += 0.002f;
+					}
+					else
+					{
+						slowTimeSlider.value = 1;
+					}
+				}
+				if(enemySlow != null)
+				{
+					/*var slowEnemy = (EnemyBehavior)enemySlow.GetComponent("EnemyBehavior");
+							slowEnemy.speed *= 2;
+						if(enemySlow.rigidbody2D.velocity.x > 0.0f || enemySlow.rigidbody2D.velocity.y > 0.0f)
+							enemySlow.rigidbody2D.velocity = slowEnemy.speed;
+						else
+							enemySlow.rigidbody2D.velocity = -slowEnemy.speed;
+						*/
+					if(slowTimeAllow == 2)
+					{				
+						audioPitch.pitchChangeUp();
+						foreach(Transform enemies in enemySlow.transform)
+						{
+							slowTimeAllow = 1;
+							slow = GameObject.Find(enemies.name).GetComponent<Animator>();
+							slow.speed *= 2.5f;
+						}
+					}
+				}
 			}
 			if (grounded) {
 								jumpCount = 0;
 								teleportCount = 0;
 						}
+			// If the player should jump...
 			if (jump) {
 				if (jumpCount < 1) {
 					jumpCount++;
