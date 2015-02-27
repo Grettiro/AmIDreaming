@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LoadOnClick : MonoBehaviour {
-	
+public class LoadOnClick : MonoBehaviour
+{
 	public AudioSource audioStart;
 	public AudioSource audioLoop;
 		
@@ -22,12 +22,10 @@ public class LoadOnClick : MonoBehaviour {
 			Application.Quit();
 
 		if(!audioStart.isPlaying) 
-		{
 			if(!audioLoop.isPlaying)
 			{
 				audioLoop.loop = true;
 				audioLoop.Play();
 			}
-		}
 	}
 }

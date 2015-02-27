@@ -2,10 +2,13 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class UIUpdate : MonoBehaviour {
+public class UIUpdate : MonoBehaviour
+{
 	Text txt;
+
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 		var findNeurons = GameObject.Find ("PlayerNeurons");
 		var updateNeurons = (NeuronCount)findNeurons.GetComponent("NeuronCount");
 
@@ -14,7 +17,8 @@ public class UIUpdate : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 		var findNeurons = GameObject.Find ("PlayerNeurons");
 		var updateNeurons = (NeuronCount)findNeurons.GetComponent("NeuronCount");
 		

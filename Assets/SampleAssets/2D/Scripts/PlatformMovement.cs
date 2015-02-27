@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlatformMovement : MonoBehaviour {
+public class PlatformMovement : MonoBehaviour
+{
 	public float speed = 0.0f;
 
 	private List<Point> points = new List<Point>();
@@ -11,20 +12,11 @@ public class PlatformMovement : MonoBehaviour {
 	private int counter = 0;
 	private bool reverse = false;
 
-	// Use this for initialization
-	void Start()
-	{
-	}
-
 	private void Awake()
 	{
 		points.AddRange(gameObject.GetComponentInParent<Platform>().GetComponentsInChildren<Point>());
 		listSize = points.Count;
 		pointArray = points.ToArray();
-	}
-
-	void FixedUpdate()
-	{
 	}
 
 	private void OnCollisionEnter2D(Collision2D other)

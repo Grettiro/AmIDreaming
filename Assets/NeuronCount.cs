@@ -1,21 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class NeuronCount : MonoBehaviour {
-
+public class NeuronCount : MonoBehaviour
+{
 	private int nNeurons;
 	private static NeuronCount instance = null;
-	public static NeuronCount Instance {
+	public static NeuronCount Instance 
+	{
 		get { return instance; }
 	}
+
 	void Awake()
 	{
-		if (instance != null && instance != this) {
+		if(instance != null && instance != this)
+		{
 			Destroy (this.gameObject);
 			return;
-		} else {
-			instance = this;
 		}
+		else
+			instance = this;
+
 		DontDestroyOnLoad (this.gameObject);	
 	}
 	

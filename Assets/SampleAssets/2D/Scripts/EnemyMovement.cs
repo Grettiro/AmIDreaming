@@ -3,8 +3,6 @@ using System.Collections;
 
 public class EnemyMovement : MonoBehaviour 
 {
-	private bool facingRight = true;
-	
 	[SerializeField] private LayerMask whatIsWall; // A mask determining what is a wall to the character
 
 	private float wallRadius = .1f;
@@ -15,7 +13,9 @@ public class EnemyMovement : MonoBehaviour
 	private bool atWall = false;
 	private bool atTop = false;
 	private bool atBottom = false;
-	
+
+	private bool facingRight = true;
+
 	public Vector2 speed = new Vector2(0.0f, 0.0f);
 	
 	// Use this for initialization
@@ -28,9 +28,9 @@ public class EnemyMovement : MonoBehaviour
 	{
 
 		// Setting up references.
-		if(this.tag == "Enemy")
+		if(this.gameObject.layer == 11) // EnemyHorizontal layer
 			wallCheck = transform.FindChild("WallCheck");
-		if(this.tag == "Vertical")
+		if(this.gameObject.layer == 12) // EnemyVertical layer
 		{
 			topCheck = transform.FindChild("TopCheck");
 			bottomCheck = transform.FindChild("BottomCheck");
@@ -55,28 +55,18 @@ public class EnemyMovement : MonoBehaviour
 		if(wallCheck != null)
 		{
 			if(facingRight)
-			{
 				rigidbody2D.velocity = speed;
-			}
 			else if(!facingRight)
-			{
 				rigidbody2D.velocity = speed * -1;
-			}
 			if(atWall)
-			{
 				Flip ();
-			}
 		}
 		else if(topCheck != null && bottomCheck != null)
 		{
 			if(atTop)
-			{
 				rigidbody2D.velocity = speed * -1;
-			}
 			if(atBottom)
-			{
 				rigidbody2D.velocity = speed;
-			}
 		}
 	}
 	

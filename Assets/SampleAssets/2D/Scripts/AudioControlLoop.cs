@@ -9,46 +9,49 @@ public class AudioControlLoop : MonoBehaviour {
 	public AudioSource audioLoop;
 
 	private static AudioControlLoop instance = null;
-	public static AudioControlLoop Instance {
+	public static AudioControlLoop Instance
+	{
 		get { return instance; }
 	}
+
 	void Awake()
 	{
-		if (instance != null && instance != this) {
-				Destroy (this.gameObject);
-				return;
-		} else {
-				audioStart.Play();
-				instance = this;
+		if(instance != null && instance != this)
+		{
+			Destroy(this.gameObject);
+			return;
 		}
-		DontDestroyOnLoad (this.gameObject);	
+		else
+		{
+			audioStart.Play();
+			instance = this;
+		}
+
+		DontDestroyOnLoad(this.gameObject);	
 	}
 
 	
 	// Update is called once per frame
-	void Update () {
+	void Update()
+	{
 		if(Application.loadedLevel == 0)
-		{
 			Destroy (this.gameObject);
-		}
 		else
-		{
-			if(!audioStart.isPlaying) {
-			if(!audioLoop.isPlaying)
-			{
+			if(!audioStart.isPlaying)
+				if(!audioLoop.isPlaying)
+				{
 					audioStart.Stop();
-				audioLoop.loop = true;
-				audioLoop.Play();
-			}
-			}
-		}
+					audioLoop.loop = true;
+					audioLoop.Play();
+				}
 	}
 
 	public void pitchChangeDown()
 	{
 		audioStart.pitch = 0.6f;
 		audioLoop.pitch = 0.6f;
-		}
+	}
+
 	public void pitchChangeUp()
 	{
 		audioStart.pitch = 1;

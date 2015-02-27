@@ -1,61 +1,49 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace UnitySampleAssets._2D
+//TODO: Still needs to be made more modular.
+public class Switches : MonoBehaviour 
 {
-	public class Switches : MonoBehaviour 
+	private int count = 0;
+	private int[] buttonArray = new int[4];
+
+	private Doors doors;
+
+	private void Awake()
 	{
-		private int count = 0;
-		private int[] buttonArray = new int[4];
+		doors = GameObject.Find("Doors").GetComponent<Doors>();
+	}
 
-		private Doors doors;
+	private void checkDoors()
+	{
+		int prev = 0;
 
-		private void Awake()
-		{
-			doors = GameObject.Find("Doors").GetComponent<Doors>();
-		}
-
-		// Use this for initialization
-		void Start () {
+		for(int i = 0; i < 4; i++)
+			if((buttonArray[i] - 1) == prev)
+				prev = buttonArray[i];
 		
-		}
+		if (prev == 4)
+			doors.OpenDoors (false);
 
-		private void checkDoors()
+		else 
 		{
-			int prev = 0;
-			for(int i = 0; i < 4; i++)
+			var buttons = this.GetComponentsInChildren<Button>();
+			for(int i = 0; i < buttons.Length; i++)
 			{
-				if((buttonArray[i] - 1) == prev)
-					prev = buttonArray[i];
-			}
-			
-			if (prev == 4)
-				doors.OpenDoors (false);
-			else 
-			{
-				var buttons = this.GetComponentsInChildren<Button>();
-				for(int i = 0; i < buttons.Length; i++)
-				{
-					buttons[i].renderer.material.color = buttons[i].getOriginalColor();
-					buttons[i].enabled = true;
-				}
+				buttons[i].renderer.material.color = buttons[i].getOriginalColor();
+				buttons[i].enabled = true;
 			}
 		}
+	}
 
-		public void UpdateArray(int buttonNumber)
+	public void UpdateArray(int buttonNumber)
+	{
+		buttonArray[count] = buttonNumber;
+		count++;
+		if(count == 4)
 		{
-			buttonArray[count] = buttonNumber;
-			count++;
-			if(count == 4)
-			{
-				count = 0;
-				checkDoors();
-			}
-		}
-
-		// Update is called once per frame
-		void Update () 
-		{
+			count = 0;
+			checkDoors();
 		}
 	}
 }
