@@ -6,6 +6,10 @@ public class Restarter : MonoBehaviour
 	{
     	if (other.tag == "Player") 
 		{
+			var audioStop = GameObject.Find("AudioController");
+			var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+			audioPitch.pitchChangeUp();
+
 			Application.LoadLevel (Application.loadedLevelName);
 		}
 		/*

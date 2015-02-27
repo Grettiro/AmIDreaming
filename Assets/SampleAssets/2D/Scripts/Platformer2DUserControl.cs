@@ -30,7 +30,14 @@ public class Platformer2DUserControl : MonoBehaviour
 		}
 		if (Input.GetButtonDown("Jump")) 
 		{
+			var jumpCount = GameObject.Find("Player");
+			var updateJumps = (PlatformerCharacter2D)jumpCount.GetComponent("PlatformerCharacter2D");
+			updateJumps.jumpCount += 1;
 			jump = true;
+		}
+		if (Input.GetButtonUp("Jump")) 
+		{
+			jump = false;
 		}
 		if (Input.GetKeyDown("d"))
 		{
@@ -40,14 +47,14 @@ public class Platformer2DUserControl : MonoBehaviour
 		{
 			teleport = true;
 		}
-		if (Input.GetKeyDown("s"))
-		{
-			slowTime = true;		
-		}
-		if (Input.GetKeyUp("s"))
-		{
-			slowTime = false;
-		}
+		if (Application.loadedLevelName != "World1") {
+						if (Input.GetKeyDown ("s")) {
+								slowTime = true;		
+						}
+						if (Input.GetKeyUp ("s")) {
+								slowTime = false;
+						}
+				}
 	}
 
 	private void FixedUpdate()
@@ -57,7 +64,6 @@ public class Platformer2DUserControl : MonoBehaviour
 	    // Pass all parameters to the character control script.
 		character.Move(h, jump, gravity, teleport, slowTime);
 		gravity = false;
-    	jump = false;
 		teleport = false;
 	}
 }

@@ -4,7 +4,6 @@ using UnityEngine.UI;
 public class PlatformerCharacter2D : MonoBehaviour
 {
 	[SerializeField] private float maxSpeed = 12f; // The fastest the player can travel in the x axis.
-	[SerializeField] private float jumpForce = 900f; // Amount of force added when the player jumps.	
 
 	[SerializeField] private bool airControl = false; // Whether or not a player can steer while jumping;
 	[SerializeField] private LayerMask whatIsGround; // A mask determining what is ground to the character
@@ -22,6 +21,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private Transform ceilingCheck; // A position marking where to check for ceilings
 	private bool atCeiling = false;
 
+	public AudioClip audioJump;
+	public AudioClip audioGravity;
+	public AudioClip audioGravityRev;
+	public AudioClip audioTeleport;
+
 	private float transformRadius = .2f; // Radius of the overlap circle to determine if grounded
 
 	private Animator anim; // Reference to the player's animator component.
@@ -29,8 +33,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 	Slider slowTimeSlider;
 
 	private bool facingRight = true; // For determining which way the player is currently facing.
+	private bool jumping = false;
+	private float jumpVelocity = 4f;
+	private float jumpForce = 18f;
 
 	public int jumpCount = 0;
+	public int gravityCount = 0;
 	public int teleportCount = 0;
 	private int slowTimeAllow = 1;
 	private int slowTimeAllow2 = 1;
@@ -76,7 +84,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			// To prevent getting stuck at a wall.
 			if(!grounded && atWall)
 				move = 0.0f;
-
+			Debug.Log (jumpCount);
 	        // Move the character
 	        rigidbody2D.velocity = new Vector2(move*maxSpeed, rigidbody2D.velocity.y);
 
@@ -222,9 +230,18 @@ public class PlatformerCharacter2D : MonoBehaviour
 		// If the player should jump...
 		if(jump)
 		{
-			if(jumpCount < 1)
+			if(jumpCount < 2)
 			{
-				jumpCount++;
+				if(jumpVelocity <= jumpForce)
+				{
+					Debug.Log(jumpVelocity + " : " + jumpForce);
+					jumping = true;
+					jumpVelocity += 1.5f;
+					grounded = false;
+					anim.SetBool("Ground", false);
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpVelocity);
+				}
+				/*jumpCount++;
 				// Add a vertical force to the player.
 				grounded = false;
 				anim.SetBool("Ground", false);
@@ -237,8 +254,17 @@ public class PlatformerCharacter2D : MonoBehaviour
 				if(rigidbody2D.gravityScale > 0)
 					rigidbody2D.AddForce(new Vector2(0f, jumpForce));
 				else
-					rigidbody2D.AddForce(new Vector2(0f, -jumpForce));
+					rigidbody2D.AddForce(new Vector2(0f, -jumpForce));*/
 			}
+		}
+		if (!jump) 
+		{
+			if(jumping == true)
+			{
+				jumpVelocity = 4f;
+				rigidbody2D.AddForce(new Vector2(0f, 1f));
+			}
+			jumping = false;
 		}
 
 		if(gravity)
@@ -246,8 +272,29 @@ public class PlatformerCharacter2D : MonoBehaviour
 			Vector3 theScale = transform.localScale;
 
 			theScale.y *= -1;
+			if(gravityCount == 0)
+			{
+				if(audio.isPlaying)
+				{
+					audio.Stop();
+					audio.PlayOneShot(audioGravityRev);
+				}
+				else
+					audio.PlayOneShot(audioGravityRev);
+				gravityCount +=1;
+			}
+			else
+			{
+				if(audio.isPlaying)
+				{
+					audio.Stop();
+					audio.PlayOneShot(audioGravity);
+				}
+				else
+					audio.PlayOneShot(audioGravity);
+				gravityCount = 0;
+			}
 			transform.localScale = theScale;
-
 			rigidbody2D.gravityScale *= -1;
 			anim.SetBool("Ground", false);
 		}
@@ -293,7 +340,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 				// Move the character!
 				if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))) {} // do nothing.
 				else
+				{
+					audio.PlayOneShot(audioTeleport);
 					transform.position += transform.right + wallEdge;
+				}
 			}
 			else
 			{
@@ -317,7 +367,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 				if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))){} // do nothing.
 				else
+				{
+					audio.PlayOneShot(audioTeleport);
 					transform.position -= transform.right + wallEdge;
+				}
 			}
 
 			wallCounter = 0;
@@ -335,5 +388,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 	    Vector3 theScale = transform.localScale;
 	    theScale.x *= -1;
 	    transform.localScale = theScale;
+	}
+	[SerializeField]
+	public int JumpCount
+	{
+		get {return jumpCount; }
+		set {jumpCount = value; }
 	}
 }
