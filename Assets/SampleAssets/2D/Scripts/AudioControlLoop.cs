@@ -7,6 +7,7 @@ public class AudioControlLoop : MonoBehaviour {
 	// Use this for initialization
 	public AudioSource audioStart;
 	public AudioSource audioLoop;
+	public AudioClip neuronPickup;
 
 	private static AudioControlLoop instance = null;
 	public static AudioControlLoop Instance
@@ -56,5 +57,11 @@ public class AudioControlLoop : MonoBehaviour {
 	{
 		audioStart.pitch = 1;
 		audioLoop.pitch = 1;
+	}
+
+	public void playNeuron()
+	{
+
+		audio.PlayOneShot (neuronPickup);
 	}
 }
