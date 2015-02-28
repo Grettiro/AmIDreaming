@@ -34,7 +34,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private bool facingRight = true; // For determining which way the player is currently facing.
 	private bool jumping = false;
-	private float jumpVelocity = 200f;
+	private float jumpVelocity = 300f;
 	private float jumpForce = 950f;
 
 	public int jumpCount = 0;
@@ -263,7 +263,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			if(jumping == true)
 			{
-				jumpVelocity = 200f;
+				jumpVelocity = 300f;
 				rigidbody2D.AddForce(new Vector2(0f, 1f));
 			}
 			jumping = false;
