@@ -34,8 +34,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private bool facingRight = true; // For determining which way the player is currently facing.
 	private bool jumping = false;
-	private float jumpVelocity = 4f;
-	private float jumpForce = 18f;
+	private float jumpVelocity = 200f;
+	private float jumpForce = 950f;
 
 	public int jumpCount = 0;
 	public int gravityCount = 0;
@@ -236,10 +236,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 				{
 					Debug.Log(jumpVelocity + " : " + jumpForce);
 					jumping = true;
-					jumpVelocity += 1.5f;
+					jumpVelocity += 100f;
 					grounded = false;
 					anim.SetBool("Ground", false);
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpVelocity);
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+					rigidbody2D.AddForce(new Vector2(0f, jumpVelocity));
+					//rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpVelocity);
 				}
 				/*jumpCount++;
 				// Add a vertical force to the player.
@@ -261,7 +263,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			if(jumping == true)
 			{
-				jumpVelocity = 4f;
+				jumpVelocity = 200f;
 				rigidbody2D.AddForce(new Vector2(0f, 1f));
 			}
 			jumping = false;
