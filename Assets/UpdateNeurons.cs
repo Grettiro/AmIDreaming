@@ -18,9 +18,6 @@ public class UpdateNeurons : MonoBehaviour
 			var audioPlay = GameObject.Find("AudioController");
 			var neuronAudio = (AudioControlLoop)audioPlay.GetComponent("AudioControlLoop");
 			neuronAudio.playNeuron();
-			var findNeurons = GameObject.Find("PlayerNeurons");
-			var updateNeurons = (NeuronCount)findNeurons.GetComponent("NeuronCount");
-			updateNeurons.Neurons += 1;
 			var findNeurons2 = GameObject.Find("LevelFinish");
 			var updateNeurons2 = (LevelFinish)findNeurons2.GetComponent("LevelFinish");
 			updateNeurons2.setNeuronStatus(nIndex);
