@@ -83,8 +83,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 			// To prevent getting stuck at a wall.
 			if(!grounded && atWall)
-				move = 0.0f;
-			Debug.Log (jumpCount);
+			{
+				if((facingRight && move > 0.0f) || (!facingRight && move < 0.0f))
+					move = 0.0f;
+			}
+			//Debug.Log (jumpCount);
 	        // Move the character
 	        rigidbody2D.velocity = new Vector2(move*maxSpeed, rigidbody2D.velocity.y);
 

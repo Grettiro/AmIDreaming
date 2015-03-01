@@ -47,14 +47,13 @@ public class Platformer2DUserControl : MonoBehaviour
 		{
 			teleport = true;
 		}
-		if (Application.loadedLevelName != "World1") {
-						if (Input.GetKeyDown ("s")) {
-								slowTime = true;		
-						}
-						if (Input.GetKeyUp ("s")) {
-								slowTime = false;
-						}
-				}
+		if(Application.loadedLevelName != "World1")
+		{
+			if(Input.GetKeyDown ("s"))
+				slowTime = true;	
+			if(Input.GetKeyUp ("s"))
+				slowTime = false;
+		}
 	}
 
 	private void FixedUpdate()
