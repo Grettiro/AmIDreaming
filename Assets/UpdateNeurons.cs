@@ -21,9 +21,9 @@ public class UpdateNeurons : MonoBehaviour
 			var findNeurons = GameObject.Find("PlayerNeurons");
 			var updateNeurons = (NeuronCount)findNeurons.GetComponent("NeuronCount");
 			updateNeurons.Neurons += 1;
-			var findNeurons2 = GameObject.Find("NeuronTracker");
-			var updateNeurons2 = (NeuronTracker)findNeurons2.GetComponent("NeuronTracker");
-			updateNeurons2.UpdateNeurons(nIndex);
+			var findNeurons2 = GameObject.Find("LevelFinish");
+			var updateNeurons2 = (LevelFinish)findNeurons2.GetComponent("LevelFinish");
+			updateNeurons2.setNeuronStatus(nIndex);
 			Destroy (this.gameObject);
 		}
 	}
