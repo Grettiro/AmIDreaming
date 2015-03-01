@@ -34,8 +34,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private bool facingRight = true; // For determining which way the player is currently facing.
 	private bool jumping = false;
-	private float jumpVelocity = 4f;
-	private float jumpForce = 18f;
+	private float jumpVelocity = 300f;
+	private float jumpForce = 800f;
 
 	public int jumpCount = 0;
 	public int gravityCount = 0;
@@ -160,6 +160,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				if(slowTimeAllow2 == 1)
 				{
+					audioPitch.pitchChangeUp();
 					foreach(GameObject enemies in slowable)
 					{
 						slowTimeAllow2 = 2;
@@ -178,7 +179,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 						if((platform = enemies.GetComponent<PlatformMovement>()) != null)
 							platform.speed *= 2.5f;
 
-						audioPitch.pitchChangeUp();
 					}
 				}
 			}
@@ -195,6 +195,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 			var audioStop = GameObject.Find("AudioController");
 			var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+			audioPitch.pitchChangeUp();
 
 			if(slowTimeBar != null)
 			{
@@ -209,7 +210,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				if(slowTimeAllow == 2)
 				{				
-					audioPitch.pitchChangeUp();
 					foreach(GameObject enemies in slowable)
 					{
 						slowTimeAllow = 1;
@@ -235,14 +235,20 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			if(jumpCount < 2)
 			{
+
 				if(jumpVelocity <= jumpForce)
 				{
-					Debug.Log(jumpVelocity + " : " + jumpForce);
 					jumping = true;
-					jumpVelocity += 1.5f;
+					jumpVelocity += 100f;
 					grounded = false;
 					anim.SetBool("Ground", false);
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpVelocity);
+					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+					if(rigidbody2D.gravityScale > 0)
+						rigidbody2D.AddForce(new Vector2(0f, jumpVelocity));
+					else
+						rigidbody2D.AddForce(new Vector2(0f, -jumpVelocity));
+
+					//rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpVelocity);
 				}
 				/*jumpCount++;
 				// Add a vertical force to the player.
@@ -264,7 +270,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 		{
 			if(jumping == true)
 			{
-				jumpVelocity = 4f;
+				jumpVelocity = 300f;
 				rigidbody2D.AddForce(new Vector2(0f, 1f));
 			}
 			jumping = false;
@@ -344,7 +350,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))) {} // do nothing.
 				else
 				{
-					audio.PlayOneShot(audioTeleport);
+					audio.PlayOneShot(audioTeleport, 1f);
 					transform.position += transform.right + wallEdge;
 				}
 			}
@@ -371,7 +377,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))){} // do nothing.
 				else
 				{
-					audio.PlayOneShot(audioTeleport);
+					audio.PlayOneShot(audioTeleport, 1f);
 					transform.position -= transform.right + wallEdge;
 				}
 			}
