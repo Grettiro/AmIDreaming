@@ -6,16 +6,14 @@ public class Restarter : MonoBehaviour
 	private PlatformerCharacter2D player;
 	private Animator anim;
 
-	void Awake()
-	{
-		player = GameObject.Find("Player").GetComponent<PlatformerCharacter2D>();
-		anim = player.getAnimator();
-	}
-
 	private void OnTriggerEnter2D(Collider2D other)
 	{
     	if(other.tag == "Player") 
 		{
+			if((player = GameObject.Find("Player").GetComponent<PlatformerCharacter2D>()) != null)
+			{
+				anim = player.getAnimator();
+			}
 
 			var audioStop = GameObject.Find("AudioController");
 			var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
@@ -24,6 +22,7 @@ public class Restarter : MonoBehaviour
 			/*
 			 * Play the death animation and let it play until continuing.
 			 */
+			anim.SetTrigger("Die");
 			StartCoroutine(DoAnimation());
 		}
 		/*
@@ -34,8 +33,8 @@ public class Restarter : MonoBehaviour
 
 	private IEnumerator DoAnimation()
 	{
-		anim.Play("Death");
 		yield return new WaitForSeconds(1); // wait for two seconds.
+		anim.SetTrigger("Die");
 		Application.LoadLevel(Application.loadedLevelName);
 	}
 }
