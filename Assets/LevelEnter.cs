@@ -17,7 +17,10 @@ public class LevelEnter : MonoBehaviour
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (getNeurons.Neurons < neuronsRequired)
-			Debug.Log("Not enough Neurons");
+		{
+			UIUpdate update = GameObject.Find("Enough").GetComponent<UIUpdate>();
+			update.notEnoughNeurons();
+		}
 	}
 
 	void OnTriggerStay2D(Collider2D other)
