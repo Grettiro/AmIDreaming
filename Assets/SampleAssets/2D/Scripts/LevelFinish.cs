@@ -13,11 +13,9 @@ public class LevelFinish : MonoBehaviour
 		{
 			if (nBool) 
 			{
-				var findNeurons = GameObject.Find ("NeuronTracker");
-				var updateNeurons = (NeuronTracker)findNeurons.GetComponent ("NeuronTracker");
-				updateNeurons.UpdateNeurons (nIndex);
-				var findNeurons2 = GameObject.Find ("PlayerNeurons");
-				var updateNeurons2 = (NeuronCount)findNeurons2.GetComponent ("NeuronCount");
+				NeuronTracker updateNeurons = GameObject.Find("NeuronTracker").GetComponent<NeuronTracker>();
+				updateNeurons.UpdateNeurons(nIndex);
+				NeuronCount updateNeurons2 = GameObject.Find("PlayerNeurons").GetComponent<NeuronCount>();
 				if(nProtection == 0)
 				{
 					updateNeurons2.Neurons += 1;

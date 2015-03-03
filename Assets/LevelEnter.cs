@@ -5,24 +5,17 @@ public class LevelEnter : MonoBehaviour
 {
 	public int levelNumber;
 	public int neuronsRequired;
-	bool nextLevel;
+	private bool nextLevel;
 
-	void OnTriggerEnter2D(Collider2D other)
+	private NeuronCount getNeurons;
+
+	void Awake()
 	{
-		var findNeurons = GameObject.Find("PlayerNeurons");
-		var getNeurons = (NeuronCount)findNeurons.GetComponent("NeuronCount");
-
-		if(getNeurons.Neurons >= neuronsRequired)
-			nextLevel = true;
-		else
-			Debug.Log("Not enough Neurons");
+		getNeurons = GameObject.Find("PlayerNeurons").GetComponent<NeuronCount>();
 	}
 
 	void OnTriggerStay2D(Collider2D other)
 	{
-		var findNeurons = GameObject.Find("PlayerNeurons");
-		var getNeurons = (NeuronCount)findNeurons.GetComponent("NeuronCount");
-
 		if (getNeurons.Neurons >= neuronsRequired)
 			nextLevel = true;
 		else
@@ -39,10 +32,8 @@ public class LevelEnter : MonoBehaviour
 		if(nextLevel)
 			if (Input.GetKeyDown ("return"))
 			{
-				var findNeurons = GameObject.Find("PlayerNeurons");
-				var setLevel = (NeuronCount)findNeurons.GetComponent("NeuronCount");
-				setLevel.GetPrevLevel = Application.loadedLevel;
-				Application.LoadLevel (levelNumber);
+				getNeurons.GetPrevLevel = Application.loadedLevel;
+				Application.LoadLevel(levelNumber);
 			}
 	}
 }

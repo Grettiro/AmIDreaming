@@ -43,13 +43,23 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	private bool dead = false;
 
-	private void Awake()
+	// Classes to be slowed
+	private Animator slow;
+	private EnemyMovement enemy;
+	private EnemyCircleMovement enemyC;
+	private MovingObject enemyM;
+	private PlatformMovement platform;
+	private AudioControlLoop audioPitch;
+
+	void Awake()
 	{
 	    // Setting up references.
 	    groundCheck = transform.Find("GroundCheck");
 		wallCheck = transform.Find("WallCheck");
 	    ceilingCheck = transform.Find("CeilingCheck");
 	    anim = GetComponent<Animator>();
+
+		audioPitch = GameObject.Find("AudioController").GetComponent<AudioControlLoop>();
 	}
 
 	public Animator getAnimator()
@@ -95,10 +105,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 				// To prevent getting stuck at a wall.
 				if(!grounded && atWall)
-				{
 					if((facingRight && move > 0.0f) || (!facingRight && move < 0.0f))
 						move = 0.0f;
-				}
 
 				// Move the character
 		        rigidbody2D.velocity = new Vector2(move*maxSpeed, rigidbody2D.velocity.y);
@@ -118,18 +126,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 	    
 			if(slowTime)
 			{
-				// Classes to be slowed
-				Animator slow;
-				EnemyMovement enemy;
-				EnemyCircleMovement enemyC;
-				MovingObject enemyM;
-				PlatformMovement platform;
-				
 				GameObject[] slowable = GameObject.FindGameObjectsWithTag("Slowable");
-				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
-				
-				var audioStop = GameObject.Find("AudioController");
-				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+				GameObject slowTimeBar = GameObject.Find("SlowTimeBar");
 
 				if(slowTimeBar != null)
 				{
@@ -215,18 +213,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 			}
 			if(!slowTime)
 			{
-				// Classes to be slowed
-				Animator slow;
-				EnemyMovement enemy;
-				EnemyCircleMovement enemyC;
-				MovingObject enemyM;
-				PlatformMovement platform;
-
 				GameObject[] slowable = GameObject.FindGameObjectsWithTag("Slowable");
-				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
+				GameObject slowTimeBar = GameObject.Find("SlowTimeBar");
 
-				var audioStop = GameObject.Find("AudioController");
-				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 				audioPitch.pitchChangeUp();
 
 				if(slowTimeBar != null)
@@ -287,23 +276,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 							rigidbody2D.AddForce(new Vector2(0f, jumpVelocity));
 						else
 							rigidbody2D.AddForce(new Vector2(0f, -jumpVelocity));
-
-						//rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpVelocity);
 					}
-					/*jumpCount++;
-					// Add a vertical force to the player.
-					grounded = false;
-					anim.SetBool("Ground", false);
-					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
-					if(grounded)
-					{
-						anim.SetBool("Ground", false);                
-						grounded = false;
-					}
-					if(rigidbody2D.gravityScale > 0)
-						rigidbody2D.AddForce(new Vector2(0f, jumpForce));
-					else
-						rigidbody2D.AddForce(new Vector2(0f, -jumpForce));*/
 				}
 			}
 			if (!jump) 
@@ -426,6 +399,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	    theScale.x *= -1;
 	    transform.localScale = theScale;
 	}
+
 	[SerializeField]
 	public int JumpCount
 	{

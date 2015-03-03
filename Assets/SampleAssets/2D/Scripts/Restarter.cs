@@ -15,8 +15,7 @@ public class Restarter : MonoBehaviour
 				anim = player.getAnimator();
 			}
 			player.setDead(true);
-			var audioStop = GameObject.Find("AudioController");
-			var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+			AudioControlLoop audioPitch = GameObject.Find("AudioController").GetComponent<AudioControlLoop>();
 			audioPitch.pitchChangeUp();
 
 			/*

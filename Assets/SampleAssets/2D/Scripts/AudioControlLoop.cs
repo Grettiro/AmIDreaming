@@ -38,8 +38,7 @@ public class AudioControlLoop : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
-		var findNeurons = GameObject.Find("PlayerNeurons");
-		var setLevel = (NeuronCount)findNeurons.GetComponent("NeuronCount");
+		NeuronCount setLevel = GameObject.Find("PlayerNeurons").GetComponent<NeuronCount>();
 		if (Application.loadedLevel == 2 && setLevel.GetPrevLevel == 1) 
 		{
 			if (audioStart.isPlaying) 
@@ -95,6 +94,6 @@ public class AudioControlLoop : MonoBehaviour {
 	public void playNeuron()
 	{
 
-		audio.PlayOneShot (neuronPickup);
+		audio.PlayOneShot(neuronPickup);
 	}
 }

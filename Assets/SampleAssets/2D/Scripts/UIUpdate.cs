@@ -6,11 +6,12 @@ public class UIUpdate : MonoBehaviour
 {
 	Text txt;
 
+	private NeuronCount updateNeurons;
+
 	// Use this for initialization
 	void Start()
 	{
-		var findNeurons = GameObject.Find ("PlayerNeurons");
-		var updateNeurons = (NeuronCount)findNeurons.GetComponent("NeuronCount");
+		updateNeurons = GameObject.Find ("PlayerNeurons").GetComponent<NeuronCount>();
 
 		txt = gameObject.GetComponent<Text>(); 
 		txt.text="Neurons: " + (0 + updateNeurons.Neurons);
@@ -19,9 +20,6 @@ public class UIUpdate : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		var findNeurons = GameObject.Find ("PlayerNeurons");
-		var updateNeurons = (NeuronCount)findNeurons.GetComponent("NeuronCount");
-		
 		txt = gameObject.GetComponent<Text>(); 
 		txt.text="Neurons: " + (0 + updateNeurons.Neurons);
 	}
