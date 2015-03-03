@@ -99,8 +99,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 					if((facingRight && move > 0.0f) || (!facingRight && move < 0.0f))
 						move = 0.0f;
 				}
-				//Debug.Log (jumpCount);
-		        // Move the character
+
+				// Move the character
 		        rigidbody2D.velocity = new Vector2(move*maxSpeed, rigidbody2D.velocity.y);
 
 		        if (move > 0.0f && !facingRight)
