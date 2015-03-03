@@ -49,19 +49,19 @@ public class Platformer2DUserControl : MonoBehaviour
 		{
 			jump = false;
 		}
-		if (Input.GetKeyDown("d"))
+		if (Input.GetKeyDown("d") || Input.GetButtonDown("Fire3"))
 		{
 			gravity = true;
 		}
-		if (Input.GetKeyDown("e"))
+		if (Input.GetKeyDown("e") || Input.GetButtonDown("Fire2"))
 		{
 			teleport = true;
 		}
 		if(Application.loadedLevelName != "World1")
 		{
-			if(Input.GetKeyDown ("s"))
+			if(Input.GetKeyDown ("s") || Input.GetButtonDown("Fire1"))
 				slowTime = true;	
-			if(Input.GetKeyUp ("s"))
+			if(Input.GetKeyUp ("s") || Input.GetButtonUp("Fire1"))
 				slowTime = false;
 		}
 	}

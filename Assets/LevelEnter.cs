@@ -30,7 +30,7 @@ public class LevelEnter : MonoBehaviour
 	void Update()
 	{
 		if(nextLevel)
-			if (Input.GetKeyDown ("return"))
+			if (Input.GetKeyDown ("return") || Input.GetButtonDown("Submit"))
 			{
 				getNeurons.GetPrevLevel = Application.loadedLevel;
 				Application.LoadLevel(levelNumber);
