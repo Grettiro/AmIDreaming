@@ -43,6 +43,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private int slowTimeAllow = 1;
 	private int slowTimeAllow2 = 1;
 
+	private bool dead = false;
+
 	private void Awake()
 	{
 	    // Setting up references.
@@ -55,6 +57,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 	public Animator getAnimator()
 	{
 		return anim;
+	}
+
+	public void setDead(bool isDead)
+	{
+		dead = isDead;
 	}
 
 	private void FixedUpdate()
@@ -80,77 +87,114 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	public void Move(float move, bool jump, bool gravity, bool teleport, bool slowTime)
 	{
-	    //only control the player if grounded or airControl is turned on
-	    if(grounded || airControl)
-	    {
-	        // The Speed animator parameter is set to the absolute value of the horizontal input.
-	        anim.SetFloat("Speed", Mathf.Abs(move));
-
-			// To prevent getting stuck at a wall.
-			if(!grounded && atWall)
-			{
-				if((facingRight && move > 0.0f) || (!facingRight && move < 0.0f))
-					move = 0.0f;
-			}
-			//Debug.Log (jumpCount);
-	        // Move the character
-	        rigidbody2D.velocity = new Vector2(move*maxSpeed, rigidbody2D.velocity.y);
-
-	        if (move > 0.0f && !facingRight)
-	            Flip();
-	        else if (move < 0.0f && facingRight)
-	            Flip();
-
-	    }
-
-		if(grounded)
+		if(!dead)
 		{
-			jumpCount = 0;
-			teleportCount = 0;
-		}
-    
-		if(slowTime)
-		{
-			// Classes to be slowed
-			Animator slow;
-			EnemyMovement enemy;
-			EnemyCircleMovement enemyC;
-			MovingObject enemyM;
-			PlatformMovement platform;
-			
-			GameObject[] slowable = GameObject.FindGameObjectsWithTag("Slowable");
-			GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
-			
-			var audioStop = GameObject.Find("AudioController");
-			var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+		    //only control the player if grounded or airControl is turned on
+		    if(grounded || airControl)
+		    {
+		        // The Speed animator parameter is set to the absolute value of the horizontal input.
+		        anim.SetFloat("Speed", Mathf.Abs(move));
 
-			if(slowTimeBar != null)
-			{
-				slowTimeSlider = slowTimeBar.GetComponent<Slider>();
-
-				if(slowTimeSlider.value > 0.010f)
-					slowTimeSlider.value -= 0.005f;
-				else
-					slowTimeSlider.value = 0.0f;
-			}
-			if(slowTimeSlider.value >= 0.1)
-			{
-				if(slowable != null)
+				// To prevent getting stuck at a wall.
+				if(!grounded && atWall)
 				{
-					if(slowTimeAllow == 1)
-					{
-						audioPitch.pitchChangeDown();
+					if((facingRight && move > 0.0f) || (!facingRight && move < 0.0f))
+						move = 0.0f;
+				}
+				//Debug.Log (jumpCount);
+		        // Move the character
+		        rigidbody2D.velocity = new Vector2(move*maxSpeed, rigidbody2D.velocity.y);
 
+		        if (move > 0.0f && !facingRight)
+		            Flip();
+		        else if (move < 0.0f && facingRight)
+		            Flip();
+
+		    }
+
+			if(grounded)
+			{
+				jumpCount = 0;
+				teleportCount = 0;
+			}
+	    
+			if(slowTime)
+			{
+				// Classes to be slowed
+				Animator slow;
+				EnemyMovement enemy;
+				EnemyCircleMovement enemyC;
+				MovingObject enemyM;
+				PlatformMovement platform;
+				
+				GameObject[] slowable = GameObject.FindGameObjectsWithTag("Slowable");
+				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
+				
+				var audioStop = GameObject.Find("AudioController");
+				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+
+				if(slowTimeBar != null)
+				{
+					slowTimeSlider = slowTimeBar.GetComponent<Slider>();
+
+					if(slowTimeSlider.value > 0.010f)
+						slowTimeSlider.value -= 0.005f;
+					else
+						slowTimeSlider.value = 0.0f;
+				}
+				if(slowTimeSlider.value >= 0.1)
+				{
+					if(slowable != null)
+					{
+						if(slowTimeAllow == 1)
+						{
+							audioPitch.pitchChangeDown();
+
+							foreach(GameObject enemies in slowable)
+							{
+								slowTimeAllow = 2;
+								slowTimeAllow2 = 1;
+
+								if((slow = GameObject.Find(enemies.name).GetComponent<Animator>()) != null)
+									slow.speed /= 2.5f;
+								if((enemy = enemies.GetComponent<EnemyMovement>()) != null)
+								{
+									enemy.speed /= 2.5f;
+									if(enemy.rigidbody2D.velocity.x > 0.0f || enemy.rigidbody2D.velocity.y > 0.0f)
+										enemy.rigidbody2D.velocity = enemy.speed;
+									else
+										enemy.rigidbody2D.velocity = -enemy.speed;
+								}
+								if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
+								{
+									enemyC.speed /= 2.5f;
+								}
+								if((enemyM = enemies.GetComponent<MovingObject>()) != null)
+								{
+									enemyM.speed /= 2.5f;
+								}
+								if((platform = enemies.GetComponent<PlatformMovement>()) != null)
+									platform.speed /= 2.5f;
+								// add more checks for any further things to be slowed, if any.
+							}
+						}
+					}
+				}
+				if(slowTimeSlider.value < 0.01)
+				{
+					if(slowTimeAllow2 == 1)
+					{
+						audioPitch.pitchChangeUp();
 						foreach(GameObject enemies in slowable)
 						{
-							slowTimeAllow = 2;
-							slowTimeAllow2 = 1;
+							slowTimeAllow2 = 2;
+							slowTimeAllow = 1;
 
 							if((slow = GameObject.Find(enemies.name).GetComponent<Animator>()) != null)
-								slow.speed /= 2.5f;
+								slow.speed *= 2.5f;
 							if((enemy = enemies.GetComponent<EnemyMovement>()) != null)
 							{
-								enemy.speed /= 2.5f;
+								enemy.speed *= 2.5f;
 								if(enemy.rigidbody2D.velocity.x > 0.0f || enemy.rigidbody2D.velocity.y > 0.0f)
 									enemy.rigidbody2D.velocity = enemy.speed;
 								else
@@ -158,266 +202,232 @@ public class PlatformerCharacter2D : MonoBehaviour
 							}
 							if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
 							{
-								enemyC.speed /= 2.5f;
+								enemyC.speed *= 2.5f;
 							}
 							if((enemyM = enemies.GetComponent<MovingObject>()) != null)
 							{
-								enemyM.speed /= 2.5f;
+								enemyM.speed *= 2.5f;
 							}
 							if((platform = enemies.GetComponent<PlatformMovement>()) != null)
-								platform.speed /= 2.5f;
-							// add more checks for any further things to be slowed, if any.
+								platform.speed *= 2.5f;
+
 						}
 					}
 				}
 			}
-			if(slowTimeSlider.value < 0.01)
+			if(!slowTime)
 			{
-				if(slowTimeAllow2 == 1)
+				// Classes to be slowed
+				Animator slow;
+				EnemyMovement enemy;
+				EnemyCircleMovement enemyC;
+				MovingObject enemyM;
+				PlatformMovement platform;
+
+				GameObject[] slowable = GameObject.FindGameObjectsWithTag("Slowable");
+				GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
+
+				var audioStop = GameObject.Find("AudioController");
+				var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
+				audioPitch.pitchChangeUp();
+
+				if(slowTimeBar != null)
 				{
-					audioPitch.pitchChangeUp();
-					foreach(GameObject enemies in slowable)
-					{
-						slowTimeAllow2 = 2;
-						slowTimeAllow = 1;
+					slowTimeSlider = slowTimeBar.GetComponent<Slider>();
 
-						if((slow = GameObject.Find(enemies.name).GetComponent<Animator>()) != null)
-							slow.speed *= 2.5f;
-						if((enemy = enemies.GetComponent<EnemyMovement>()) != null)
-						{
-							enemy.speed *= 2.5f;
-							if(enemy.rigidbody2D.velocity.x > 0.0f || enemy.rigidbody2D.velocity.y > 0.0f)
-								enemy.rigidbody2D.velocity = enemy.speed;
-							else
-								enemy.rigidbody2D.velocity = -enemy.speed;
-						}
-						if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
-						{
-							enemyC.speed *= 2.5f;
-						}
-						if((enemyM = enemies.GetComponent<MovingObject>()) != null)
-						{
-							enemyM.speed *= 2.5f;
-						}
-						if((platform = enemies.GetComponent<PlatformMovement>()) != null)
-							platform.speed *= 2.5f;
-
-					}
+					if(slowTimeSlider.value < 0.95f)
+						slowTimeSlider.value += 0.002f;
+					else
+						slowTimeSlider.value = 1;
 				}
-			}
-		}
-		if(!slowTime)
-		{
-			// Classes to be slowed
-			Animator slow;
-			EnemyMovement enemy;
-			EnemyCircleMovement enemyC;
-			MovingObject enemyM;
-			PlatformMovement platform;
-
-			GameObject[] slowable = GameObject.FindGameObjectsWithTag("Slowable");
-			GameObject slowTimeBar = GameObject.Find ("SlowTimeBar");
-
-			var audioStop = GameObject.Find("AudioController");
-			var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
-			audioPitch.pitchChangeUp();
-
-			if(slowTimeBar != null)
-			{
-				slowTimeSlider = slowTimeBar.GetComponent<Slider>();
-
-				if(slowTimeSlider.value < 0.95f)
-					slowTimeSlider.value += 0.002f;
-				else
-					slowTimeSlider.value = 1;
-			}
-			if(slowable != null)
-			{
-				if(slowTimeAllow == 2)
-				{				
-					foreach(GameObject enemies in slowable)
-					{
-						slowTimeAllow = 1;
-						if((slow = GameObject.Find(enemies.name).GetComponent<Animator>()) != null)
-							slow.speed *= 2.5f;
-						if((enemy = enemies.GetComponent<EnemyMovement>()) != null)
-						{
-							enemy.speed *= 2.5f;
-							if(enemy.rigidbody2D.velocity.x > 0.0f || enemy.rigidbody2D.velocity.y > 0.0f)
-								enemy.rigidbody2D.velocity = enemy.speed;
-							else
-								enemy.rigidbody2D.velocity = -enemy.speed;
-						}
-						if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
-						{
-							enemyC.speed *= 2.5f;
-						}
-						if((enemyM = enemies.GetComponent<MovingObject>()) != null)
-						{
-							enemyM.speed *= 2.5f;
-						}
-						if((platform = enemies.GetComponent<PlatformMovement>()) != null)
-							platform.speed *= 2.5f;
-					}
-				}
-			}
-		}
-
-		// If the player should jump...
-		if(jump)
-		{
-			if(jumpCount < 2)
-			{
-
-				if(jumpVelocity <= jumpForce)
+				if(slowable != null)
 				{
-					jumping = true;
-					jumpVelocity += 100f;
+					if(slowTimeAllow == 2)
+					{				
+						foreach(GameObject enemies in slowable)
+						{
+							slowTimeAllow = 1;
+							if((slow = GameObject.Find(enemies.name).GetComponent<Animator>()) != null)
+								slow.speed *= 2.5f;
+							if((enemy = enemies.GetComponent<EnemyMovement>()) != null)
+							{
+								enemy.speed *= 2.5f;
+								if(enemy.rigidbody2D.velocity.x > 0.0f || enemy.rigidbody2D.velocity.y > 0.0f)
+									enemy.rigidbody2D.velocity = enemy.speed;
+								else
+									enemy.rigidbody2D.velocity = -enemy.speed;
+							}
+							if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
+							{
+								enemyC.speed *= 2.5f;
+							}
+							if((enemyM = enemies.GetComponent<MovingObject>()) != null)
+							{
+								enemyM.speed *= 2.5f;
+							}
+							if((platform = enemies.GetComponent<PlatformMovement>()) != null)
+								platform.speed *= 2.5f;
+						}
+					}
+				}
+			}
+
+			// If the player should jump...
+			if(jump)
+			{
+				if(jumpCount < 2)
+				{
+
+					if(jumpVelocity <= jumpForce)
+					{
+						jumping = true;
+						jumpVelocity += 100f;
+						grounded = false;
+						anim.SetBool("Ground", false);
+						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+						if(rigidbody2D.gravityScale > 0)
+							rigidbody2D.AddForce(new Vector2(0f, jumpVelocity));
+						else
+							rigidbody2D.AddForce(new Vector2(0f, -jumpVelocity));
+
+						//rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpVelocity);
+					}
+					/*jumpCount++;
+					// Add a vertical force to the player.
 					grounded = false;
 					anim.SetBool("Ground", false);
 					rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
+					if(grounded)
+					{
+						anim.SetBool("Ground", false);                
+						grounded = false;
+					}
 					if(rigidbody2D.gravityScale > 0)
-						rigidbody2D.AddForce(new Vector2(0f, jumpVelocity));
+						rigidbody2D.AddForce(new Vector2(0f, jumpForce));
 					else
-						rigidbody2D.AddForce(new Vector2(0f, -jumpVelocity));
-
-					//rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, jumpVelocity);
+						rigidbody2D.AddForce(new Vector2(0f, -jumpForce));*/
 				}
-				/*jumpCount++;
-				// Add a vertical force to the player.
-				grounded = false;
+			}
+			if (!jump) 
+			{
+				if(jumping == true)
+				{
+					jumpVelocity = 300f;
+					rigidbody2D.AddForce(new Vector2(0f, 1f));
+				}
+				jumping = false;
+			}
+
+			if(gravity)
+			{
+				Vector3 theScale = transform.localScale;
+
+				theScale.y *= -1;
+				if(gravityCount == 0)
+				{
+					if(audio.isPlaying)
+					{
+						audio.Stop();
+						audio.PlayOneShot(audioGravityRev);
+					}
+					else
+						audio.PlayOneShot(audioGravityRev);
+					gravityCount +=1;
+				}
+				else
+				{
+					if(audio.isPlaying)
+					{
+						audio.Stop();
+						audio.PlayOneShot(audioGravity);
+					}
+					else
+						audio.PlayOneShot(audioGravity);
+					gravityCount = 0;
+				}
+				transform.localScale = theScale;
+				rigidbody2D.gravityScale *= -1;
 				anim.SetBool("Ground", false);
-				rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
-				if(grounded)
-				{
-					anim.SetBool("Ground", false);                
-					grounded = false;
-				}
-				if(rigidbody2D.gravityScale > 0)
-					rigidbody2D.AddForce(new Vector2(0f, jumpForce));
-				else
-					rigidbody2D.AddForce(new Vector2(0f, -jumpForce));*/
 			}
-		}
-		if (!jump) 
-		{
-			if(jumping == true)
-			{
-				jumpVelocity = 300f;
-				rigidbody2D.AddForce(new Vector2(0f, 1f));
-			}
-			jumping = false;
-		}
 
-		if(gravity)
-		{
-			Vector3 theScale = transform.localScale;
-
-			theScale.y *= -1;
-			if(gravityCount == 0)
+			if(teleport && (teleportCount == 0))
 			{
-				if(audio.isPlaying)
+				teleportCount++;
+				/*
+				 * Still needs some cleaning up to do, proooobably don't need 3 vectors..
+				 */
+				Vector3 dashScale = new Vector3(10.0f, 0.0f);
+				Vector3 loopCheck = new Vector3(0.0f, 0.0f);
+				Vector3 wallEdge = new Vector3(0.0f, 0.0f);
+
+				float wallCounter = 0.0f;
+				float distanceCounter = 0.0f;
+				bool impassableObject = false;
+
+				if(facingRight)
 				{
-					audio.Stop();
-					audio.PlayOneShot(audioGravityRev);
-				}
-				else
-					audio.PlayOneShot(audioGravityRev);
-				gravityCount +=1;
-			}
-			else
-			{
-				if(audio.isPlaying)
-				{
-					audio.Stop();
-					audio.PlayOneShot(audioGravity);
-				}
-				else
-					audio.PlayOneShot(audioGravity);
-				gravityCount = 0;
-			}
-			transform.localScale = theScale;
-			rigidbody2D.gravityScale *= -1;
-			anim.SetBool("Ground", false);
-		}
-
-		if(teleport && (teleportCount == 0))
-		{
-			teleportCount++;
-			/*
-			 * Still needs some cleaning up to do, proooobably don't need 3 vectors..
-			 */
-			Vector3 dashScale = new Vector3(10.0f, 0.0f);
-			Vector3 loopCheck = new Vector3(0.0f, 0.0f);
-			Vector3 wallEdge = new Vector3(0.0f, 0.0f);
-
-			float wallCounter = 0.0f;
-			float distanceCounter = 0.0f;
-			bool impassableObject = false;
-
-			if(facingRight)
-			{
-				// Check how many collisions there will be along the way (how many units into the wall,
-				// if there is a wall, the character would travel).
-				for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x += 0.1f)
-				{
-					if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), transformRadius, whatIsImpassable))
+					// Check how many collisions there will be along the way (how many units into the wall,
+					// if there is a wall, the character would travel).
+					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x += 0.1f)
 					{
-						impassableObject = true;
-						break;
+						if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), transformRadius, whatIsImpassable))
+						{
+							impassableObject = true;
+							break;
+						}
+						if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), transformRadius, whatIsWall))
+							wallCounter++;
+						else
+							distanceCounter++;
 					}
-					if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), transformRadius, whatIsWall))
-						wallCounter++;
+
+					// Update how long the teleport will take the character, full distance - how many units 
+					// into the wall).
+					if(impassableObject)
+						wallEdge.x = distanceCounter / 10.0f - 1.0f; // Reduce by 1.0f because of the door.
 					else
-						distanceCounter++;
-				}
+						wallEdge.x = (dashScale.x - wallCounter / 10.0f);
 
-				// Update how long the teleport will take the character, full distance - how many units 
-				// into the wall).
-				if(impassableObject)
-					wallEdge.x = distanceCounter / 10.0f - 1.0f; // Reduce by 1.0f because of the door.
-				else
-					wallEdge.x = (dashScale.x - wallCounter / 10.0f);
-
-				// Move the character!
-				if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))) {} // do nothing.
-				else
-				{
-					audio.PlayOneShot(audioTeleport, 1f);
-					transform.position += transform.right + wallEdge;
-				}
-			}
-			else
-			{
-				for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x += 0.1f)
-				{
-					if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), transformRadius, whatIsImpassable))
+					// Move the character!
+					if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))) {} // do nothing.
+					else
 					{
-						impassableObject = true;
-						break;
+						audio.PlayOneShot(audioTeleport, 1f);
+						transform.position += transform.right + wallEdge;
 					}
-					if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), transformRadius, whatIsWall))
-						wallCounter++;
-					else
-						distanceCounter++;
 				}
-
-				if(impassableObject)
-					wallEdge.x = distanceCounter / 10.0f - 1.0f; // Reduce by 1.0f because of the door.
-				else
-					wallEdge.x = (dashScale.x - wallCounter / 10.0f);
-
-				if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))){} // do nothing.
 				else
 				{
-					audio.PlayOneShot(audioTeleport, 1f);
-					transform.position -= transform.right + wallEdge;
-				}
-			}
+					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x += 0.1f)
+					{
+						if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), transformRadius, whatIsImpassable))
+						{
+							impassableObject = true;
+							break;
+						}
+						if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), transformRadius, whatIsWall))
+							wallCounter++;
+						else
+							distanceCounter++;
+					}
 
-			wallCounter = 0;
-			distanceCounter = 0;
-			impassableObject = false;
+					if(impassableObject)
+						wallEdge.x = distanceCounter / 10.0f - 1.0f; // Reduce by 1.0f because of the door.
+					else
+						wallEdge.x = (dashScale.x - wallCounter / 10.0f);
+
+					if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))){} // do nothing.
+					else
+					{
+						audio.PlayOneShot(audioTeleport, 1f);
+						transform.position -= transform.right + wallEdge;
+					}
+				}
+
+				wallCounter = 0;
+				distanceCounter = 0;
+				impassableObject = false;
+			}
 		}
 	}
 

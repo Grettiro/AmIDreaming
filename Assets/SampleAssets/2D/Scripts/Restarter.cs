@@ -14,7 +14,7 @@ public class Restarter : MonoBehaviour
 			{
 				anim = player.getAnimator();
 			}
-
+			player.setDead(true);
 			var audioStop = GameObject.Find("AudioController");
 			var audioPitch = (AudioControlLoop)audioStop.GetComponent("AudioControlLoop");
 			audioPitch.pitchChangeUp();
@@ -22,7 +22,7 @@ public class Restarter : MonoBehaviour
 			/*
 			 * Play the death animation and let it play until continuing.
 			 */
-			anim.SetTrigger("Die");
+
 			StartCoroutine(DoAnimation());
 		}
 		/*
@@ -33,8 +33,8 @@ public class Restarter : MonoBehaviour
 
 	private IEnumerator DoAnimation()
 	{
-		yield return new WaitForSeconds(1); // wait for two seconds.
 		anim.SetTrigger("Die");
+		yield return new WaitForSeconds(1); // wait for two seconds.
 		Application.LoadLevel(Application.loadedLevelName);
 	}
 }
