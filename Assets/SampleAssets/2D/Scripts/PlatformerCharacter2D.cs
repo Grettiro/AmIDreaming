@@ -40,6 +40,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	public int teleportCount = 0;
 	private int slowTimeAllow = 1;
 	private int slowTimeAllow2 = 1;
+	private bool allowJumpSound = true;
 
 	private bool dead = false;
 
@@ -264,9 +265,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				if(jumpCount < 2)
 				{
-
+					if(allowJumpSound)
+					{
+						audio.PlayOneShot(audioJump);
+					}
 					if(jumpVelocity <= jumpForce)
 					{
+						allowJumpSound = false;
 						jumping = true;
 						jumpVelocity += 100f;
 						grounded = false;
@@ -283,6 +288,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				if(jumping == true)
 				{
+					allowJumpSound = true;
 					jumpVelocity = 300f;
 					rigidbody2D.AddForce(new Vector2(0f, 1f));
 				}
