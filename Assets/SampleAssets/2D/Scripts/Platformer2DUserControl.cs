@@ -42,7 +42,7 @@ public class Platformer2DUserControl : MonoBehaviour
 		}
 		if (Input.GetButtonDown("Jump")) 
 		{
-			var jumpCount = GameObject.Find("Player");
+			var jumpCount = GameObject.Find("Player 1");
 			var updateJumps = (PlatformerCharacter2D)jumpCount.GetComponent("PlatformerCharacter2D");
 			updateJumps.jumpCount += 1;
 			jump = true;
@@ -101,6 +101,8 @@ public class Platformer2DUserControl : MonoBehaviour
 		{
 			if(GUILayout.Button ("Level Select"))
 			{
+				Time.timeScale = 1f;
+				paused = false;
 				var findNeurons = GameObject.Find("PlayerNeurons");
 				var setLevel = (NeuronCount)findNeurons.GetComponent("NeuronCount");
 				Application.LoadLevel(setLevel.GetPrevLevel);
@@ -109,7 +111,11 @@ public class Platformer2DUserControl : MonoBehaviour
 		if(Application.loadedLevelName == "World1")
 		{
 			if(GUILayout.Button ("Menu Screen"))
+			{
+				paused = false;
+				Time.timeScale = 1f;
 				Application.LoadLevel (0);
+			}
 		}
 		if(GUILayout.Button ("Exit Game"))
 				Application.Quit();

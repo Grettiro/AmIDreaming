@@ -9,7 +9,7 @@ public class LevelFinish : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag == "Player") 
+		if (other.name == "Player 1") 
 		{
 			if (nBool) 
 			{
@@ -24,7 +24,12 @@ public class LevelFinish : MonoBehaviour
 					nProtection = 1;
 				}
 			}
-			Application.LoadLevel (1);
+			if(Application.loadedLevelName.Contains ("Medium") || Application.loadedLevel == (9))
+			{
+				Application.LoadLevel(2);
+			}
+			else
+				Application.LoadLevel (1);
 		}
 	}
 	public void setNeuronStatus(int index)

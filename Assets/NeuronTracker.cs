@@ -4,7 +4,7 @@ using System.Collections;
 public class NeuronTracker : MonoBehaviour {
 
 	// Use this for initialization
-	private bool[] neurons = new bool[6];
+	private bool[] neurons = new bool[17];
 
 	private static NeuronTracker instance = null;
 	public static NeuronTracker Instance 

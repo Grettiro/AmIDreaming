@@ -18,6 +18,11 @@ public class MovingObject : MonoBehaviour {
 		listSize = points.Count;
 		pointArray = points.ToArray();
 	}
+	private void OnCollisionEnter2D(Collision2D other)
+	{
+		if (other.collider.tag == "Player 1")
+						moving = false;
+	}
 	
 	// Update is called once per frame
 	void Update () {

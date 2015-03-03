@@ -21,13 +21,13 @@ public class PlatformMovement : MonoBehaviour
 
 	private void OnCollisionEnter2D(Collision2D other)
 	{
-		if(other.collider.tag == "Player")
+		if(other.collider.tag == "Player 1")
 			other.transform.parent = this.transform;
 	}
 
 	private void OnCollisionExit2D(Collision2D other)
 	{
-		if(other.collider.tag == "Player")
+		if(other.collider.tag == "Player 1")
 			other.transform.parent = null;
 	}
 

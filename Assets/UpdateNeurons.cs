@@ -13,7 +13,7 @@ public class UpdateNeurons : MonoBehaviour
 	}
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if(other.name == "Player")
+		if(other.name == "Player 1")
 		{
 			var audioPlay = GameObject.Find("AudioController");
 			var neuronAudio = (AudioControlLoop)audioPlay.GetComponent("AudioControlLoop");
