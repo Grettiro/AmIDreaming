@@ -4,6 +4,7 @@ using System.Collections;
 public class NeuronCount : MonoBehaviour
 {
 	private int nNeurons;
+	private int prevLevel;
 	private static NeuronCount instance = null;
 	public static NeuronCount Instance 
 	{
@@ -28,5 +29,11 @@ public class NeuronCount : MonoBehaviour
 	{
 		get {return nNeurons; }
 		set {nNeurons = value; }
+	}
+
+	public int GetPrevLevel
+	{
+		get {return prevLevel;}
+		set {prevLevel = value;}
 	}
 }

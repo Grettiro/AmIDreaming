@@ -109,6 +109,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			// Classes to be slowed
 			Animator slow;
 			EnemyMovement enemy;
+			EnemyCircleMovement enemyC;
 			PlatformMovement platform;
 			
 			GameObject[] slowable = GameObject.FindGameObjectsWithTag("Slowable");
@@ -149,6 +150,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 								else
 									enemy.rigidbody2D.velocity = -enemy.speed;
 							}
+							if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
+							{
+								enemyC.speed /= 2.5f;
+							}
 							if((platform = enemies.GetComponent<PlatformMovement>()) != null)
 								platform.speed /= 2.5f;
 							// add more checks for any further things to be slowed, if any.
@@ -176,6 +181,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 							else
 								enemy.rigidbody2D.velocity = -enemy.speed;
 						}
+						if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
+						{
+							enemyC.speed *= 2.5f;
+						}
 						if((platform = enemies.GetComponent<PlatformMovement>()) != null)
 							platform.speed *= 2.5f;
 
@@ -188,6 +197,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			// Classes to be slowed
 			Animator slow;
 			EnemyMovement enemy;
+			EnemyCircleMovement enemyC;
 			PlatformMovement platform;
 
 			GameObject[] slowable = GameObject.FindGameObjectsWithTag("Slowable");
@@ -222,6 +232,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 								enemy.rigidbody2D.velocity = enemy.speed;
 							else
 								enemy.rigidbody2D.velocity = -enemy.speed;
+						}
+						if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
+						{
+							enemyC.speed *= 2.5f;
 						}
 						if((platform = enemies.GetComponent<PlatformMovement>()) != null)
 							platform.speed *= 2.5f;

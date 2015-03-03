@@ -38,6 +38,11 @@ public class LevelEnter : MonoBehaviour
 	{
 		if(nextLevel)
 			if (Input.GetKeyDown ("return"))
+			{
+				var findNeurons = GameObject.Find("PlayerNeurons");
+				var setLevel = (NeuronCount)findNeurons.GetComponent("NeuronCount");
+				setLevel.GetPrevLevel = Application.loadedLevel;
 				Application.LoadLevel (levelNumber);
+			}
 	}
 }
