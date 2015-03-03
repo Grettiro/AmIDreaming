@@ -23,7 +23,7 @@ public class Platformer2DUserControl : MonoBehaviour
 
 	private void Update()
 	{
-		if (Input.GetKeyDown ("escape")) 
+		if (Input.GetButtonDown("Pause")) // Escape key or start button
 		{
 			if (!paused)
 			{
@@ -36,11 +36,7 @@ public class Platformer2DUserControl : MonoBehaviour
 				paused = false;
 			}
 		}
-		if (Input.GetKeyDown ("m")) 
-		{
-			anim.SetTrigger ("Die");
-		}
-		if (Input.GetButtonDown("Jump")) 
+		if (Input.GetButtonDown("Jump")) // Space bar or X button
 		{
 			character.jumpCount += 1;
 			jump = true;
@@ -49,19 +45,19 @@ public class Platformer2DUserControl : MonoBehaviour
 		{
 			jump = false;
 		}
-		if (Input.GetKeyDown("d") || Input.GetButtonDown("Fire3"))
+		if (Input.GetButtonDown("Gravity")) // D or Square button
 		{
 			gravity = true;
 		}
-		if (Input.GetKeyDown("e") || Input.GetButtonDown("Fire2"))
+		if (Input.GetButtonDown("Teleport")) // E or R1 button
 		{
 			teleport = true;
 		}
 		if(Application.loadedLevelName != "World1")
 		{
-			if(Input.GetKeyDown ("s") || Input.GetButtonDown("Fire1"))
+			if(Input.GetButtonDown("Slow")) // S or L1 button
 				slowTime = true;	
-			if(Input.GetKeyUp ("s") || Input.GetButtonUp("Fire1"))
+			if(Input.GetButtonUp("Slow"))
 				slowTime = false;
 		}
 	}
@@ -69,7 +65,7 @@ public class Platformer2DUserControl : MonoBehaviour
 	private void FixedUpdate()
 	{
 	    // Read the inputs.
-		float h = Input.GetAxis ("Horizontal");
+		float h = Input.GetAxis("Horizontal");
 	    // Pass all parameters to the character control script.
 		character.Move(h, jump, gravity, teleport, slowTime);
 		gravity = false;

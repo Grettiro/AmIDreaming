@@ -14,12 +14,16 @@ public class LevelEnter : MonoBehaviour
 		getNeurons = GameObject.Find("PlayerNeurons").GetComponent<NeuronCount>();
 	}
 
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		if (getNeurons.Neurons < neuronsRequired)
+			Debug.Log("Not enough Neurons");
+	}
+
 	void OnTriggerStay2D(Collider2D other)
 	{
 		if (getNeurons.Neurons >= neuronsRequired)
 			nextLevel = true;
-		else
-			Debug.Log("Not enough Neurons");
 	}
 
 	void OnTriggerExit2D(Collider2D other)
@@ -30,7 +34,7 @@ public class LevelEnter : MonoBehaviour
 	void Update()
 	{
 		if(nextLevel)
-			if (Input.GetKeyDown ("return") || Input.GetButtonDown("Submit"))
+			if (Input.GetButtonDown("Enter")) // Enter or Circle button
 			{
 				getNeurons.GetPrevLevel = Application.loadedLevel;
 				Application.LoadLevel(levelNumber);
