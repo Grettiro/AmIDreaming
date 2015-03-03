@@ -52,6 +52,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 	    anim = GetComponent<Animator>();
 	}
 
+	public Animator getAnimator()
+	{
+		return anim;
+	}
+
 	private void FixedUpdate()
 	{
 	    // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
