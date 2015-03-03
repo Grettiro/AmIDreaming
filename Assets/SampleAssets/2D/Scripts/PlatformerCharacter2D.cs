@@ -23,7 +23,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	public AudioClip audioJump;
 	public AudioClip audioGravity;
-	public AudioClip audioGravityRev;
 	public AudioClip audioTeleport;
 
 	private float transformRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -38,7 +37,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private float jumpForce = 800f;
 
 	public int jumpCount = 0;
-	public int gravityCount = 0;
 	public int teleportCount = 0;
 	private int slowTimeAllow = 1;
 	private int slowTimeAllow2 = 1;
@@ -323,28 +321,15 @@ public class PlatformerCharacter2D : MonoBehaviour
 				Vector3 theScale = transform.localScale;
 
 				theScale.y *= -1;
-				if(gravityCount == 0)
+
+				if(audio.isPlaying)
 				{
-					if(audio.isPlaying)
-					{
-						audio.Stop();
-						audio.PlayOneShot(audioGravityRev);
-					}
-					else
-						audio.PlayOneShot(audioGravityRev);
-					gravityCount +=1;
+					audio.Stop();
+					audio.PlayOneShot(audioGravity);
 				}
 				else
-				{
-					if(audio.isPlaying)
-					{
-						audio.Stop();
-						audio.PlayOneShot(audioGravity);
-					}
-					else
-						audio.PlayOneShot(audioGravity);
-					gravityCount = 0;
-				}
+					audio.PlayOneShot(audioGravity);
+
 				transform.localScale = theScale;
 				rigidbody2D.gravityScale *= -1;
 				anim.SetBool("Ground", false);
