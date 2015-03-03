@@ -24,7 +24,7 @@ public class LevelFinish : MonoBehaviour
 					nProtection = 1;
 				}
 			}
-			Application.LoadLevel (12);
+			Application.LoadLevel (1);
 		}
 	}
 	public void setNeuronStatus(int index)
