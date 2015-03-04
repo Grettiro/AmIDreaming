@@ -9,7 +9,7 @@ public class AudioControlLoop : MonoBehaviour {
 	public AudioSource audioLoop;
 	public AudioSource audioStart2;
 	public AudioSource audioLoop2;
-	private bool changeSongs;
+	private bool changeSongs = false;
 	public AudioClip neuronPickup;
 
 	private static AudioControlLoop instance = null;
@@ -38,19 +38,35 @@ public class AudioControlLoop : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
+
 		NeuronCount setLevel = GameObject.Find("PlayerNeurons").GetComponent<NeuronCount>();
+		if (Application.loadedLevel == 0) 
+		{
+			Destroy (this.gameObject);
+		}
 		if (Application.loadedLevel == 2 && setLevel.GetPrevLevel == 1) 
 		{
 			if (audioStart.isPlaying) 
 			{
 				audioStart.Stop ();
-			} 
-			else if (audioLoop.isPlaying) 
+				changeSongs = true;
+				audioStart2.Play();
+			}
+			else if(audioLoop.isPlaying)
 			{
 				audioLoop.Stop ();
+				changeSongs = true;
+				audioStart2.Play();
 			}
-			changeSongs = true;
-			audioStart2.Play();
+			else if(!audioStart2.isPlaying)
+			{
+				if(!audioLoop2.isPlaying)
+				{
+					audioStart2.Stop ();
+					audioLoop2.loop = true;
+					audioLoop2.Play();
+				}
+			}
 		} 
 		else
 		{
@@ -58,21 +74,11 @@ public class AudioControlLoop : MonoBehaviour {
 			{
 				if(!audioStart.isPlaying)
 					if(!audioLoop.isPlaying)
-				{
-					audioStart.Stop();
-					audioLoop.loop = true;
-					audioLoop.Play();
-				}
-			}
-			else
-			{
-				if(!audioStart2.isPlaying)
-					if(!audioLoop2.isPlaying)
-				{
-					audioStart2.Stop();
-					audioLoop2.loop = true;
-					audioLoop2.Play();
-				}
+					{
+						audioStart.Stop();
+						audioLoop.loop = true;
+						audioLoop.Play();
+					}
 			}
 		}
 			

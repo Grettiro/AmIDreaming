@@ -19,7 +19,7 @@ public class LevelEnter : MonoBehaviour
 		if (getNeurons.Neurons < neuronsRequired)
 		{
 			UIUpdate update = GameObject.Find("Enough").GetComponent<UIUpdate>();
-			update.notEnoughNeurons();
+			update.notEnoughNeurons(neuronsRequired);
 		}
 	}
 

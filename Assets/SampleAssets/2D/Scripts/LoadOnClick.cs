@@ -24,6 +24,7 @@ public class LoadOnClick : MonoBehaviour
 		if(!audioStart.isPlaying) 
 			if(!audioLoop.isPlaying)
 			{
+				audioStart.Stop ();
 				audioLoop.loop = true;
 				audioLoop.Play();
 			}

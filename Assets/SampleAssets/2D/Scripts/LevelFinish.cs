@@ -3,14 +3,21 @@ using System.Collections;
 
 public class LevelFinish : MonoBehaviour
 {
+	private PlatformerCharacter2D player;
 	private int nIndex;
 	private bool nBool;
 	private int nProtection = 0;
+	private Animator anim;
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.name == "Player") 
+		if (other.tag == "Player") 
 		{
+			if((player = GameObject.Find("Player").GetComponent<PlatformerCharacter2D>()) != null)
+			{
+				anim = player.getAnimator();
+				player.setDead (true);
+			}
 			if (nBool) 
 			{
 				NeuronTracker updateNeurons = GameObject.Find("NeuronTracker").GetComponent<NeuronTracker>();
@@ -22,17 +29,24 @@ public class LevelFinish : MonoBehaviour
 					nProtection = 1;
 				}
 			}
-			if(Application.loadedLevelName.Contains ("Medium") || Application.loadedLevel == (9))
-			{
-				Application.LoadLevel(2);
-			}
-			else
-				Application.LoadLevel (1);
+			other.rigidbody2D.isKinematic = true;
+			StartCoroutine(DoAnimation());
 		}
 	}
 	public void setNeuronStatus(int index)
 	{
 		nBool = true;
 		nIndex = index;
+	}
+
+	private IEnumerator DoAnimation()
+	{
+		yield return new WaitForSeconds(0.3f); // wait for two seconds.
+		if(Application.loadedLevelName.Contains ("Medium") || Application.loadedLevel == (9))
+		{
+			Application.LoadLevel(2);
+		}
+		else
+			Application.LoadLevel (1);
 	}
 }

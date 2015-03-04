@@ -22,7 +22,7 @@ public class Restarter : MonoBehaviour
 			 * Play the death animation and let it play until continuing.
 			 */
 
-			StartCoroutine(DoAnimation());
+			StartCoroutine(DoAnimation(other));
 		}
 		/*
 		 * Check for other tags, i.e. enemies that would be killed by environment
@@ -30,10 +30,11 @@ public class Restarter : MonoBehaviour
 		 */
 	}
 
-	private IEnumerator DoAnimation()
+	private IEnumerator DoAnimation(Collider2D other)
 	{
+		other.rigidbody2D.isKinematic = true;
 		anim.SetTrigger("Die");
-		yield return new WaitForSeconds(1); // wait for two seconds.
+		yield return new WaitForSeconds(0.5f); // wait for two seconds.
 		Application.LoadLevel(Application.loadedLevelName);
 	}
 }

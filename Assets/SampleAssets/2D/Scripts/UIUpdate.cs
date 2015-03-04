@@ -9,10 +9,10 @@ public class UIUpdate : MonoBehaviour
 
 	private NeuronCount updateNeurons;
 
-	public void notEnoughNeurons()
+	public void notEnoughNeurons(int neurons)
 	{
 		enoughNeuronsTxt = GameObject.Find("Enough").GetComponent<Text>();
-		enoughNeuronsTxt.text = "Not enough neurons!";
+		enoughNeuronsTxt.text = "Not enough neurons!\n" + neurons + " Are needed to enter";
 		StartCoroutine(Wait());
 	}
 
@@ -34,7 +34,7 @@ public class UIUpdate : MonoBehaviour
 
 	private IEnumerator Wait()
 	{
-		yield return new WaitForSeconds(.6f); // wait for two seconds.
+		yield return new WaitForSeconds(1f); // wait for two seconds.
 		enoughNeuronsTxt.text = "";
 	}
 }
