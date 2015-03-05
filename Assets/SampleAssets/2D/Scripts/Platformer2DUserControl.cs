@@ -91,7 +91,7 @@ public class Platformer2DUserControl : MonoBehaviour
 			Time.timeScale = 1f;
 			paused = false;
 		}
-		if(Application.loadedLevelName != "World1")
+		if(Application.loadedLevelName != "World1" || Application.loadedLevelName != "World2")
 		{
 			if(GUILayout.Button ("Level Select"))
 			{
@@ -101,7 +101,7 @@ public class Platformer2DUserControl : MonoBehaviour
 				Application.LoadLevel(setLevel.GetPrevLevel);
 			}
 		}
-		if(Application.loadedLevelName == "World1")
+		if(Application.loadedLevelName == "World1" || Application.loadedLevelName == "World2")
 		{
 			if(GUILayout.Button ("Menu Screen"))
 			{

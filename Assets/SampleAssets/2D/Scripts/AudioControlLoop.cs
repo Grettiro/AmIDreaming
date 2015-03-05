@@ -27,7 +27,11 @@ public class AudioControlLoop : MonoBehaviour {
 		}
 		else
 		{
-			audioStart.Play();
+			if(Application.loadedLevel >= 3 && Application.loadedLevel <= 9)
+				audioStart.Play();
+			if(Application.loadedLevel >= 10)
+				audioStart2.Play();
+
 			instance = this;
 		}
 
@@ -44,10 +48,8 @@ public class AudioControlLoop : MonoBehaviour {
 		{
 			Destroy (this.gameObject);
 		}
-		if (Application.loadedLevel == 2) 
+		if (Application.loadedLevel == 2 || Application.loadedLevel >= 10) 
 		{
-			if(setLevel.GetPrevLevel == 1)
-			{
 				if (audioStart.isPlaying) 
 				{
 					audioStart.Stop ();
@@ -69,7 +71,6 @@ public class AudioControlLoop : MonoBehaviour {
 						audioLoop2.Play();
 					}
 				}
-			}
 			else
 			{
 				if(!audioStart2.isPlaying)
@@ -103,14 +104,32 @@ public class AudioControlLoop : MonoBehaviour {
 
 	public void pitchChangeDown()
 	{
-		audioStart.pitch = 0.6f;
-		audioLoop.pitch = 0.6f;
+		if(Application.loadedLevel >= 3 && Application.loadedLevel <= 9)
+		{
+			audioStart.pitch = 0.6f;
+			audioLoop.pitch = 0.6f;
+		}
+
+		if(Application.loadedLevel >= 10)
+		{
+			audioStart2.pitch = 0.6f;
+			audioLoop2.pitch = 0.6f;
+		}
 	}
 
 	public void pitchChangeUp()
 	{
-		audioStart.pitch = 1;
-		audioLoop.pitch = 1;
+		if(Application.loadedLevel >= 3 && Application.loadedLevel <= 9)
+		{
+			audioStart.pitch = 1;
+			audioLoop.pitch = 1;
+		}
+		
+		if(Application.loadedLevel >= 10)
+		{
+			audioStart2.pitch = 1;
+			audioLoop2.pitch = 1;
+		}
 	}
 
 	public void playNeuron()
