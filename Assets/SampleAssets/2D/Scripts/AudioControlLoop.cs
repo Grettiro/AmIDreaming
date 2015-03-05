@@ -27,9 +27,9 @@ public class AudioControlLoop : MonoBehaviour {
 		}
 		else
 		{
-			if(Application.loadedLevel >= 3 && Application.loadedLevel <= 9)
+			if(Application.loadedLevel == 1 || (Application.loadedLevel >= 3 && Application.loadedLevel <= 9))
 				audioStart.Play();
-			if(Application.loadedLevel >= 10)
+			if(Application.loadedLevel == 2 || Application.loadedLevel >= 10)
 				audioStart2.Play();
 
 			instance = this;
