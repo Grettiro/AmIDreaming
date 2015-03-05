@@ -27,7 +27,11 @@ public class MovingObject : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (Input.GetKeyDown ("d") || Input.GetKeyDown ("e") || Input.GetKeyDown ("right") || Input.GetButtonDown ("Jump") || Input.GetKeyDown("left")) 
+		if (Input.GetButtonDown ("Gravity") || Input.GetButtonDown ("Teleport") || Input.GetButtonDown ("Jump")) 
+		{
+			moving = true;
+		}
+		if(Input.GetAxis ("Horizontal") != 0)
 		{
 			moving = true;
 		}

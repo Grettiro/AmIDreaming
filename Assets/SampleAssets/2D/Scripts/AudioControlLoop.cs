@@ -44,29 +44,45 @@ public class AudioControlLoop : MonoBehaviour {
 		{
 			Destroy (this.gameObject);
 		}
-		if (Application.loadedLevel == 2 && setLevel.GetPrevLevel == 1) 
+		if (Application.loadedLevel == 2) 
 		{
-			if (audioStart.isPlaying) 
+			if(setLevel.GetPrevLevel == 1)
 			{
-				audioStart.Stop ();
-				changeSongs = true;
-				audioStart2.Play();
-			}
-			else if(audioLoop.isPlaying)
-			{
-				audioLoop.Stop ();
-				changeSongs = true;
-				audioStart2.Play();
-			}
-			else if(!audioStart2.isPlaying)
-			{
-				if(!audioLoop2.isPlaying)
+				if (audioStart.isPlaying) 
 				{
-					audioStart2.Stop ();
-					audioLoop2.loop = true;
-					audioLoop2.Play();
+					audioStart.Stop ();
+					changeSongs = true;
+					audioStart2.Play();
+				}
+				else if(audioLoop.isPlaying)
+				{
+					audioLoop.Stop ();
+					changeSongs = true;
+					audioStart2.Play();
+				}
+				else if(!audioStart2.isPlaying)
+				{
+					if(!audioLoop2.isPlaying)
+					{
+						audioStart2.Stop ();
+						audioLoop2.loop = true;
+						audioLoop2.Play();
+					}
 				}
 			}
+			else
+			{
+				if(!audioStart2.isPlaying)
+				{
+					if(!audioLoop2.isPlaying)
+					{
+						audioStart2.Stop ();
+						audioLoop2.loop = true;
+						audioLoop2.Play();
+					}
+				}
+			}
+
 		} 
 		else
 		{
