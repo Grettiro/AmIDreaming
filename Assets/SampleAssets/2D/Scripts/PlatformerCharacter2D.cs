@@ -15,8 +15,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private Transform groundCheck; // A position marking where to check if the player is grounded.
 	private bool grounded = false; // Whether or not the player is grounded.
 	// Checking if teleporting into a wall.
-	private Transform wallCheck;	 // A position marking where to check if the player is inside a wall.
+	private Transform wallCheckUpper;	 // A position marking where to check if the player is inside a wall.
+	private Transform wallCheckLower;
 	private bool atWall = false; // Whether or not the player is inside a wall.
+	private Transform teleportCheck;
 	// Checking if hitting a ceiling.
 	private Transform ceilingCheck; // A position marking where to check for ceilings
 	private bool atCeiling = false;
@@ -41,6 +43,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	private int slowTimeAllow = 1;
 	private int slowTimeAllow2 = 1;
 	private bool allowJumpSound = true;
+	static private bool muted;
 
 	private bool dead = false;
 
@@ -56,7 +59,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 	{
 	    // Setting up references.
 	    groundCheck = transform.Find("GroundCheck");
-		wallCheck = transform.Find("WallCheck");
+		wallCheckUpper = transform.Find("WallCheckUpper");
+		wallCheckLower = transform.Find("WallCheckLower");
+		teleportCheck = transform.Find("TeleportCheck");
 	    ceilingCheck = transform.Find("CeilingCheck");
 	    anim = GetComponent<Animator>();
 
@@ -73,14 +78,32 @@ public class PlatformerCharacter2D : MonoBehaviour
 		dead = isDead;
 	}
 
+	public void muteAudio(bool mute)
+	{
+		muted = mute;
+
+		if(mute)
+		{
+			audioPitch.audioStart.mute = true;
+			audioPitch.audioLoop.mute = true;
+			audioPitch.audioStart2.mute = true;
+			audioPitch.audioLoop2.mute = true;
+		}
+		else
+		{
+			audioPitch.audioStart.mute = false;
+			audioPitch.audioLoop.mute = false;
+			audioPitch.audioStart2.mute = false;
+			audioPitch.audioLoop2.mute = false;
+		}
+	}
+
 	private void FixedUpdate()
 	{
 	    // The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
 	    grounded = Physics2D.OverlapCircle(groundCheck.position, transformRadius, whatIsGround);
 	    anim.SetBool("Ground", grounded);
-
-		atWall = Physics2D.OverlapCircle(wallCheck.position, transformRadius, whatIsWall);
-
+		atWall = Physics2D.OverlapArea(wallCheckLower.position, wallCheckUpper.position, whatIsWall);
 		atCeiling = Physics2D.OverlapCircle (ceilingCheck.position, transformRadius, whatIsCeiling);
 
     	// Set the vertical animation
@@ -106,9 +129,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 				// To prevent getting stuck at a wall.
 				if(!grounded && atWall)
+				{
 					if((facingRight && move > 0.0f) || (!facingRight && move < 0.0f))
 						move = 0.0f;
-
+				}
 				// Move the character
 		        rigidbody2D.velocity = new Vector2(move*maxSpeed, rigidbody2D.velocity.y);
 
@@ -265,7 +289,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				if(jumpCount < 2)
 				{
-					if(allowJumpSound)
+					if(allowJumpSound && !muted)
 					{
 						audio.PlayOneShot(audioJump);
 					}
@@ -301,13 +325,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 				theScale.y *= -1;
 
-				if(audio.isPlaying)
+				if(!muted)
 				{
 					audio.Stop();
 					audio.PlayOneShot(audioGravity);
 				}
-				else
-					audio.PlayOneShot(audioGravity);
 
 				transform.localScale = theScale;
 				rigidbody2D.gravityScale *= -1;
@@ -334,12 +356,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 					// if there is a wall, the character would travel).
 					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x += 0.1f)
 					{
-						if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), transformRadius, whatIsImpassable))
+						if(Physics2D.OverlapCircle((teleportCheck.position + loopCheck), transformRadius, whatIsImpassable))
 						{
 							impassableObject = true;
 							break;
 						}
-						if(Physics2D.OverlapCircle((wallCheck.position + loopCheck), transformRadius, whatIsWall))
+						if(Physics2D.OverlapCircle((teleportCheck.position + loopCheck), transformRadius, whatIsWall))
 							wallCounter++;
 						else
 							distanceCounter++;
@@ -356,7 +378,6 @@ public class PlatformerCharacter2D : MonoBehaviour
 					if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))) {} // do nothing.
 					else
 					{
-						audio.PlayOneShot(audioTeleport, 1f);
 						transform.position += transform.right + wallEdge;
 					}
 				}
@@ -364,12 +385,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 				{
 					for(loopCheck.x = 0.0f; loopCheck.x < dashScale.x; loopCheck.x += 0.1f)
 					{
-						if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), transformRadius, whatIsImpassable))
+						if(Physics2D.OverlapCircle((teleportCheck.position - loopCheck), transformRadius, whatIsImpassable))
 						{
 							impassableObject = true;
 							break;
 						}
-						if(Physics2D.OverlapCircle((wallCheck.position - loopCheck), transformRadius, whatIsWall))
+						if(Physics2D.OverlapCircle((teleportCheck.position - loopCheck), transformRadius, whatIsWall))
 							wallCounter++;
 						else
 							distanceCounter++;
@@ -383,9 +404,13 @@ public class PlatformerCharacter2D : MonoBehaviour
 					if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))){} // do nothing.
 					else
 					{
-						audio.PlayOneShot(audioTeleport, 1f);
 						transform.position -= transform.right + wallEdge;
 					}
+				}
+
+				if(!muted)
+				{
+					audio.PlayOneShot(audioTeleport, 1f);
 				}
 
 				wallCounter = 0;

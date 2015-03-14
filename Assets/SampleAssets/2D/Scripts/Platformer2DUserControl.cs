@@ -11,6 +11,7 @@ public class Platformer2DUserControl : MonoBehaviour
 	private bool teleport;
 	private bool slowTime;
 	private bool paused;
+	static private bool muted = false;
 	private Animator anim;
 	Slider slowTimeSlider;
 	public Rect winRect = new Rect(200, 200, 240, 100);
@@ -90,6 +91,22 @@ public class Platformer2DUserControl : MonoBehaviour
 		{
 			Time.timeScale = 1f;
 			paused = false;
+		}
+		if(!muted)
+		{
+			if(GUILayout.Button("Mute"))
+			{
+				character.muteAudio(true);
+				muted = true;
+			}
+		}
+		else
+		{
+			if(GUILayout.Button("Unmute"))
+			{
+				character.muteAudio(false);
+				muted = false;
+			}
 		}
 		if(Application.loadedLevelName != "World1" && Application.loadedLevelName != "World2")
 		{
