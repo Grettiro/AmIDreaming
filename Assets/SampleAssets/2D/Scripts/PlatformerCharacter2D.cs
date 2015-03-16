@@ -378,6 +378,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 					if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))) {} // do nothing.
 					else
 					{
+						if(!muted)
+						{
+							audio.PlayOneShot(audioTeleport, 1f);
+						}
 						transform.position += transform.right + wallEdge;
 					}
 				}
@@ -404,13 +408,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 					if((impassableObject && distanceCounter <= 0.0f) || (atWall && wallEdge.x < (wallCounter / 10.0f))){} // do nothing.
 					else
 					{
+						if(!muted)
+						{
+							audio.PlayOneShot(audioTeleport, 1f);
+						}
 						transform.position -= transform.right + wallEdge;
 					}
-				}
-
-				if(!muted)
-				{
-					audio.PlayOneShot(audioTeleport, 1f);
 				}
 
 				wallCounter = 0;
