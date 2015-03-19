@@ -44,7 +44,7 @@ public class AudioControlLoop : MonoBehaviour {
 	{
 
 		NeuronCount setLevel = GameObject.Find("PlayerNeurons").GetComponent<NeuronCount>();
-		if (Application.loadedLevel == 0) 
+		if (Application.loadedLevel == 0 || Application.loadedLevel == 18) 
 		{
 			Destroy (this.gameObject);
 		}
@@ -135,6 +135,6 @@ public class AudioControlLoop : MonoBehaviour {
 	public void playNeuron()
 	{
 
-		audio.PlayOneShot(neuronPickup);
+		GetComponent<AudioSource>().PlayOneShot(neuronPickup);
 	}
 }

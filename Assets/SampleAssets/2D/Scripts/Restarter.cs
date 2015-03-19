@@ -32,7 +32,7 @@ public class Restarter : MonoBehaviour
 
 	private IEnumerator DoAnimation(Collider2D other)
 	{
-		other.rigidbody2D.isKinematic = true;
+		other.GetComponent<Rigidbody2D>().isKinematic = true;
 		anim.SetTrigger("Die");
 		yield return new WaitForSeconds(0.5f); // wait for two seconds.
 		Application.LoadLevel(Application.loadedLevelName);

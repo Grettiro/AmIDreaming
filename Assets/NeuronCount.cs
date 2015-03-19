@@ -3,7 +3,7 @@ using System.Collections;
 
 public class NeuronCount : MonoBehaviour
 {
-	private int nNeurons = 0;
+	private int nNeurons = 14;
 	private int prevLevel;
 	private static NeuronCount instance = null;
 	public static NeuronCount Instance 

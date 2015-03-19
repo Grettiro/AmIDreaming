@@ -21,7 +21,7 @@ public class EnemyMovement : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-		rigidbody2D.velocity = speed;
+		GetComponent<Rigidbody2D>().velocity = speed;
 	}
 	
 	private void Awake()
@@ -55,18 +55,18 @@ public class EnemyMovement : MonoBehaviour
 		if(wallCheck != null)
 		{
 			if(facingRight)
-				rigidbody2D.velocity = speed;
+				GetComponent<Rigidbody2D>().velocity = speed;
 			else if(!facingRight)
-				rigidbody2D.velocity = speed * -1;
+				GetComponent<Rigidbody2D>().velocity = speed * -1;
 			if(atWall)
 				Flip ();
 		}
 		else if(topCheck != null && bottomCheck != null)
 		{
 			if(atTop)
-				rigidbody2D.velocity = speed * -1;
+				GetComponent<Rigidbody2D>().velocity = speed * -1;
 			if(atBottom)
-				rigidbody2D.velocity = speed;
+				GetComponent<Rigidbody2D>().velocity = speed;
 		}
 	}
 	

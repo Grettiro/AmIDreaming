@@ -30,7 +30,7 @@ public class Switches : MonoBehaviour
 			var buttons = this.GetComponentsInChildren<Button>();
 			for(int i = 0; i < buttons.Length; i++)
 			{
-				buttons[i].renderer.material.color = buttons[i].getOriginalColor();
+				buttons[i].GetComponent<Renderer>().material.color = buttons[i].getOriginalColor();
 				buttons[i].enabled = true;
 			}
 		}

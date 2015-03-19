@@ -33,9 +33,9 @@ public class Doors : MonoBehaviour
 		if (doors != null) 
 		{
 			if(!isTopped)
-				doors.rigidbody2D.velocity = new Vector2(0.0f, 1.0f);
+				doors.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 1.0f);
 			else
-				doors.rigidbody2D.velocity = new Vector2(0.0f, 0.0f);
+				doors.GetComponent<Rigidbody2D>().velocity = new Vector2(0.0f, 0.0f);
 		}
 	}
 }

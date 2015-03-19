@@ -24,8 +24,8 @@ public class Button : MonoBehaviour
 		{
 			// Disable and hide the button.
 			this.enabled = false;
-			originalColor = renderer.material.color;
-			renderer.material.color = Color.clear;
+			originalColor = GetComponent<Renderer>().material.color;
+			GetComponent<Renderer>().material.color = Color.clear;
 			// Send value of buttonNumber to the array in switches.
 			switches.UpdateArray(buttonNumber);
 		}

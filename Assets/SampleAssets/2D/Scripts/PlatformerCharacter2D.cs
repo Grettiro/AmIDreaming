@@ -107,14 +107,14 @@ public class PlatformerCharacter2D : MonoBehaviour
 		atCeiling = Physics2D.OverlapCircle (ceilingCheck.position, transformRadius, whatIsCeiling);
 
     	// Set the vertical animation
-		if(rigidbody2D.gravityScale < 0)
+		if(GetComponent<Rigidbody2D>().gravityScale < 0)
 		{
-			Vector2 gScale = rigidbody2D.velocity;
+			Vector2 gScale = GetComponent<Rigidbody2D>().velocity;
 			gScale.y *= -1;
 			anim.SetFloat ("vSpeed", gScale.y);
 		} 
 		else 
-			anim.SetFloat ("vSpeed", rigidbody2D.velocity.y);
+			anim.SetFloat ("vSpeed", GetComponent<Rigidbody2D>().velocity.y);
 	}
 
 	public void Move(float move, bool jump, bool gravity, bool teleport, bool slowTime)
@@ -134,7 +134,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 						move = 0.0f;
 				}
 				// Move the character
-		        rigidbody2D.velocity = new Vector2(move*maxSpeed, rigidbody2D.velocity.y);
+		        GetComponent<Rigidbody2D>().velocity = new Vector2(move*maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
 
 		        if (move > 0.0f && !facingRight)
 		            Flip();
@@ -181,10 +181,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 								if((enemy = enemies.GetComponent<EnemyMovement>()) != null)
 								{
 									enemy.speed /= 2.5f;
-									if(enemy.rigidbody2D.velocity.x > 0.0f || enemy.rigidbody2D.velocity.y > 0.0f)
-										enemy.rigidbody2D.velocity = enemy.speed;
+									if(enemy.GetComponent<Rigidbody2D>().velocity.x > 0.0f || enemy.GetComponent<Rigidbody2D>().velocity.y > 0.0f)
+										enemy.GetComponent<Rigidbody2D>().velocity = enemy.speed;
 									else
-										enemy.rigidbody2D.velocity = -enemy.speed;
+										enemy.GetComponent<Rigidbody2D>().velocity = -enemy.speed;
 								}
 								if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
 								{
@@ -216,10 +216,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 							if((enemy = enemies.GetComponent<EnemyMovement>()) != null)
 							{
 								enemy.speed *= 2.5f;
-								if(enemy.rigidbody2D.velocity.x > 0.0f || enemy.rigidbody2D.velocity.y > 0.0f)
-									enemy.rigidbody2D.velocity = enemy.speed;
+								if(enemy.GetComponent<Rigidbody2D>().velocity.x > 0.0f || enemy.GetComponent<Rigidbody2D>().velocity.y > 0.0f)
+									enemy.GetComponent<Rigidbody2D>().velocity = enemy.speed;
 								else
-									enemy.rigidbody2D.velocity = -enemy.speed;
+									enemy.GetComponent<Rigidbody2D>().velocity = -enemy.speed;
 							}
 							if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
 							{
@@ -264,10 +264,10 @@ public class PlatformerCharacter2D : MonoBehaviour
 							if((enemy = enemies.GetComponent<EnemyMovement>()) != null)
 							{
 								enemy.speed *= 2.5f;
-								if(enemy.rigidbody2D.velocity.x > 0.0f || enemy.rigidbody2D.velocity.y > 0.0f)
-									enemy.rigidbody2D.velocity = enemy.speed;
+								if(enemy.GetComponent<Rigidbody2D>().velocity.x > 0.0f || enemy.GetComponent<Rigidbody2D>().velocity.y > 0.0f)
+									enemy.GetComponent<Rigidbody2D>().velocity = enemy.speed;
 								else
-									enemy.rigidbody2D.velocity = -enemy.speed;
+									enemy.GetComponent<Rigidbody2D>().velocity = -enemy.speed;
 							}
 							if((enemyC = enemies.GetComponent<EnemyCircleMovement>()) != null)
 							{
@@ -291,7 +291,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				{
 					if(allowJumpSound && !muted)
 					{
-						audio.PlayOneShot(audioJump);
+						GetComponent<AudioSource>().PlayOneShot(audioJump);
 					}
 					if(jumpVelocity <= jumpForce)
 					{
@@ -300,11 +300,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 						jumpVelocity += 100f;
 						grounded = false;
 						anim.SetBool("Ground", false);
-						rigidbody2D.velocity = new Vector2(rigidbody2D.velocity.x, 0);
-						if(rigidbody2D.gravityScale > 0)
-							rigidbody2D.AddForce(new Vector2(0f, jumpVelocity));
+						GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, 0);
+						if(GetComponent<Rigidbody2D>().gravityScale > 0)
+							GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, jumpVelocity));
 						else
-							rigidbody2D.AddForce(new Vector2(0f, -jumpVelocity));
+							GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, -jumpVelocity));
 					}
 				}
 			}
@@ -314,7 +314,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				{
 					allowJumpSound = true;
 					jumpVelocity = 300f;
-					rigidbody2D.AddForce(new Vector2(0f, 1f));
+					GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 1f));
 				}
 				jumping = false;
 			}
@@ -327,12 +327,12 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 				if(!muted)
 				{
-					audio.Stop();
-					audio.PlayOneShot(audioGravity);
+					GetComponent<AudioSource>().Stop();
+					GetComponent<AudioSource>().PlayOneShot(audioGravity);
 				}
 
 				transform.localScale = theScale;
-				rigidbody2D.gravityScale *= -1;
+				GetComponent<Rigidbody2D>().gravityScale *= -1;
 				anim.SetBool("Ground", false);
 			}
 
@@ -410,7 +410,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 				if(!muted)
 				{
-					audio.PlayOneShot(audioTeleport, 1f);
+					GetComponent<AudioSource>().PlayOneShot(audioTeleport, 1f);
 				}
 
 				wallCounter = 0;

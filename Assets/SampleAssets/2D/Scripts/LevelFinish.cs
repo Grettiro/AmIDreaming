@@ -29,7 +29,7 @@ public class LevelFinish : MonoBehaviour
 					nProtection = 1;
 				}
 			}
-			other.rigidbody2D.isKinematic = true;
+			other.GetComponent<Rigidbody2D>().isKinematic = true;
 			StartCoroutine(DoAnimation());
 		}
 	}
