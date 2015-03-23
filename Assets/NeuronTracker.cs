@@ -24,8 +24,7 @@ public class NeuronTracker : MonoBehaviour {
 		
 		DontDestroyOnLoad (this.gameObject);	
 	}
-	
-	// Update is called once per frame
+
 	public void UpdateNeurons(int index)
 	{
 		for(int i = 0; i < 6; i++)

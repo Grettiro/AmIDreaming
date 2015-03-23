@@ -4,6 +4,7 @@ using System.Collections;
 public class Restarter : MonoBehaviour
 {
 	private PlatformerCharacter2D player;
+	private CheckpointObject checkpoint;
 	private Animator anim;
 
 	private void OnTriggerEnter2D(Collider2D other)
@@ -34,7 +35,12 @@ public class Restarter : MonoBehaviour
 	{
 		other.GetComponent<Rigidbody2D>().isKinematic = true;
 		anim.SetTrigger("Die");
+		//checkpoint = GameObject.Find ("CheckPoint").GetComponent<CheckpointObject> ();
 		yield return new WaitForSeconds(0.5f); // wait for two seconds.
+		/*if (checkpoint.GetComponent<CheckpointObject>().IsCheckpoint) 
+		{
+			other.transform.position = checkpoint.GetComponent<CheckpointObject>().Checkpoint;
+		}*/
 		Application.LoadLevel(Application.loadedLevelName);
 	}
 }

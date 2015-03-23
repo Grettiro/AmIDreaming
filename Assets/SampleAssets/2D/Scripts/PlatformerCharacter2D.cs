@@ -380,7 +380,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 					{
 						if(!muted)
 						{
-							audio.PlayOneShot(audioTeleport, 1f);
+							GetComponent<AudioSource>().PlayOneShot(audioTeleport, 1f);
 						}
 						transform.position += transform.right + wallEdge;
 					}
@@ -410,7 +410,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 					{
 						if(!muted)
 						{
-							audio.PlayOneShot(audioTeleport, 1f);
+							GetComponent<AudioSource>().PlayOneShot(audioTeleport, 1f);
 						}
 						transform.position -= transform.right + wallEdge;
 					}
