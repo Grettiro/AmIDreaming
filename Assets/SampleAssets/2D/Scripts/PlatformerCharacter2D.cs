@@ -10,8 +10,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[SerializeField] private LayerMask whatIsWall; // A mask determining what is a wall to the character
 	[SerializeField] private LayerMask whatIsCeiling; // A mask determining what is a wall to the character
 	[SerializeField] private LayerMask whatIsImpassable; // A mask determining what is impassable (teleporting)
+	[SerializeField] private LayerMask whatIsCheckpoint; // A mask determining what is a checkpoint object
 
 	// Checking if grounded.
+	private GameObject checkpoint;
+	CheckpointObject setPos;
 	private Transform groundCheck; // A position marking where to check if the player is grounded.
 	private bool grounded = false; // Whether or not the player is grounded.
 	// Checking if teleporting into a wall.
@@ -346,6 +349,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 				Vector3 loopCheck = new Vector3(0.0f, 0.0f);
 				Vector3 wallEdge = new Vector3(0.0f, 0.0f);
 
+				checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
+				setPos = checkpoint.GetComponent<CheckpointObject> ();
 				float wallCounter = 0.0f;
 				float distanceCounter = 0.0f;
 				bool impassableObject = false;
@@ -363,6 +368,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 						}
 						if(Physics2D.OverlapCircle((teleportCheck.position + loopCheck), transformRadius, whatIsWall))
 							wallCounter++;
+						if(Physics2D.OverlapCircle((teleportCheck.position + loopCheck), transformRadius, whatIsCheckpoint))
+						{
+							setPos.IsCheckpoint = true;
+							setPos.Checkpoint = setPos.transform.position;
+						}
 						else
 							distanceCounter++;
 					}

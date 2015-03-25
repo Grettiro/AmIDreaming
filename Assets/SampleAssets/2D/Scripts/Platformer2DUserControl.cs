@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class Platformer2DUserControl : MonoBehaviour
 {
 	private PlatformerCharacter2D character;
+	private GameObject checkpoint;
 	private bool jump;
 	private int doubleJump;
 	private bool gravity;
@@ -14,16 +15,21 @@ public class Platformer2DUserControl : MonoBehaviour
 	static private bool muted = false;
 	private Animator anim;
 	Slider slowTimeSlider;
+	CheckpointObject setPos;
 	public Rect winRect = new Rect(200, 200, 240, 100);
 
 	private void Awake()
 	{
+		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
+		setPos = checkpoint.GetComponent<CheckpointObject> ();
 	    character = GetComponent<PlatformerCharacter2D>();
+		this.transform.position = setPos.Checkpoint;
 		anim = GetComponent<Animator>();
 	}
 
 	private void Update()
 	{
+		Debug.Log (setPos.Checkpoint);
 		if (Input.GetButtonDown("Pause")) // Escape key or start button
 		{
 			if (!paused)
