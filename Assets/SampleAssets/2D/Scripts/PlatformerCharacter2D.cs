@@ -351,7 +351,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 				Vector3 wallEdge = new Vector3(0.0f, 0.0f);
 
 				checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
-				setPos = checkpoint.GetComponent<CheckpointObject> ();
+				if(checkpoint != null)
+				{
+					setPos = checkpoint.GetComponent<CheckpointObject> ();
+				}
+
 				float wallCounter = 0.0f;
 				float distanceCounter = 0.0f;
 				bool impassableObject = false;

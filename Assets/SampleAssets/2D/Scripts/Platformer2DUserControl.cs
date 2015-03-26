@@ -21,18 +21,19 @@ public class Platformer2DUserControl : MonoBehaviour
 	private void Awake()
 	{
 		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
-		setPos = checkpoint.GetComponent<CheckpointObject> ();
 	    character = GetComponent<PlatformerCharacter2D>();
-		if (setPos.IsCheckpoint) {
-			this.transform.position = setPos.Checkpoint;
-			GetComponent<Rigidbody2D>().isKinematic = true;
+		if (checkpoint != null) {
+			setPos = checkpoint.GetComponent<CheckpointObject> ();
+			if (setPos.IsCheckpoint) {
+				this.transform.position = setPos.Checkpoint;
+				GetComponent<Rigidbody2D> ().isKinematic = true;
+			}
 		}
 		anim = GetComponent<Animator>();
 	}
 
 	private void Update()
 	{
-		Debug.Log (setPos.Checkpoint);
 		if (Input.GetButtonDown("Pause")) // Escape key or start button
 		{
 			if (!paused)
