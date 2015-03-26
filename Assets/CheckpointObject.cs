@@ -34,7 +34,7 @@ public class CheckpointObject : MonoBehaviour {
 	[SerializeField]
 	public Vector3 Checkpoint
 	{
-		get {return new Vector3(checkpointPos.x,checkpointPos.y + 5, 0);}
+		get {return new Vector3(checkpointPos.x,checkpointPos.y + 1, 0);}
 		set {checkpointPos = value; }
 	}
 	

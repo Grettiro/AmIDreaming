@@ -23,7 +23,10 @@ public class Platformer2DUserControl : MonoBehaviour
 		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
 		setPos = checkpoint.GetComponent<CheckpointObject> ();
 	    character = GetComponent<PlatformerCharacter2D>();
-		this.transform.position = setPos.Checkpoint;
+		if (setPos.IsCheckpoint) {
+			this.transform.position = setPos.Checkpoint;
+			GetComponent<Rigidbody2D>().isKinematic = true;
+		}
 		anim = GetComponent<Animator>();
 	}
 
@@ -43,21 +46,32 @@ public class Platformer2DUserControl : MonoBehaviour
 				paused = false;
 			}
 		}
+		if (Input.GetKeyDown ("left")) {
+			GetComponent<Rigidbody2D>().isKinematic = false;
+		}
+		if (Input.GetKeyDown ("right")) {
+			GetComponent<Rigidbody2D>().isKinematic = false;
+		}
+		// Space bar or X button
 		if (Input.GetButtonDown("Jump")) // Space bar or X button
 		{
+			GetComponent<Rigidbody2D>().isKinematic = false;
 			character.jumpCount += 1;
 			jump = true;
 		}
 		if (Input.GetButtonUp("Jump")) 
 		{
+			GetComponent<Rigidbody2D>().isKinematic = false;
 			jump = false;
 		}
 		if (Input.GetButtonDown("Gravity")) // D or Square button
 		{
+			GetComponent<Rigidbody2D>().isKinematic = false;
 			gravity = true;
 		}
 		if (Input.GetButtonDown("Teleport")) // E or R1 button
 		{
+			GetComponent<Rigidbody2D>().isKinematic = false;
 			teleport = true;
 		}
 		if(Application.loadedLevelName != "World1")

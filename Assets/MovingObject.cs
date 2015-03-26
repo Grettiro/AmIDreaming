@@ -14,6 +14,10 @@ public class MovingObject : MonoBehaviour {
 	private bool reverse = false;
 
 	void Awake () {
+		/*GameObject player = GameObject.Find ("Player");
+		if (Application.loadedLevelName == "Medium8") {
+			this.transform.position = new Vector2(this.transform.position.x, player.transform.position.y - 4);
+		}*/
 		points.AddRange(gameObject.GetComponentInParent<Platform>().GetComponentsInChildren<Point>());
 		listSize = points.Count;
 		pointArray = points.ToArray();

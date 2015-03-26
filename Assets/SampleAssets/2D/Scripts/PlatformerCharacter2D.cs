@@ -139,6 +139,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 				// Move the character
 		        GetComponent<Rigidbody2D>().velocity = new Vector2(move*maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
 
+
 		        if (move > 0.0f && !facingRight)
 		            Flip();
 		        else if (move < 0.0f && facingRight)
