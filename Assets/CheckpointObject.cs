@@ -3,6 +3,8 @@ using System.Collections;
 
 public class CheckpointObject : MonoBehaviour {
 	private Vector3 checkpointPos = new Vector3 (0, 0, 0);
+	public float offsetY = 1;
+	public float offsetX = 0;
 	private bool checkpoint = false;
 	// Use this for initialization
 	private static CheckpointObject instance = null;
@@ -34,7 +36,7 @@ public class CheckpointObject : MonoBehaviour {
 	[SerializeField]
 	public Vector3 Checkpoint
 	{
-		get {return new Vector3(checkpointPos.x,checkpointPos.y + 1, 0);}
+		get {return new Vector3(checkpointPos.x + offsetX,checkpointPos.y + offsetY, 0);}
 		set {checkpointPos = value; }
 	}
 	

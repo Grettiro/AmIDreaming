@@ -4,11 +4,13 @@ using System.Collections;
 public class DeathTracker : MonoBehaviour {
 
 	private static DeathTracker instance = null;
+	private static DifficultyAdjuster adjust;
 	public static DeathTracker Instance 
 	{
 		get { return instance; }
 	}
 	private int nDeaths = 0;
+	private int dLevel = 5;
 
 	void Awake () {
 		if(instance != null && instance != this)
@@ -24,7 +26,11 @@ public class DeathTracker : MonoBehaviour {
 
 
 	void Update () {
-		
+		if (nDeaths > 2) 
+		{
+			nDeaths = 0;
+			dLevel -= 1;
+		}
 	}
 
 	[SerializeField]
@@ -32,5 +38,12 @@ public class DeathTracker : MonoBehaviour {
 	{
 		get {return nDeaths; }
 		set {nDeaths = value; }
+	}
+
+	[SerializeField]
+	public int Difficulty
+	{
+		get {return dLevel; }
+		set {dLevel = value; }
 	}
 }

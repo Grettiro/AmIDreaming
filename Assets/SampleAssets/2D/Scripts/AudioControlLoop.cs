@@ -9,6 +9,8 @@ public class AudioControlLoop : MonoBehaviour {
 	public AudioSource audioLoop;
 	public AudioSource audioStart2;
 	public AudioSource audioLoop2;
+	public AudioSource audioStart3;
+	public AudioSource audioLoop3;
 	private bool changeSongs = false;
 	public AudioClip neuronPickup;
 
@@ -29,8 +31,10 @@ public class AudioControlLoop : MonoBehaviour {
 		{
 			if(Application.loadedLevel == 1 || (Application.loadedLevel >= 3 && Application.loadedLevel <= 9))
 				audioStart.Play();
-			if(Application.loadedLevel == 2 || Application.loadedLevel >= 10)
+			if(Application.loadedLevel == 2 || Application.loadedLevel >= 10 && Application.loadedLevel <= 17)
 				audioStart2.Play();
+			if(Application.loadedLevel >= 19)
+				audioStart3.Play();
 
 			instance = this;
 		}
@@ -48,43 +52,43 @@ public class AudioControlLoop : MonoBehaviour {
 		{
 			Destroy (this.gameObject);
 		}
-		if (Application.loadedLevel == 2 || Application.loadedLevel >= 10) 
-		{
-				if (audioStart.isPlaying) 
-				{
-					audioStart.Stop ();
-					changeSongs = true;
-					audioStart2.Play();
+		if (Application.loadedLevel == 2 || Application.loadedLevel >= 10 && Application.loadedLevel <18) {
+			if (audioStart.isPlaying) {
+				audioStart.Stop ();
+				changeSongs = true;
+				audioStart2.Play ();
+			} else if (audioLoop.isPlaying) {
+				audioLoop.Stop ();
+				changeSongs = true;
+				audioStart2.Play ();
+			} else if (!audioStart2.isPlaying) {
+				if (!audioLoop2.isPlaying) {
+					audioStart2.Stop ();
+					audioLoop2.loop = true;
+					audioLoop2.Play ();
 				}
-				else if(audioLoop.isPlaying)
-				{
-					audioLoop.Stop ();
-					changeSongs = true;
-					audioStart2.Play();
-				}
-				else if(!audioStart2.isPlaying)
-				{
-					if(!audioLoop2.isPlaying)
-					{
+			} else {
+				if (!audioStart2.isPlaying) {
+					if (!audioLoop2.isPlaying) {
 						audioStart2.Stop ();
 						audioLoop2.loop = true;
-						audioLoop2.Play();
-					}
-				}
-			else
-			{
-				if(!audioStart2.isPlaying)
-				{
-					if(!audioLoop2.isPlaying)
-					{
-						audioStart2.Stop ();
-						audioLoop2.loop = true;
-						audioLoop2.Play();
+						audioLoop2.Play ();
 					}
 				}
 			}
 
-		} 
+		} else if (Application.loadedLevel >= 19) {
+			if(!changeSongs)
+			{
+				if(!audioStart3.isPlaying)
+					if(!audioLoop3.isPlaying)
+				{
+					audioStart3.Stop();
+					audioLoop3.loop = true;
+					audioLoop3.Play();
+				}
+			}
+		}
 		else
 		{
 			if(!changeSongs)
