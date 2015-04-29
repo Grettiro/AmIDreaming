@@ -1,12 +1,17 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class FadePlatform : MonoBehaviour {
 
 	public float fadeTime = 0.0f;
+
 	// Use this for initialization
 	void Start () {
-	
+		DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
+		fadeTime = 2 - (float)difficulty.Difficulty / 10 * 2;
+		Debug.Log(fadeTime);
+		if (difficulty.Difficulty == 1)
+			Debug.Log ("Difficulty = 1");
 	}
 	
 	// Update is called once per frame

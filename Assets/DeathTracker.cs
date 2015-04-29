@@ -10,7 +10,7 @@ public class DeathTracker : MonoBehaviour {
 		get { return instance; }
 	}
 	private int nDeaths = 0;
-	private int dLevel = 5;
+	private int dLevel = 10;
 
 	void Awake () {
 		if(instance != null && instance != this)
@@ -26,7 +26,7 @@ public class DeathTracker : MonoBehaviour {
 
 
 	void Update () {
-		if (nDeaths > 2) 
+		if (nDeaths > 0) 
 		{
 			nDeaths = 0;
 			dLevel -= 1;
