@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class Platformer2DUserControl : MonoBehaviour
 {
 	private PlatformerCharacter2D character;
+	private JSONGenerator json;
 	private GameObject checkpoint;
 	private bool jump;
 	private int doubleJump;
@@ -18,10 +19,17 @@ public class Platformer2DUserControl : MonoBehaviour
 	CheckpointObject setPos;
 	public Rect winRect = new Rect(200, 200, 240, 100);
 
+	public void Log(string levelName, bool neuron)
+	{
+		json.LevelExit(levelName, neuron);
+		// Do stuff
+	}
+
 	private void Awake()
 	{
 		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
 	    character = GetComponent<PlatformerCharacter2D>();
+		json = GetComponent<JSONGenerator>();
 		if (checkpoint != null) {
 			setPos = checkpoint.GetComponent<CheckpointObject> ();
 			if (setPos.IsCheckpoint) {

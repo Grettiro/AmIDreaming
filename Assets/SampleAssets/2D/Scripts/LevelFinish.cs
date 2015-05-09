@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class LevelFinish : MonoBehaviour
 {
 	private PlatformerCharacter2D player;
+	private Platformer2DUserControl control;
 	private int nIndex;
 	private bool nBool;
 	private int nProtection = 0;
@@ -29,6 +31,8 @@ public class LevelFinish : MonoBehaviour
 					nProtection = 1;
 				}
 			}
+			control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
+			control.Log(Application.loadedLevelName, nBool);
 			other.GetComponent<Rigidbody2D>().isKinematic = true;
 			StartCoroutine(DoAnimation());
 		}

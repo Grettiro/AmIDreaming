@@ -4,6 +4,7 @@ using System.Collections;
 public class Restarter : MonoBehaviour
 {
 	private PlatformerCharacter2D player;
+	private Platformer2DUserControl control;
 	private CheckpointObject checkpoint;
 	private DeathTracker deathCount;
 	private bool dead = false;
