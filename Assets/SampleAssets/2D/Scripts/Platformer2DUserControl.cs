@@ -12,6 +12,10 @@ public class Platformer2DUserControl : MonoBehaviour
 	private bool teleport;
 	private bool slowTime;
 	private bool paused;
+	private bool allowSlow = true;
+	private bool allowTeleport = true;
+	private bool allowGravity = true;
+	private bool moveable = true;
 	static private bool muted = false;
 	private Animator anim;
 	Slider slowTimeSlider;
@@ -20,6 +24,9 @@ public class Platformer2DUserControl : MonoBehaviour
 
 	private void Awake()
 	{
+		if (Application.loadedLevelName.Contains ("Easy") || Application.loadedLevelName.Contains ("World")) {
+			allowSlow = false;
+		}
 		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
 	    character = GetComponent<PlatformerCharacter2D>();
 		if (checkpoint != null) {
@@ -65,17 +72,19 @@ public class Platformer2DUserControl : MonoBehaviour
 			GetComponent<Rigidbody2D>().isKinematic = false;
 			jump = false;
 		}
-		if (Input.GetButtonDown("Gravity")) // D or Square button
-		{
-			GetComponent<Rigidbody2D>().isKinematic = false;
-			gravity = true;
+		if (allowGravity) {
+			if (Input.GetButtonDown ("Gravity")) { // D or Square button
+				GetComponent<Rigidbody2D> ().isKinematic = false;
+				gravity = true;
+			}
 		}
-		if (Input.GetButtonDown("Teleport")) // E or R1 button
-		{
-			GetComponent<Rigidbody2D>().isKinematic = false;
-			teleport = true;
+		if (allowTeleport) {
+			if (Input.GetButtonDown ("Teleport")) { // E or R1 button
+				GetComponent<Rigidbody2D> ().isKinematic = false;
+				teleport = true;
+			}
 		}
-		if(Application.loadedLevelName != "World1")
+		if(allowSlow)
 		{
 			if(Input.GetButtonDown("Slow")) // S or L1 button
 				slowTime = true;	
@@ -89,9 +98,37 @@ public class Platformer2DUserControl : MonoBehaviour
 	    // Read the inputs.
 		float h = Input.GetAxis("Horizontal");
 	    // Pass all parameters to the character control script.
-		character.Move(h, jump, gravity, teleport, slowTime);
+		if(moveable)
+			character.Move(h, jump, gravity, teleport, slowTime);
 		gravity = false;
 		teleport = false;
+	}
+
+	[SerializeField]
+	public bool Teleport
+	{
+		get {return allowTeleport; }
+		set {allowTeleport = value; }
+	}
+
+	[SerializeField]
+	public bool Slow
+	{
+		get {return allowSlow; }
+		set {allowSlow = value; }
+	}
+
+	[SerializeField]
+	public bool Gravity
+	{
+		get {return allowGravity; }
+		set {allowGravity = value; }
+	}
+
+	public bool Move
+	{
+		get {return moveable; }
+		set {moveable = value; }
 	}
 
 	private void OnGUI()
