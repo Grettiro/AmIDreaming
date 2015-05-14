@@ -9,9 +9,12 @@ public class LevelFinish : MonoBehaviour
 	private bool nBool;
 	private int nProtection = 0;
 	private Animator anim;
+<<<<<<< HEAD
 	private bool finished = false;
 	private GameObject checkpoint;
 	private CheckpointObject setPos;
+=======
+>>>>>>> parent of 38a5ae4... The great commit of commits
 
 	void Awake()
 	{
@@ -27,11 +30,6 @@ public class LevelFinish : MonoBehaviour
 			{
 				anim = player.getAnimator();
 				player.setDead (true);
-				DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
-				if(difficulty.Deaths < difficulty.DeathMarker / 2)
-				{
-					difficulty.Difficulty += 1;
-				}
 			}
 			if (nBool) 
 			{
@@ -60,6 +58,7 @@ public class LevelFinish : MonoBehaviour
 	private IEnumerator DoAnimation()
 	{
 		yield return new WaitForSeconds(0.3f); // wait for two seconds.
+<<<<<<< HEAD
 		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
 		if (checkpoint != null) {
 			setPos = checkpoint.GetComponent<CheckpointObject> ();
@@ -73,9 +72,12 @@ public class LevelFinish : MonoBehaviour
 		}
 		else if (Application.loadedLevel == 13) {
 			Application.LoadLevel(14);
+=======
+		if(Application.loadedLevelName.Contains ("Medium") || Application.loadedLevel == (9))
+		{
+			Application.LoadLevel(2);
+>>>>>>> parent of 38a5ae4... The great commit of commits
 		}
-		else if (Application.loadedLevelName.Contains ("Wind"))
-		         Application.LoadLevel(2);
 		else
 			Application.LoadLevel (1);
 	}

@@ -27,7 +27,7 @@ public class NeuronTracker : MonoBehaviour {
 
 	public void UpdateNeurons(int index)
 	{
-		for(int i = 0; i < 17; i++)
+		for(int i = 0; i < 6; i++)
 		{
 			if(i == index)
 			{
@@ -37,7 +37,7 @@ public class NeuronTracker : MonoBehaviour {
 	}
 	public bool returnNeurons(int index)
 	{
-		for (int i = 0; i < 17; i++) 
+		for (int i = 0; i < 6; i++) 
 		{
 			if(i == index)
 			{
