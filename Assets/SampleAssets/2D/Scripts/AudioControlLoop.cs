@@ -11,9 +11,6 @@ public class AudioControlLoop : MonoBehaviour {
 	public AudioSource audioLoop2;
 	public AudioSource audioStart3;
 	public AudioSource audioLoop3;
-	public AudioSource audioStart4;
-	public AudioSource audioLoop4;
-
 	private bool changeSongs = false;
 	public AudioClip neuronPickup;
 
@@ -34,12 +31,10 @@ public class AudioControlLoop : MonoBehaviour {
 		{
 			if(Application.loadedLevel == 1 || (Application.loadedLevel >= 3 && Application.loadedLevel <= 9))
 				audioStart.Play();
-			if(Application.loadedLevel == 2 || (Application.loadedLevel >= 10 && Application.loadedLevel <= 14))
+			if(Application.loadedLevel == 2 || Application.loadedLevel >= 10 && Application.loadedLevel <= 17)
 				audioStart2.Play();
-			if(Application.loadedLevel >= 15 && Application.loadedLevel <= 19)
+			if(Application.loadedLevel >= 19)
 				audioStart3.Play();
-			if(Application.loadedLevel >= 20)
-				audioStart4.Play();
 
 			instance = this;
 		}
@@ -53,15 +48,15 @@ public class AudioControlLoop : MonoBehaviour {
 	{
 
 		NeuronCount setLevel = GameObject.Find("PlayerNeurons").GetComponent<NeuronCount>();
-		if (Application.loadedLevel == 0 || Application.loadedLevel == 24) 
+		if (Application.loadedLevel == 0 || Application.loadedLevel == 18) 
 		{
 			Destroy (this.gameObject);
 		}
-		if (Application.loadedLevel == 2 || Application.loadedLevel >= 10 && Application.loadedLevel <= 14) {
-			if (audioStart2.isPlaying) {
-				audioStart2.Stop ();
+		if (Application.loadedLevel == 2 || Application.loadedLevel >= 10 && Application.loadedLevel <18) {
+			if (audioStart.isPlaying) {
+				audioStart.Stop ();
 				changeSongs = true;
-				audioLoop2.Play ();
+				audioStart2.Play ();
 			} else if (audioLoop.isPlaying) {
 				audioLoop.Stop ();
 				changeSongs = true;
@@ -82,8 +77,7 @@ public class AudioControlLoop : MonoBehaviour {
 				}
 			}
 
-		} 
-		else if (Application.loadedLevel >= 15 && Application.loadedLevel <= 19) {
+		} else if (Application.loadedLevel >= 19) {
 			if(!changeSongs)
 			{
 				if(!audioStart3.isPlaying)
@@ -92,18 +86,6 @@ public class AudioControlLoop : MonoBehaviour {
 					audioStart3.Stop();
 					audioLoop3.loop = true;
 					audioLoop3.Play();
-				}
-			}
-		}
-		else if (Application.loadedLevel >= 20) {
-			if(!changeSongs)
-			{
-				if(!audioStart4.isPlaying)
-					if(!audioLoop4.isPlaying)
-				{
-					audioStart4.Stop();
-					audioLoop4.loop = true;
-					audioLoop4.Play();
 				}
 			}
 		}

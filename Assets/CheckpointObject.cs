@@ -30,9 +30,12 @@ public class CheckpointObject : MonoBehaviour {
 		{
 			checkpoint = true;
 			checkpointPos = this.transform.position;
+<<<<<<< HEAD
 			DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 			difficulty.Deaths /= 2;
 
+=======
+>>>>>>> parent of 38a5ae4... The great commit of commits
 		}
 	}
 
