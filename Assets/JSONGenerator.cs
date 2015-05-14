@@ -6,7 +6,7 @@ using System;
 
 public class JSONGenerator {
 
-	gmailSender sender = new gmailSender();
+	//gmailSender sender = new gmailSender();
 
 	private static string name = "name";
 	private string m_InGameLog = "";
@@ -38,15 +38,16 @@ public class JSONGenerator {
 			I[Application.loadedLevelName]["pathOfPlay"][-1] = "(" + path[i] + ", " + path[i + 1] + ")";
 		P(I.ToString(""));
 
-		sendMail();
+		//sendMail();
+		//Application.OpenURL("mailto:amidreaminggame@gmail.com?subject=Play through log for: " + name + "&body=" + m_InGameLog);
 
-		//Debug.Log(m_InGameLog);
+		Debug.Log(m_InGameLog);
 		m_InGameLog = "";
 	}
 
 	private void sendMail()
 	{
-		sender.sendMail(m_InGameLog);
+		//sender.sendMail(m_InGameLog);
 	}
 
 	public void logDeath(int count, float xCoord, float yCoord, string timeOfDeath, int teleportCount, int gravityCount,
