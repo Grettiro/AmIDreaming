@@ -27,7 +27,7 @@ public class JSONGenerator {
 	public void setName(string playerName)
 	{
 		name = playerName;
-		I["player"] = name; // need to fix
+		I["player"] = name;
 	}
 
 	public void LevelExit(bool neuronCollected, bool levelFinished, string levelBegin, string levelEnd, float pauseTime, float[] path)
@@ -44,7 +44,7 @@ public class JSONGenerator {
 
 		sendMail();
 
-		Debug.Log(m_InGameLog);
+		//Debug.Log(m_InGameLog);
 		m_InGameLog = "";
 	}
 
@@ -68,6 +68,7 @@ public class JSONGenerator {
 		for(int i = 0; i < path.Length; i += 2)
 			I[Application.loadedLevelName]["death" + count]["pathOfPlay"][-1] = "(" + path[i] + ", " + path[i + 1] + ")";
 		P(I.ToString(""));
+		m_InGameLog = "";
 	}
 
 	// Update is called once per frame

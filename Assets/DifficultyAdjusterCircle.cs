@@ -5,39 +5,35 @@ public class DifficultyAdjusterCircle : MonoBehaviour {
 
 	private bool scaled = false;
 	private bool sizeScaled = false;
-	
+	private EnemyCircleMovement speed;
 	
 	// Use this for initialization
 	void Awake () {
+		ScaleSpeed ();
+		ScaleObjects();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
-		if (difficulty.Difficulty < 5) {
-			ScaleSpeed();
-		}
-		if (difficulty.Difficulty < 4) {
-			ScaleObjects();
-		}
 	}
 
 	private void ScaleSpeed() {
-		EnemyCircleMovement speed = this.gameObject.GetComponent<EnemyCircleMovement> ();
-		if (!scaled)
-			speed.speed -= 30;
+		DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
+		speed = gameObject.GetComponent<EnemyCircleMovement> ();
+		if (!scaled) {
+			speed.speed -= (10 - difficulty.Difficulty) * 5;
+		}
 		scaled = true;
 	}
 	private void ScaleObjects()
 	{
+		DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 		if (!sizeScaled) {
 			foreach (Transform child in transform) {
 				if (child.name == "KillzoneOpeningBot") {
-					Debug.Log ("BOT TRANSFORMED!");
-					child.transform.position = new Vector3 (child.transform.position.x, child.transform.position.y  - 1f, 0);
+					child.transform.position = new Vector3 (child.transform.position.x, child.transform.position.y  - ((10-difficulty.Difficulty)/4), 0);
 				} else if (child.name == "KillzoneOpeningTop") {
-					Debug.Log ("TOP TRANSFORMED!");
-					child.transform.position = new Vector3 (child.transform.position.x, child.transform.position.y  + 1f, 0);
+					child.transform.position = new Vector3 (child.transform.position.x, child.transform.position.y  + ((10-difficulty.Difficulty)/4), 0);
 				}
 			}
 			sizeScaled = true;

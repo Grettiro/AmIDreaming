@@ -11,6 +11,8 @@ public class LevelFinish : MonoBehaviour
 	private int nProtection = 0;
 	private Animator anim;
 	private bool finished = false;
+	private GameObject checkpoint;
+	private CheckpointObject setPos;
 
 	void Awake()
 	{
@@ -26,6 +28,11 @@ public class LevelFinish : MonoBehaviour
 			{
 				anim = player.getAnimator();
 				player.setDead (true);
+				DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
+				if(difficulty.Deaths < difficulty.DeathMarker / 2)
+				{
+					difficulty.Difficulty += 1;
+				}
 			}
 			if (nBool) 
 			{
@@ -54,10 +61,22 @@ public class LevelFinish : MonoBehaviour
 	private IEnumerator DoAnimation()
 	{
 		yield return new WaitForSeconds(0.3f); // wait for two seconds.
-		if(Application.loadedLevelName.Contains ("Medium") || Application.loadedLevel == (9))
-		{
-			Application.LoadLevel(2);
+		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
+		if (checkpoint != null) {
+			setPos = checkpoint.GetComponent<CheckpointObject> ();
+			setPos.IsCheckpoint = false;
 		}
+		if (Application.loadedLevelName.Contains ("Medium") || Application.loadedLevel == 14) {
+			Application.LoadLevel (2);
+		} 
+		else if (Application.loadedLevel == 3 || Application.loadedLevel == 4) {
+			Application.LoadLevel (Application.loadedLevel + 1);
+		}
+		else if (Application.loadedLevel == 13) {
+			Application.LoadLevel(14);
+		}
+		else if (Application.loadedLevelName.Contains ("Wind"))
+		         Application.LoadLevel(2);
 		else
 			Application.LoadLevel (1);
 	}

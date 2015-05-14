@@ -23,7 +23,7 @@ public class NameField : MonoBehaviour {
 		if (GUILayout.Button("New Game") && nameOfPlayer != "")
 		{
 			json.setName(nameOfPlayer);
-			Application.LoadLevel(1);
+			Application.LoadLevel(3);
 		}
 	}
 
