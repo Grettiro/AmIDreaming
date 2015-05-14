@@ -7,6 +7,7 @@ public class NameField : MonoBehaviour {
 
 	public Rect winRect = new Rect(200, 200, 240, 100);
 	public string nameOfPlayer = "";
+	public float levelDifficulty = 10;
 
 	void OnGUI() {
 		winRect = GUILayout.Window( 0, winRect, WindowFunction, "");
@@ -18,11 +19,16 @@ public class NameField : MonoBehaviour {
 	}
 
 	void WindowFunction(int windowID) {
+		DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 		GUILayout.TextField("Need to put in your name!");
 		nameOfPlayer = GUILayout.TextField(nameOfPlayer);
+		GUILayout.TextField("And choose your starting difficulty!");
+		levelDifficulty = Mathf.RoundToInt(GUILayout.HorizontalSlider (levelDifficulty, 0, 10));
+		GUILayout.Label(levelDifficulty.ToString());
 		if (GUILayout.Button("New Game") && nameOfPlayer != "")
 		{
 			json.setName(nameOfPlayer);
+			difficulty.Difficulty = (int)levelDifficulty;
 			Application.LoadLevel(3);
 		}
 	}
