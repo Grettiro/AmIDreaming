@@ -16,9 +16,10 @@ public class Camera2DFollow : MonoBehaviour
 	// Use this for initialization
 	private void Start()
 	{
+		//transform.position = target.position;
 	    lastTargetPosition = target.position;
 	    offsetZ = (transform.position - target.position).z;
-	    transform.parent = null;
+	    transform.parent = target;
 	}
 
 	// Update is called once per frame
