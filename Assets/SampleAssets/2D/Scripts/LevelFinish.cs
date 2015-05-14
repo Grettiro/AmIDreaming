@@ -53,6 +53,8 @@ public class LevelFinish : MonoBehaviour
 		if (checkpoint != null) {
 			setPos = checkpoint.GetComponent<CheckpointObject> ();
 			setPos.IsCheckpoint = false;
+			Destroy(checkpoint);
+
 		}
 		if (Application.loadedLevelName.Contains ("Medium") || Application.loadedLevel == 14) {
 			Application.LoadLevel (2);

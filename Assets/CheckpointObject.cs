@@ -32,7 +32,7 @@ public class CheckpointObject : MonoBehaviour {
 			checkpointPos = this.transform.position;
 			DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 			difficulty.Deaths /= 2;
-			Destroy(this.gameObject);
+
 		}
 	}
 
