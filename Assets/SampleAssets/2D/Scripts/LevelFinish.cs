@@ -1,20 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class LevelFinish : MonoBehaviour
 {
 	private PlatformerCharacter2D player;
+	private Platformer2DUserControl control;
 	private int nIndex;
 	private bool nBool;
 	private int nProtection = 0;
 	private Animator anim;
+	private bool finished = false;
 	private GameObject checkpoint;
 	private CheckpointObject setPos;
 
+	void Awake()
+	{
+		control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
+	}
+
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag == "Player") 
+		if (other.tag == "Player" && !finished) 
 		{
+			finished = true;
 			if((player = GameObject.Find("Player").GetComponent<PlatformerCharacter2D>()) != null)
 			{
 				anim = player.getAnimator();
@@ -36,6 +45,9 @@ public class LevelFinish : MonoBehaviour
 					nProtection = 1;
 				}
 			}
+
+			control.LogExit(true);
+
 			other.GetComponent<Rigidbody2D>().isKinematic = true;
 			StartCoroutine(DoAnimation());
 		}
