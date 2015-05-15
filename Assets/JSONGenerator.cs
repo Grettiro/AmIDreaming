@@ -22,11 +22,13 @@ public class JSONGenerator {
 		I["player"] = name;
 	}
 
-	public void LevelExit(bool neuronCollected, bool levelFinished, string levelBegin, string levelEnd, float pauseTime, float[] path)
+	public void LevelExit(bool neuronCollected, bool levelFinished, string levelBegin, string levelEnd, int diffLevelBegin, int diffLevelEnd, float pauseTime, float[] path)
 	{
 		I[Application.loadedLevelName]["neuronPickup"].AsBool = neuronCollected;
 		I[Application.loadedLevelName]["levelStart"] = levelBegin;
 		I[Application.loadedLevelName]["levelEnd"] = levelEnd;
+		I[Application.loadedLevelName]["diffLevelStart"].AsInt = diffLevelBegin;
+		I[Application.loadedLevelName]["diffLevelEnd"].AsInt = diffLevelEnd;
 		I[Application.loadedLevelName]["pauseTime"].AsFloat = pauseTime;
 		I[Application.loadedLevelName]["levelCompleted"].AsBool = levelFinished;
 		I[Application.loadedLevelName]["averageSpeed"].AsFloat = 3.151f;

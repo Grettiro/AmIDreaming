@@ -5,6 +5,7 @@ public class LevelFinish : MonoBehaviour
 {
 	private PlatformerCharacter2D player;
 	private Platformer2DUserControl control;
+	private DeathTracker difficulty;
 	private int nIndex;
 	private bool nBool;
 	private int nProtection = 0;
@@ -15,6 +16,7 @@ public class LevelFinish : MonoBehaviour
 	
 	void Awake()
 	{
+		difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 		control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
 	}
 
@@ -27,7 +29,6 @@ public class LevelFinish : MonoBehaviour
 			{
 				anim = player.getAnimator();
 				player.setDead (true);
-				DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 				if(difficulty.Deaths < difficulty.DeathMarker / 2)
 				{
 					difficulty.Difficulty += 1;

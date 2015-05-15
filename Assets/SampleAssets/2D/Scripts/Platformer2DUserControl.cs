@@ -9,6 +9,7 @@ public class Platformer2DUserControl : MonoBehaviour
 {
 	private PlatformerCharacter2D character;
 	private static JSONGenerator json = new JSONGenerator();
+	private DeathTracker difficulty;
 	private GameObject checkpoint;
 	private bool jump;
 	private int doubleJump;
@@ -19,17 +20,18 @@ public class Platformer2DUserControl : MonoBehaviour
 	private bool allowSlow = true;
 	private bool allowTeleport = true;
 	private bool allowGravity = true;
-	private bool moveable = true;
+	private bool moveable = true;                                                                                                                             
 	static private bool muted = false;
 	private Animator anim;
 	Slider slowTimeSlider;
 	CheckpointObject setPos;
 	public Rect winRect = new Rect(200, 200, 240, 100);
+	private static bool levelStarted = false;
 
 	// Timers
 	private static Timer levelTimer = new Timer(10);
 	private static Timer pauseTimer = new Timer(10);
-	private static Timer pathTimer = new Timer(1000);
+	private Timer pathTimer = new Timer(1000);
 	
 	private static float globalTime = 0f;
 	private static float levelTime = 0f;
@@ -40,6 +42,7 @@ public class Platformer2DUserControl : MonoBehaviour
 	private DateTime timeNow;
 	private static string levelBegin = "n/a";
 	private static string levelEnd = "n/a";
+	private static int diffLevelBegin;
 	public bool neuron = false;
 	private static List<float> playerPath = new List<float>();
 	private int teleportCount;
@@ -54,12 +57,13 @@ public class Platformer2DUserControl : MonoBehaviour
 	public void LogExit(bool levelFinished)
 	{
 		levelEnd = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
-		json.LevelExit(neuron, levelFinished, levelBegin, levelEnd, pauseTime, playerPath.ToArray());
+		json.LevelExit(neuron, levelFinished, levelBegin, levelEnd, diffLevelBegin, difficulty.Difficulty, pauseTime, playerPath.ToArray());
 		neuron = false;
 		levelTime = 0f;
 		pauseTime = 0f;
 		playerPath.Clear();
 		stopTimer();
+		levelStarted = false;
 	}
 	
 	public void LogDeath(int deathCount)
@@ -74,7 +78,6 @@ public class Platformer2DUserControl : MonoBehaviour
 	
 	public void startTimer()
 	{
-		//levelBegin = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
 		levelTimer.Enabled = true;
 		pathTimer.Enabled = true;
 	}
@@ -95,8 +98,13 @@ public class Platformer2DUserControl : MonoBehaviour
 	
 	static void pathTimerElapsed(object sender, ElapsedEventArgs e)
 	{
-		playerPath.Add(charPos.x);
-		playerPath.Add(charPos.y);
+		bool added = false;
+		if(!added)
+		{
+			added = true;
+			playerPath.Add(charPos.x);
+			playerPath.Add(charPos.y);
+		}
 	}
 	
 	static void pauseTimerElapsed(object sender, ElapsedEventArgs e)
@@ -115,6 +123,16 @@ public class Platformer2DUserControl : MonoBehaviour
 	{
 		timeNow = DateTime.Now;
 		levelBegin = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
+		if(!Application.loadedLevelName.Equals("World1") && !Application.loadedLevelName.Equals("World2"))
+		{
+			if(!levelStarted)
+			{
+				levelStarted = true;
+				difficulty = GameObject.Find("DeathTracker").GetComponent<DeathTracker>();
+				startTimer();
+				diffLevelBegin = difficulty.Difficulty;
+			}
+		}
 		if (Application.loadedLevelName.Contains ("Easy") || Application.loadedLevelName.Contains ("World")) {
 			allowSlow = false;
 		}
