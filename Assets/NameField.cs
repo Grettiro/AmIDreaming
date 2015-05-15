@@ -32,14 +32,4 @@ public class NameField : MonoBehaviour {
 			Application.LoadLevel(3);
 		}
 	}
-
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

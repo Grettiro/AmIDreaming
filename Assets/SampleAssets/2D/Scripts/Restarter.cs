@@ -4,15 +4,22 @@ using System.Collections;
 public class Restarter : MonoBehaviour
 {
 	private PlatformerCharacter2D player;
+	private Platformer2DUserControl control;
 	private CheckpointObject checkpoint;
 	private DeathTracker deathCount;
 	private bool dead = false;
 	private Animator anim;
+	private static int counter = 0;
 
 	void Start ()
 	{
 		dead = false;
 	}
+	void Awake()
+	{
+		control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
+	}
+
 	private void OnTriggerEnter2D(Collider2D other)
 	{
     	if(other.tag == "Player" && !dead) 
@@ -48,6 +55,8 @@ public class Restarter : MonoBehaviour
 		yield return new WaitForSeconds(0.5f); // wait for two seconds.
 		deathCount = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 		deathCount.Deaths += 1;
+		counter++;
+		control.LogDeath(counter);
 		/*if (checkpoint.GetComponent<CheckpointObject>().IsCheckpoint) 
 		{
 			other.transform.position = checkpoint.GetComponent<CheckpointObject>().Checkpoint;

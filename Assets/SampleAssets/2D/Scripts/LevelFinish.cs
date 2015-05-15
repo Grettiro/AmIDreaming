@@ -4,17 +4,25 @@ using System.Collections;
 public class LevelFinish : MonoBehaviour
 {
 	private PlatformerCharacter2D player;
+	private Platformer2DUserControl control;
 	private int nIndex;
 	private bool nBool;
 	private int nProtection = 0;
+	private bool finished = false;
 	private Animator anim;
 	private GameObject checkpoint;
 	private CheckpointObject setPos;
+	
+	void Awake()
+	{
+		control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
+	}
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (other.tag == "Player") 
+		if (other.tag == "Player" && !finished) 
 		{
+			finished = true;
 			if((player = GameObject.Find("Player").GetComponent<PlatformerCharacter2D>()) != null)
 			{
 				anim = player.getAnimator();
@@ -36,6 +44,9 @@ public class LevelFinish : MonoBehaviour
 					nProtection = 1;
 				}
 			}
+
+			control.LogExit(true);
+
 			other.GetComponent<Rigidbody2D>().isKinematic = true;
 			StartCoroutine(DoAnimation());
 		}
@@ -53,8 +64,6 @@ public class LevelFinish : MonoBehaviour
 		if (checkpoint != null) {
 			setPos = checkpoint.GetComponent<CheckpointObject> ();
 			setPos.IsCheckpoint = false;
-			Destroy(checkpoint);
-
 		}
 		if (Application.loadedLevelName.Contains ("Medium") || Application.loadedLevel == 14) {
 			Application.LoadLevel (2);

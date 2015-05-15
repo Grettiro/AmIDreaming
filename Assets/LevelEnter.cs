@@ -7,10 +7,12 @@ public class LevelEnter : MonoBehaviour
 	public int neuronsRequired;
 	private bool nextLevel;
 
+	private Platformer2DUserControl control;
 	private NeuronCount getNeurons;
 
 	void Awake()
 	{
+		control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
 		getNeurons = GameObject.Find("PlayerNeurons").GetComponent<NeuronCount>();
 	}
 
@@ -39,6 +41,7 @@ public class LevelEnter : MonoBehaviour
 		if(nextLevel)
 			if (Input.GetButtonDown("Enter")) // Enter or Circle button
 			{
+				control.startTimer();
 				getNeurons.GetPrevLevel = Application.loadedLevel;
 				Application.LoadLevel(levelNumber);
 			}

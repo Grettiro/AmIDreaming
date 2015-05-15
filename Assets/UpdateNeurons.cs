@@ -3,6 +3,7 @@ using System.Collections;
 
 public class UpdateNeurons : MonoBehaviour
 {
+	private Platformer2DUserControl control;
 	public Rect winRect = new Rect(200, 200, 240, 100);
 	public string tutText = "This is a neuron, collect these neurons to open up new levels and unlock new abilities!" ;
 	public bool textAllow = false;
@@ -10,6 +11,7 @@ public class UpdateNeurons : MonoBehaviour
 	public int nIndex;
 	void Start()
 	{
+		control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
 		NeuronTracker getNeuron = GameObject.Find("NeuronTracker").GetComponent<NeuronTracker>();
 		if (getNeuron.returnNeurons(nIndex))
 						Destroy (this.gameObject);
@@ -25,12 +27,14 @@ public class UpdateNeurons : MonoBehaviour
 			StartCoroutine(Delay(other));
 		}
 		else if(other.name == "Player")
-		        {
+		{
 			AudioControlLoop neuronAudio = GameObject.Find("AudioController").GetComponent<AudioControlLoop>();
 			neuronAudio.playNeuron();
 			
 			LevelFinish updateNeurons = GameObject.Find("LevelFinishDoor").GetComponent<LevelFinish>();
 			updateNeurons.setNeuronStatus(nIndex);
+
+			control.neuron = true;
 
 			Destroy(this.gameObject);
 		}

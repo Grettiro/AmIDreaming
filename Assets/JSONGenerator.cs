@@ -16,10 +16,6 @@ public class JSONGenerator {
 		m_InGameLog += aText + "\n";
 	}
 
-	// Use this for initialization
-	void Start () {
-	}
-
 	public void setName(string playerName)
 	{
 		name = playerName;
@@ -40,7 +36,9 @@ public class JSONGenerator {
 
 		//sendMail();
 		//Application.OpenURL("mailto:amidreaminggame@gmail.com?subject=Play through log for: " + name + "&body=" + m_InGameLog);
-
+		/*
+		 * Write to file, overwriting the file after each level.
+		 */
 		Debug.Log(m_InGameLog);
 		m_InGameLog = "";
 	}
