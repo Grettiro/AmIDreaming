@@ -123,12 +123,14 @@ public class Platformer2DUserControl : MonoBehaviour
 	{
 		timeNow = DateTime.Now;
 		levelBegin = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
+		difficulty = GameObject.Find("DeathTracker").GetComponent<DeathTracker>();
+		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
+		character = GetComponent<PlatformerCharacter2D>();
 		if(!Application.loadedLevelName.Equals("World1") && !Application.loadedLevelName.Equals("World2"))
 		{
 			if(!levelStarted)
 			{
 				levelStarted = true;
-				difficulty = GameObject.Find("DeathTracker").GetComponent<DeathTracker>();
 				startTimer();
 				diffLevelBegin = difficulty.Difficulty;
 			}
@@ -136,8 +138,7 @@ public class Platformer2DUserControl : MonoBehaviour
 		if (Application.loadedLevelName.Contains ("Easy") || Application.loadedLevelName.Contains ("World")) {
 			allowSlow = false;
 		}
-		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
-	    character = GetComponent<PlatformerCharacter2D>();
+
 		if (checkpoint != null) {
 			setPos = checkpoint.GetComponent<CheckpointObject> ();
 			if (setPos.IsCheckpoint) {
