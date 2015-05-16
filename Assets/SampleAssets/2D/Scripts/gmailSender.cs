@@ -46,9 +46,9 @@ public class gmailSender {
 		mail.Subject = nameOfPlayer;
 		mail.Body = message;
 
-		string userState = "Mail token";
+		//string userState = "Mail token";
 
-		client.SendAsync(mail, userState);
+		client.Send(mail);//, userState);
 
 		mail.Dispose();
 	}

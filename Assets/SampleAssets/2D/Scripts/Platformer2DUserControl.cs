@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
 using System;
@@ -317,8 +318,15 @@ public class Platformer2DUserControl : MonoBehaviour
 				Application.LoadLevel (0);
 			}
 		}
+		if(GUILayout.Button("Send log"))
+		{
+			json.sendMail();
+		}
 		if(GUILayout.Button ("Exit Game"))
-				Application.Quit();
+		{
+			json.sendMail();
+			Application.Quit();
+		}
 		
 	}
 }

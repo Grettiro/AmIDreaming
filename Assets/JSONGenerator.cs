@@ -37,19 +37,11 @@ public class JSONGenerator {
 		I[Application.loadedLevelName]["averageSpeed"].AsFloat = 3.151f;
 		for(int i = 0; i < path.Length; i += 2)
 			I[Application.loadedLevelName]["pathOfPlay"][-1] = "(" + path[i] + ", " + path[i + 1] + ")";
-		P(I.ToString(""));
-
-		sendMail();
-		//Application.OpenURL("mailto:amidreaminggame@gmail.com?subject=Play through log for: " + name + "&body=" + m_InGameLog);
-		/*
-		 * Write to file, overwriting the file after each level.
-		 */
-		Debug.Log(m_InGameLog);
-		m_InGameLog = "";
 	}
 
-	private void sendMail()
+	public void sendMail()
 	{
+		P(I.ToString(""));
 		timeNow = DateTime.Now;
 		sender.sendMail(name + " - " + timeNow.Date, m_InGameLog);
 	}
@@ -68,8 +60,6 @@ public class JSONGenerator {
 		I[Application.loadedLevelName]["death" + count]["latestAbilityTime"] = timeOfLatestAbility;
 		for(int i = 0; i < path.Length; i += 2)
 			I[Application.loadedLevelName]["death" + count]["pathOfPlay"][-1] = "(" + path[i] + ", " + path[i + 1] + ")";
-		P(I.ToString(""));
-		m_InGameLog = "";
 	}
 
 	// Update is called once per frame
