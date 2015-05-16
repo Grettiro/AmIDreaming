@@ -19,7 +19,7 @@ public class UpdateNeurons : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		if (this.name == "TutorialNeuron") {
+		if (this.name == "TutorialNeuron" && Application.loadedLevelName == "Tutorial1") {
 			Platformer2DUserControl abilities = GameObject.Find ("Player").GetComponent<Platformer2DUserControl> ();
 			abilities.Move = false;
 			textAllow = true;
@@ -30,9 +30,9 @@ public class UpdateNeurons : MonoBehaviour
 		{
 			AudioControlLoop neuronAudio = GameObject.Find("AudioController").GetComponent<AudioControlLoop>();
 			neuronAudio.playNeuron();
-			
+			if(this.name != "TutorialNeuron"){
 			LevelFinish updateNeurons = GameObject.Find("LevelFinishDoor").GetComponent<LevelFinish>();
-			updateNeurons.setNeuronStatus(nIndex);
+				updateNeurons.setNeuronStatus(nIndex);}
 
 			control.neuron = true;
 
@@ -43,7 +43,7 @@ public class UpdateNeurons : MonoBehaviour
 	private IEnumerator Delay(Collider2D other)
 	{
 
-			yield return new WaitForSeconds(3.5f);
+			yield return new WaitForSeconds(3f);
 			Platformer2DUserControl abilities = GameObject.Find ("Player").GetComponent<Platformer2DUserControl> ();
 			abilities.Move = true;
 			other.attachedRigidbody.isKinematic = false;
