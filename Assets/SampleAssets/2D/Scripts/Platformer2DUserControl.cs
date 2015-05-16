@@ -28,6 +28,7 @@ public class Platformer2DUserControl : MonoBehaviour
 	CheckpointObject setPos;
 	public Rect winRect = new Rect(200, 200, 240, 100);
 	private static bool levelStarted = false;
+	private static int messageSendsLeft = 3;
 
 	// Timers
 	private static Timer levelTimer = new Timer(10);
@@ -318,10 +319,12 @@ public class Platformer2DUserControl : MonoBehaviour
 				Application.LoadLevel (0);
 			}
 		}
-		if(GUILayout.Button("Send log"))
-		{
-			json.sendMail(true);
-		}
+		if(messageSendsLeft > 0)
+			if(GUILayout.Button("Send log (" + messageSendsLeft + ")"))
+			{
+				json.sendMail(true);
+				messageSendsLeft--;
+			}
 		if(GUILayout.Button ("Exit Game"))
 		{
 			json.sendMail(false);
