@@ -32,11 +32,11 @@ public class AudioControlLoop : MonoBehaviour {
 		}
 		else
 		{
-			if(Application.loadedLevel == 1 || (Application.loadedLevel >= 3 && Application.loadedLevel <= 9))
+			if(Application.loadedLevel == 1 || (Application.loadedLevel >= 6 && Application.loadedLevel <= 9))
 				audioStart.Play();
-			if(Application.loadedLevel == 2 || (Application.loadedLevel >= 10 && Application.loadedLevel <= 14))
+			if(Application.loadedLevel == 2 || (Application.loadedLevel >= 6 && Application.loadedLevel <= 13))
 				audioStart2.Play();
-			if(Application.loadedLevel >= 15 && Application.loadedLevel <= 19)
+			if(Application.loadedLevel >= 3 && Application.loadedLevel <= 5 || Application.loadedLevel == 14)
 				audioStart3.Play();
 			if(Application.loadedLevel >= 20)
 				audioStart4.Play();
@@ -57,13 +57,47 @@ public class AudioControlLoop : MonoBehaviour {
 		{
 			Destroy (this.gameObject);
 		}
-		if (Application.loadedLevel == 2 || Application.loadedLevel >= 10 && Application.loadedLevel <= 14) {
+		if (Application.loadedLevel == 1 || Application.loadedLevel >= 15 && Application.loadedLevel <= 23) {
+			if (audioStart3.isPlaying) {
+				audioStart3.Stop ();
+				changeSongs = true;
+				audioStart.Play ();
+			} else if (audioLoop3.isPlaying) {
+				audioLoop3.Stop ();
+				changeSongs = true;
+				audioStart.Play ();
+			} else if (!audioStart.isPlaying) {
+				if (!audioLoop.isPlaying) {
+					audioStart.Stop ();
+					audioLoop.loop = true;
+					audioLoop.Play ();
+				}
+			}
+
+		} else if (Application.loadedLevel == 14) {
 			if (audioStart2.isPlaying) {
 				audioStart2.Stop ();
 				changeSongs = true;
-				audioLoop2.Play ();
-			} else if (audioLoop.isPlaying) {
-				audioLoop.Stop ();
+				audioStart3.Play ();
+			} else if (audioLoop3.isPlaying) {
+				audioLoop2.Stop ();
+				changeSongs = true;
+				audioStart3.Play ();
+			} else if (!audioStart3.isPlaying) {
+				if (!audioLoop3.isPlaying) {
+					audioStart3.Stop ();
+					audioLoop3.loop = true;
+					audioLoop3.Play ();
+				}
+			}
+		}
+		else if (Application.loadedLevel >= 15 && Application.loadedLevel <= 23) {
+			if (audioStart3.isPlaying) {
+				audioStart3.Stop ();
+				changeSongs = true;
+				audioStart2.Play ();
+			} else if (audioLoop3.isPlaying) {
+				audioLoop3.Stop ();
 				changeSongs = true;
 				audioStart2.Play ();
 			} else if (!audioStart2.isPlaying) {
@@ -72,53 +106,8 @@ public class AudioControlLoop : MonoBehaviour {
 					audioLoop2.loop = true;
 					audioLoop2.Play ();
 				}
-			} else {
-				if (!audioStart2.isPlaying) {
-					if (!audioLoop2.isPlaying) {
-						audioStart2.Stop ();
-						audioLoop2.loop = true;
-						audioLoop2.Play ();
-					}
-				}
 			}
 
-		} 
-		else if (Application.loadedLevel >= 15 && Application.loadedLevel <= 19) {
-			if(!changeSongs)
-			{
-				if(!audioStart3.isPlaying)
-					if(!audioLoop3.isPlaying)
-				{
-					audioStart3.Stop();
-					audioLoop3.loop = true;
-					audioLoop3.Play();
-				}
-			}
-		}
-		else if (Application.loadedLevel >= 20) {
-			if(!changeSongs)
-			{
-				if(!audioStart4.isPlaying)
-					if(!audioLoop4.isPlaying)
-				{
-					audioStart4.Stop();
-					audioLoop4.loop = true;
-					audioLoop4.Play();
-				}
-			}
-		}
-		else
-		{
-			if(!changeSongs)
-			{
-				if(!audioStart.isPlaying)
-					if(!audioLoop.isPlaying)
-					{
-						audioStart.Stop();
-						audioLoop.loop = true;
-						audioLoop.Play();
-					}
-			}
 		}
 			
 			
@@ -126,13 +115,7 @@ public class AudioControlLoop : MonoBehaviour {
 
 	public void pitchChangeDown()
 	{
-		if(Application.loadedLevel >= 3 && Application.loadedLevel <= 9)
-		{
-			audioStart.pitch = 0.6f;
-			audioLoop.pitch = 0.6f;
-		}
-
-		if(Application.loadedLevel >= 10)
+		if(Application.loadedLevel >= 15 && Application.loadedLevel <= 23)
 		{
 			audioStart2.pitch = 0.6f;
 			audioLoop2.pitch = 0.6f;
@@ -141,16 +124,10 @@ public class AudioControlLoop : MonoBehaviour {
 
 	public void pitchChangeUp()
 	{
-		if(Application.loadedLevel >= 3 && Application.loadedLevel <= 9)
+		if(Application.loadedLevel >= 15 && Application.loadedLevel <= 23)
 		{
-			audioStart.pitch = 1;
-			audioLoop.pitch = 1;
-		}
-		
-		if(Application.loadedLevel >= 10)
-		{
-			audioStart2.pitch = 1;
-			audioLoop2.pitch = 1;
+			audioStart2.pitch = 0.6f;
+			audioLoop2.pitch = 0.6f;
 		}
 	}
 

@@ -21,13 +21,13 @@ public class DifficultyAdjusterPlatform : MonoBehaviour {
 			DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 			if(this.name.Contains("Killzone"))
 			{
-				this.transform.position = new Vector3(this.transform.position.x -((10-difficulty.Difficulty)/10), this.transform.position.y, 0);
-				this.transform.localScale -= new Vector3(((10-difficulty.Difficulty)/10), 0, 0);
+				this.transform.position = new Vector3(this.transform.position.x -((10-difficulty.Difficulty)/15), this.transform.position.y, 0);
+				this.transform.localScale -= new Vector3(((10-difficulty.Difficulty)/15), 0, 0);
 			}
 			else
 			{
-				this.transform.position = new Vector3(this.transform.position.x -((10-difficulty.Difficulty)/5), this.transform.position.y, 0);
-				this.transform.localScale += new Vector3(((10-difficulty.Difficulty)/5), 0, 0);
+				this.transform.position = new Vector3(this.transform.position.x -((10-difficulty.Difficulty)/10), this.transform.position.y, 0);
+				this.transform.localScale += new Vector3(((10-difficulty.Difficulty)/10), 0, 0);
 			}
 
 		}

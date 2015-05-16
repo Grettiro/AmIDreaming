@@ -35,7 +35,8 @@ public class DeathTracker : MonoBehaviour {
 		}
 	}
 	void LateUpdate() {
-		deathMarker = 20 + (10 - dLevel * 5);
+		Debug.Log (dLevel);
+		deathMarker = 20 + ((10 - dLevel) * 5);
 	}
 
 	[SerializeField]
