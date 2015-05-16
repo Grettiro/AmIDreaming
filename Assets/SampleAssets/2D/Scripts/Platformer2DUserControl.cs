@@ -320,11 +320,11 @@ public class Platformer2DUserControl : MonoBehaviour
 		}
 		if(GUILayout.Button("Send log"))
 		{
-			json.sendMail();
+			json.sendMail(true);
 		}
 		if(GUILayout.Button ("Exit Game"))
 		{
-			json.sendMail();
+			json.sendMail(false);
 			Application.Quit();
 		}
 		

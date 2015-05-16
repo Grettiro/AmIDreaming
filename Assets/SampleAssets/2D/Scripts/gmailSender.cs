@@ -41,14 +41,19 @@ public class gmailSender {
 		client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
 	}
 
-	public void sendMail(string nameOfPlayer, string message)
+	public void sendMail(string nameOfPlayer, string message, bool asynch)
 	{
 		mail.Subject = nameOfPlayer;
 		mail.Body = message;
 
-		//string userState = "Mail token";
+		if(asynch)
+		{
+			string userState = "Mail token";
 
-		client.Send(mail);//, userState);
+			client.SendAsync(mail, userState);
+		}
+		else
+			client.Send(mail);
 
 		mail.Dispose();
 	}

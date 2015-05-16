@@ -39,11 +39,11 @@ public class JSONGenerator {
 			I[Application.loadedLevelName]["pathOfPlay"][-1] = "(" + path[i] + ", " + path[i + 1] + ")";
 	}
 
-	public void sendMail()
+	public void sendMail(bool asynch)
 	{
 		P(I.ToString(""));
 		timeNow = DateTime.Now;
-		sender.sendMail(name + " - " + timeNow.Date, m_InGameLog);
+		sender.sendMail(name + " - " + timeNow.Date, m_InGameLog, asynch);
 	}
 
 	public void logDeath(int count, float xCoord, float yCoord, string timeOfDeath, int teleportCount, int gravityCount,
