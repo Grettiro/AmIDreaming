@@ -38,6 +38,7 @@ public class gmailSender {
 		client.EnableSsl = true;
 		ServicePointManager.ServerCertificateValidationCallback = delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors SslPolicyErrors)
 		{ return true; };
+		client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
 	}
 
 	public void sendMail(string nameOfPlayer, string message)
@@ -45,7 +46,6 @@ public class gmailSender {
 		mail.Subject = nameOfPlayer;
 		mail.Body = message;
 
-		client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
 		string userState = "Mail token";
 
 		client.SendAsync(mail, userState);

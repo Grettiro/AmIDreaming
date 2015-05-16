@@ -4,6 +4,7 @@ using SimpleJSON;
 using System.IO;
 using System;
 
+
 public class JSONGenerator {
 
 	private static gmailSender sender = new gmailSender();
@@ -11,6 +12,8 @@ public class JSONGenerator {
 	private static string name = "name";
 	private string m_InGameLog = "";
 	private static JSONClass I = new JSONClass();
+	private DateTime timeNow;
+
 	void P(string aText)
 	{
 		m_InGameLog += aText + "\n";
@@ -47,7 +50,8 @@ public class JSONGenerator {
 
 	private void sendMail()
 	{
-		sender.sendMail(name, m_InGameLog);
+		timeNow = DateTime.Now;
+		sender.sendMail(name + " - " + timeNow.Date, m_InGameLog);
 	}
 
 	public void logDeath(int count, float xCoord, float yCoord, string timeOfDeath, int teleportCount, int gravityCount,
