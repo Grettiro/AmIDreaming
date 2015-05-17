@@ -53,10 +53,13 @@ public class Restarter : MonoBehaviour
 		anim.SetTrigger("Die");
 		//checkpoint = GameObject.Find ("CheckPoint").GetComponent<CheckpointObject> ();
 		yield return new WaitForSeconds(0.5f); // wait for two seconds.
-		deathCount = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
-		deathCount.Deaths += 1;
-		counter++;
-		control.LogDeath(counter);
+		if(!Application.loadedLevelName.Contains("World"))
+		{
+			deathCount = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
+			deathCount.Deaths += 1;
+			counter++;
+			control.LogDeath(counter);
+		}
 		/*if (checkpoint.GetComponent<CheckpointObject>().IsCheckpoint) 
 		{
 			other.transform.position = checkpoint.GetComponent<CheckpointObject>().Checkpoint;

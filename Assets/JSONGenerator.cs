@@ -34,7 +34,7 @@ public class JSONGenerator {
 		I[Application.loadedLevelName]["diffLevelEnd"].AsInt = diffLevelEnd;
 		I[Application.loadedLevelName]["pauseTime"].AsFloat = pauseTime;
 		I[Application.loadedLevelName]["levelCompleted"].AsBool = levelFinished;
-		I[Application.loadedLevelName]["averageSpeed"].AsFloat = 3.151f;
+		//I[Application.loadedLevelName]["averageSpeed"].AsFloat = 3.151f;
 		for(int i = 0; i < path.Length; i += 2)
 			I[Application.loadedLevelName]["pathOfPlay"][-1] = "(" + path[i] + ", " + path[i + 1] + ")";
 	}
@@ -43,7 +43,8 @@ public class JSONGenerator {
 	{
 		P(I.ToString(""));
 		timeNow = DateTime.Now;
-		sender.sendMail(name + " - " + timeNow.Date, m_InGameLog, asynch);
+		sender.sendMail(name + " - " + timeNow.Day + "/" + timeNow.Month + "/" + timeNow.Year + " - " + timeNow.TimeOfDay, m_InGameLog, asynch);
+		m_InGameLog = "";
 	}
 
 	public void logDeath(int count, float xCoord, float yCoord, string timeOfDeath, int teleportCount, int gravityCount,

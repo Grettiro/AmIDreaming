@@ -261,6 +261,11 @@ public class Platformer2DUserControl : MonoBehaviour
 		set {moveable = value; }
 	}
 
+	void OnApplicationQuit()
+	{
+		json.sendMail(false);
+	}
+
 	private void OnGUI()
 	{
 		if (paused) 
@@ -327,7 +332,6 @@ public class Platformer2DUserControl : MonoBehaviour
 			}
 		if(GUILayout.Button ("Exit Game"))
 		{
-			json.sendMail(false);
 			Application.Quit();
 		}
 		

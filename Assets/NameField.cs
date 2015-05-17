@@ -20,9 +20,9 @@ public class NameField : MonoBehaviour {
 
 	void WindowFunction(int windowID) {
 		DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
-		GUILayout.TextField("Need to put in your name!");
+		GUILayout.TextField("Need to put in your name in the text box below!");
 		nameOfPlayer = GUILayout.TextField(nameOfPlayer);
-		GUILayout.TextField("And choose your starting difficulty!");
+		GUILayout.TextField("And choose your starting difficulty with the slider!");
 		levelDifficulty = Mathf.RoundToInt(GUILayout.HorizontalSlider (levelDifficulty, 0, 10));
 		GUILayout.Label(levelDifficulty.ToString());
 		if (GUILayout.Button("New Game") && nameOfPlayer != "")

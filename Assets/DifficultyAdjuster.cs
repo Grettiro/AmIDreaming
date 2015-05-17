@@ -16,7 +16,6 @@ public class DifficultyAdjuster : MonoBehaviour {
 	private void Scale(){
 		if (!scaled) {
 			DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
-			Debug.Log (difficulty.Difficulty);
 			if(this.name == "KillzoneTop")
 			{
 				this.transform.position = new Vector3 (this.transform.position.x, this.transform.position.y + ((10-difficulty.Difficulty)/4), 0);
