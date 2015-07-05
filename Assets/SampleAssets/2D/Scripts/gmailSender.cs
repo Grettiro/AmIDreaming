@@ -12,7 +12,7 @@ using System.Threading;
 public class gmailSender {
 
 	private MailMessage mail = new MailMessage();
-	private SmtpClient client = new SmtpClient("smtp.gmail.com");	
+	private SmtpClient client = new SmtpClient("smtp.sendgrid.net");	
 
 	private static void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
 	{
@@ -34,7 +34,7 @@ public class gmailSender {
 		mail.To.Add("amidreaminggame@gmail.com");
 		
 		client.Port = 587;
-		client.Credentials = new System.Net.NetworkCredential("amidreaminggame@gmail.com", "nightmareofdreams") as ICredentialsByHost;
+		client.Credentials = new System.Net.NetworkCredential("AmIDreaming", "nightm4r3ofdreams") as ICredentialsByHost;
 		client.EnableSsl = true;
 		ServicePointManager.ServerCertificateValidationCallback = delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors SslPolicyErrors)
 		{ return true; };
@@ -45,6 +45,7 @@ public class gmailSender {
 	{
 		mail.Subject = nameOfPlayer;
 		mail.Body = message;
+		mail.Headers.Add("X-SMTPAPI", "{\"category\":\"game_email\"}");
 
 		if(asynch)
 		{
