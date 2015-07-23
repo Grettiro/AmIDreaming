@@ -263,6 +263,8 @@ public class Platformer2DUserControl : MonoBehaviour
 
 	void OnApplicationQuit()
 	{
+		if (Application.loadedLevelName.Contains ("Easy") || Application.loadedLevelName.Contains ("Medium"))
+			LogExit (false);
 		json.sendMail(false);
 	}
 
