@@ -12,33 +12,42 @@ public class Platformer2DUserControl : MonoBehaviour
 	private static JSONGenerator json = new JSONGenerator();
 	private DeathTracker difficulty;
 	private GameObject checkpoint;
+
 	private bool jump;
 	private int doubleJump;
 	private bool gravity;
 	private bool teleport;
 	private bool slowTime;
 	private bool paused;
+	private static bool levelStarted = false;
+
 	private bool allowSlow = true;
 	private bool allowTeleport = true;
 	private bool allowGravity = true;
 	private bool moveable = true;                                                                                                                             
+
 	static private bool muted = false;
+
 	private Animator anim;
 	Slider slowTimeSlider;
 	CheckpointObject setPos;
+
 	public Rect winRect = new Rect(200, 200, 240, 100);
-	private static bool levelStarted = false;
+
 	private static int messageSendsLeft = 3;
 
 	// Timers
-	private static Timer levelTimer = new Timer(10);
-	private static Timer pauseTimer = new Timer(10);
-	private Timer pathTimer = new Timer(1000);
+	private static Timer levelTimer;// = new Timer(10);
+	private static Timer pauseTimer;// = new Timer(10);
+	private Timer pathTimer;// = new Timer(1000);
 	
 	private static float globalTime = 0f;
 	private static float levelTime = 0f;
 	private static float deathTime = 0f;
 	private static float pauseTime = 0f;
+
+	Text timer;
+	private string timerText;
 	
 	// JSON log variables
 	private DateTime timeNow;
@@ -58,6 +67,7 @@ public class Platformer2DUserControl : MonoBehaviour
 	
 	public void LogExit(bool levelFinished)
 	{
+		/*
 		levelEnd = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
 		json.LevelExit(neuron, levelFinished, levelBegin, levelEnd, diffLevelBegin, difficulty.Difficulty, pauseTime, playerPath.ToArray());
 		neuron = false;
@@ -66,16 +76,19 @@ public class Platformer2DUserControl : MonoBehaviour
 		playerPath.Clear();
 		stopTimer();
 		levelStarted = false;
+		*/
 	}
 	
 	public void LogDeath(int deathCount)
 	{
+		/*
 		timeOfDeath = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
 		json.logDeath(deathCount, character.transform.position.x, character.transform.position.y, timeOfDeath,
 		              teleportCount, gravityCount, slowtimeCount, doubleJumps, latestAbility, timeOfLatestAbility,
 		              playerPath.ToArray());
 		deathTime = 0f;
 		playerPath.Clear();
+		*/
 	}
 	
 	public void startTimer()
@@ -116,20 +129,30 @@ public class Platformer2DUserControl : MonoBehaviour
 	
 	private void Start()
 	{
-		levelTimer.Elapsed += new ElapsedEventHandler(levelTimerElapsed);
-		pathTimer.Elapsed += new ElapsedEventHandler(pathTimerElapsed);
-		pauseTimer.Elapsed += new ElapsedEventHandler(pauseTimerElapsed);
+		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
+		{
+			levelTimer.Elapsed += new ElapsedEventHandler (levelTimerElapsed);
+			pathTimer.Elapsed += new ElapsedEventHandler (pathTimerElapsed);
+			pauseTimer.Elapsed += new ElapsedEventHandler (pauseTimerElapsed);
+		}
 	}
 
 	private void Awake()
 	{
+		levelTime = 0;
 		timeNow = DateTime.Now;
 		levelBegin = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
 		difficulty = GameObject.Find("DeathTracker").GetComponent<DeathTracker>();
 		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
 		character = GetComponent<PlatformerCharacter2D>();
-		if(!Application.loadedLevelName.Equals("World1") && !Application.loadedLevelName.Equals("World2"))
+
+		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
 		{
+			levelTimer = new Timer(10);
+			pauseTimer = new Timer(10);
+			pathTimer = new Timer(1000);
+			timer = GameObject.Find("LevelTimer").GetComponent<Text>();
+
 			if(!levelStarted)
 			{
 				levelStarted = true;
@@ -156,6 +179,13 @@ public class Platformer2DUserControl : MonoBehaviour
 		timeNow = DateTime.Now;
 		charPos = character.transform.position;
 
+		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
+		{
+			var ts = TimeSpan.FromSeconds (levelTime);
+			timerText = string.Format ("{0:D2}:{1:D2}.{2:D3}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+
+			timer.text = timerText;
+		}
 		if (Input.GetButtonDown("Pause")) // Escape key or start button
 		{
 			if (!paused)
@@ -163,12 +193,14 @@ public class Platformer2DUserControl : MonoBehaviour
 				Time.timeScale = 0f;
 				paused = true;
 				pauseTimer.Enabled = true;
+				stopTimer();
 			}
 			else
 			{
 				Time.timeScale = 1f;
 				paused = false;
 				pauseTimer.Enabled = false;
+				startTimer();
 			}
 		}
 		if (Input.GetKeyDown ("left")) {
@@ -261,12 +293,12 @@ public class Platformer2DUserControl : MonoBehaviour
 		set {moveable = value; }
 	}
 
-	void OnApplicationQuit()
+	/*void OnApplicationQuit()
 	{
 		if (Application.loadedLevelName.Contains ("Easy") || Application.loadedLevelName.Contains ("Medium"))
 			LogExit (false);
 		json.sendMail(false);
-	}
+	}*/
 
 	private void OnGUI()
 	{
@@ -326,12 +358,12 @@ public class Platformer2DUserControl : MonoBehaviour
 				Application.LoadLevel (0);
 			}
 		}
-		if(messageSendsLeft > 0)
+		/*if(messageSendsLeft > 0)
 			if(GUILayout.Button("Send log (" + messageSendsLeft + ")"))
 			{
 				json.sendMail(true);
 				messageSendsLeft--;
-			}
+			}*/
 		if(GUILayout.Button ("Exit Game"))
 		{
 			Application.Quit();

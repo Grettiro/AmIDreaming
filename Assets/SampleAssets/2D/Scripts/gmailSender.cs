@@ -34,7 +34,7 @@ public class gmailSender {
 		mail.To.Add("amidreaminggame@gmail.com");
 		
 		client.Port = 587;
-		client.Credentials = new System.Net.NetworkCredential("AmIDreaming", "nightm4r3ofdreams") as ICredentialsByHost;
+		client.Credentials = new System.Net.NetworkCredential("AmIDreaming", "Dreamingofnightm4r3s") as ICredentialsByHost;
 		client.EnableSsl = true;
 		ServicePointManager.ServerCertificateValidationCallback = delegate(object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors SslPolicyErrors)
 		{ return true; };

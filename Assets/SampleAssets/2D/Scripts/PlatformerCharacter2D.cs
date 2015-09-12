@@ -163,7 +163,9 @@ public class PlatformerCharacter2D : MonoBehaviour
 					slowTimeSlider = slowTimeBar.GetComponent<Slider>();
 
 					if(slowTimeSlider.value > 0.010f)
+					{
 						slowTimeSlider.value -= 0.005f;
+					}
 					else
 						slowTimeSlider.value = 0.0f;
 				}
