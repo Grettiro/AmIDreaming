@@ -12,6 +12,7 @@ public class DeathTracker : MonoBehaviour {
 	private int nDeaths = 0;
 	private int deathMarker;
 	private int dLevel = 10;
+	private int totalDeaths = 0;
 
 	void Awake () {
 		if(instance != null && instance != this)
@@ -43,6 +44,12 @@ public class DeathTracker : MonoBehaviour {
 	{
 		get {return nDeaths; }
 		set {nDeaths = value; }
+	}
+
+	public int TotalDeaths
+	{
+		get {return totalDeaths; }
+		set {totalDeaths = value; }
 	}
 
 	[SerializeField]

@@ -26,7 +26,7 @@ public class LevelFinish : MonoBehaviour
 			if((player = GameObject.Find("Player").GetComponent<PlatformerCharacter2D>()) != null)
 			{
 				anim = player.getAnimator();
-				player.setDead (true);
+				player.Dead = true;
 				DeathTracker difficulty = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 				if(difficulty.Deaths < difficulty.DeathMarker / 2)
 				{

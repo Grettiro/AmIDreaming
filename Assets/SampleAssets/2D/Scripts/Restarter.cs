@@ -29,7 +29,7 @@ public class Restarter : MonoBehaviour
 			{
 				anim = player.getAnimator();
 			}
-			player.setDead(true);
+			player.Dead = true;
 			AudioControlLoop audioPitch = GameObject.Find("AudioController").GetComponent<AudioControlLoop>();
 			audioPitch.pitchChangeUp();
 
@@ -57,6 +57,7 @@ public class Restarter : MonoBehaviour
 		{
 			deathCount = GameObject.Find ("DeathTracker").GetComponent<DeathTracker> ();
 			deathCount.Deaths += 1;
+			deathCount.TotalDeaths += 1;
 			counter++;
 			control.LogDeath(counter);
 		}

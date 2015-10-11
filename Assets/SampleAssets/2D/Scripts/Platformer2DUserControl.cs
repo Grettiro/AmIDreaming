@@ -8,6 +8,7 @@ using System;
 [RequireComponent(typeof (PlatformerCharacter2D))]
 public class Platformer2DUserControl : MonoBehaviour
 {
+	//TODO: organise class variables, make it tidy, idfk.
 	private PlatformerCharacter2D character;
 	private static JSONGenerator json = new JSONGenerator();
 	private DeathTracker difficulty;
@@ -34,12 +35,12 @@ public class Platformer2DUserControl : MonoBehaviour
 
 	public Rect winRect = new Rect(200, 200, 240, 100);
 
-	private static int messageSendsLeft = 3;
+	//private static int messageSendsLeft = 3;
 
 	// Timers
-	private static Timer levelTimer;// = new Timer(10);
-	private static Timer pauseTimer;// = new Timer(10);
-	private Timer pathTimer;// = new Timer(1000);
+	private static Timer levelTimer;
+	private static Timer pauseTimer;
+	private Timer pathTimer = new Timer(1000);
 	
 	private static float globalTime = 0f;
 	private static float levelTime = 0f;
@@ -48,6 +49,8 @@ public class Platformer2DUserControl : MonoBehaviour
 
 	Text timer;
 	private string timerText;
+	Text difficultyText;
+	Text deathCountText;
 	
 	// JSON log variables
 	private DateTime timeNow;
@@ -113,8 +116,9 @@ public class Platformer2DUserControl : MonoBehaviour
 	
 	static void pathTimerElapsed(object sender, ElapsedEventArgs e)
 	{
+		//TODO: Doesn't really do anything.. I think. Check it out.
 		bool added = false;
-		if(!added)
+		if (!added)
 		{
 			added = true;
 			playerPath.Add(charPos.x);
@@ -129,11 +133,11 @@ public class Platformer2DUserControl : MonoBehaviour
 	
 	private void Start()
 	{
-		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
+		if (!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
 		{
-			levelTimer.Elapsed += new ElapsedEventHandler (levelTimerElapsed);
-			pathTimer.Elapsed += new ElapsedEventHandler (pathTimerElapsed);
-			pauseTimer.Elapsed += new ElapsedEventHandler (pauseTimerElapsed);
+			levelTimer.Elapsed += new ElapsedEventHandler(levelTimerElapsed);
+			pathTimer.Elapsed += new ElapsedEventHandler(pathTimerElapsed);
+			pauseTimer.Elapsed += new ElapsedEventHandler(pauseTimerElapsed);
 		}
 	}
 
@@ -141,34 +145,36 @@ public class Platformer2DUserControl : MonoBehaviour
 	{
 		levelTime = 0;
 		timeNow = DateTime.Now;
-		levelBegin = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
+		levelBegin = string.Format("{0:D2}:{1:D2}.{2:D2}", timeNow.Hour, timeNow.Minute, timeNow.Second);
 		difficulty = GameObject.Find("DeathTracker").GetComponent<DeathTracker>();
 		checkpoint = GameObject.FindGameObjectWithTag ("Checkpoint");
 		character = GetComponent<PlatformerCharacter2D>();
 
-		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
+		if (!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
 		{
 			levelTimer = new Timer(10);
 			pauseTimer = new Timer(10);
-			pathTimer = new Timer(1000);
 			timer = GameObject.Find("LevelTimer").GetComponent<Text>();
+			difficultyText = GameObject.Find("DifficultyLevel").GetComponent<Text>();
+			deathCountText = GameObject.Find("DeathCount").GetComponent<Text>();
 
-			if(!levelStarted)
+			if (!levelStarted)
 			{
 				levelStarted = true;
 				startTimer();
 				diffLevelBegin = difficulty.Difficulty;
 			}
 		}
-		if (Application.loadedLevelName.Contains ("Easy") || Application.loadedLevelName.Contains ("World")) {
+		if (Application.loadedLevelName.Contains("Easy") || Application.loadedLevelName.Contains("World"))
 			allowSlow = false;
-		}
 
-		if (checkpoint != null) {
-			setPos = checkpoint.GetComponent<CheckpointObject> ();
-			if (setPos.IsCheckpoint) {
+		if (checkpoint != null)
+		{
+			setPos = checkpoint.GetComponent<CheckpointObject>();
+			if (setPos.IsCheckpoint)
+			{
 				this.transform.position = setPos.Checkpoint;
-				GetComponent<Rigidbody2D> ().isKinematic = true;
+				GetComponent<Rigidbody2D>().isKinematic = true;
 			}
 		}
 		anim = GetComponent<Animator>();
@@ -181,10 +187,13 @@ public class Platformer2DUserControl : MonoBehaviour
 
 		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
 		{
-			var ts = TimeSpan.FromSeconds (levelTime);
-			timerText = string.Format ("{0:D2}:{1:D2}.{2:D3}", ts.Minutes, ts.Seconds, ts.Milliseconds);
+			var ts = TimeSpan.FromSeconds(levelTime);
+			timerText = string.Format("{0:D2}:{1:D2}.{2:D3}", ts.Minutes, ts.Seconds, ts.Milliseconds);
 
+			// Update HUD texts
 			timer.text = timerText;
+			difficultyText.text = "Difficulty: " + difficulty.Difficulty.ToString();
+			deathCountText.text = "Deaths: " + difficulty.TotalDeaths.ToString();
 		}
 		if (Input.GetButtonDown("Pause")) // Escape key or start button
 		{
@@ -203,10 +212,12 @@ public class Platformer2DUserControl : MonoBehaviour
 				startTimer();
 			}
 		}
-		if (Input.GetKeyDown ("left")) {
+		if (Input.GetKeyDown("left"))
+		{
 			GetComponent<Rigidbody2D>().isKinematic = false;
 		}
-		if (Input.GetKeyDown ("right")) {
+		if (Input.GetKeyDown("right"))
+		{
 			GetComponent<Rigidbody2D>().isKinematic = false;
 		}
 		// Space bar or X button
@@ -218,26 +229,30 @@ public class Platformer2DUserControl : MonoBehaviour
 				doubleJumps++;
 			jump = true;
 		}
-		if (Input.GetButtonUp("Jump")) 
+		if (Input.GetButtonUp("Jump"))
 		{
 			GetComponent<Rigidbody2D>().isKinematic = false;
 			jump = false;
 		}
-		if (allowGravity) {
-			if (Input.GetButtonDown ("Gravity")) { // D or Square button
+		if (allowGravity)
+		{
+			if (Input.GetButtonDown("Gravity")) // D or Square button
+			{
 				latestAbility = "Gravity";
 				gravityCount++;
-				timeOfLatestAbility = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
-				GetComponent<Rigidbody2D> ().isKinematic = false;
+				timeOfLatestAbility = String.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", timeNow.Hour, timeNow.Minute, timeNow.Second, timeNow.Millisecond);
+				GetComponent<Rigidbody2D>().isKinematic = false;
 				gravity = true;
 			}
 		}
-		if (allowTeleport) {
-			if (Input.GetButtonDown ("Teleport")) { // E or R1 button
+		if (allowTeleport)
+		{
+			if (Input.GetButtonDown("Teleport")) // E or R1 button
+			{
 				latestAbility = "Teleport";
 				teleportCount++;
-				timeOfLatestAbility = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
-				GetComponent<Rigidbody2D> ().isKinematic = false;
+				timeOfLatestAbility = String.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", timeNow.Hour, timeNow.Minute, timeNow.Second, timeNow.Millisecond);
+				GetComponent<Rigidbody2D>().isKinematic = false;
 				teleport = true;
 			}
 		}
@@ -247,7 +262,7 @@ public class Platformer2DUserControl : MonoBehaviour
 			{
 				latestAbility = "Slow";
 				slowtimeCount++;
-				timeOfLatestAbility = timeNow.Hour + ":" + timeNow.Minute + ":" + timeNow.Second + "." + timeNow.Millisecond;
+				timeOfLatestAbility = String.Format("{0:D2}:{1:D2}:{2:D2}.{3:D3}", timeNow.Hour, timeNow.Minute, timeNow.Second, timeNow.Millisecond);
 				slowTime = true;
 			}
 			if(Input.GetButtonUp("Slow"))
@@ -260,8 +275,16 @@ public class Platformer2DUserControl : MonoBehaviour
 	    // Read the inputs.
 		float h = Input.GetAxis("Horizontal");
 	    // Pass all parameters to the character control script.
-		if(moveable)
-			character.Move(h, jump, gravity, teleport, slowTime);
+		if(moveable && !character.Dead)
+		{
+			character.Move(h);
+			character.Jump(jump);
+			if(gravity)
+				character.Gravity();
+			if(teleport)
+				character.Teleport();
+			character.Slow(slowTime);
+		}
 		gravity = false;
 		teleport = false;
 	}
