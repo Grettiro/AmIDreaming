@@ -31,7 +31,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	public AudioClip audioGravity;
 	public AudioClip audioTeleport;
 
-	private float transformRadius = .4f; // Radius of the overlap circle to determine if grounded
+	private float transformRadius = .2f; // Radius of the overlap circle to determine if grounded
 
 	private Animator anim; // Reference to the player's animator component.
 
@@ -118,31 +118,26 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 	public void Move(float move)
 	{
-		//only control the player if grounded or airControl is turned on
-		if(grounded || airControl)
+		if (grounded)
 		{
 			jumpCount = 0;
 			teleportAllow = true;
-		
-			// The Speed animator parameter is set to the absolute value of the horizontal input.
-			anim.SetFloat("Speed", Mathf.Abs(move));
-		
-			// To prevent getting stuck at a wall.
-			if (!grounded && atWall)
-			{
-				if ((facingRight && move > 0.0f) || (!facingRight && move < 0.0f))
-					move = 0.0f;
-			}
-			// Move the character
-			GetComponent<Rigidbody2D>().velocity = new Vector2(move * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
-		
-		
-			if (move > 0.0f && !facingRight)
-				Flip();
-			else if (move < 0.0f && facingRight)
-				Flip();
-		
 		}
+
+		// The Speed animator parameter is set to the absolute value of the horizontal input.
+		anim.SetFloat("Speed", Mathf.Abs(move));
+
+		// To prevent getting stuck at a wall.
+		if (!grounded && atWall)
+			if ((facingRight && move > 0.0f) || (!facingRight && move < 0.0f))
+				move = 0.0f;
+
+		// Move the character
+		GetComponent<Rigidbody2D>().velocity = new Vector2(move * maxSpeed, GetComponent<Rigidbody2D>().velocity.y);
+		if (move > 0.0f && !facingRight)
+			Flip();
+		else if (move < 0.0f && facingRight)
+			Flip();
 	}
 
 	public void Jump(bool jump)
@@ -176,7 +171,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				allowJumpSound = true;
 				jumpVelocity = 300f;
-				GetComponent<Rigidbody2D>().AddForce(new Vector2 (0f, 1f));
+				GetComponent<Rigidbody2D>().AddForce(new Vector2(0f, 1f));
 			}
 			jumping = false;
 		}
@@ -190,7 +185,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 
 		if (!muted)
 		{
-			GetComponent<AudioSource>().Stop ();
+			GetComponent<AudioSource>().Stop();
 			GetComponent<AudioSource>().PlayOneShot(audioGravity);
 		}
 	
@@ -204,9 +199,8 @@ public class PlatformerCharacter2D : MonoBehaviour
 		if (teleportAllow)
 		{
 			teleportAllow = false;
-			/*
-			 * Still needs some cleaning up to do, proooobably don't need 3 vectors..
-		 	 */
+
+			// Still needs some cleaning up to do, proooobably don't need 3 vectors..
 			Vector3 dashScale = new Vector3(10.0f, 0.0f);
 			Vector3 loopCheck = new Vector3(0.0f, 0.0f);
 			Vector3 wallEdge = new Vector3(0.0f, 0.0f);

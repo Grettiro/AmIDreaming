@@ -225,8 +225,8 @@ public class Platformer2DUserControl : MonoBehaviour
 		{
 			GetComponent<Rigidbody2D>().isKinematic = false;
 			character.jumpCount += 1;
-			if(character.jumpCount >= 2)
-				doubleJumps++;
+			//if(character.jumpCount >= 2)
+				//doubleJumps++;
 			jump = true;
 		}
 		if (Input.GetButtonUp("Jump"))
@@ -275,7 +275,7 @@ public class Platformer2DUserControl : MonoBehaviour
 	    // Read the inputs.
 		float h = Input.GetAxis("Horizontal");
 	    // Pass all parameters to the character control script.
-		if(moveable && !character.Dead)
+		if (moveable && !character.Dead)
 		{
 			character.Move(h);
 			character.Jump(jump);
@@ -360,8 +360,13 @@ public class Platformer2DUserControl : MonoBehaviour
 		}
 		if(Application.loadedLevelName != "World1" && Application.loadedLevelName != "World2")
 		{
-			if(GUILayout.Button ("Level Select"))
+			if(GUILayout.Button("Level Select"))
 			{
+				if (checkpoint != null) {
+					setPos = checkpoint.GetComponent<CheckpointObject> ();
+					setPos.IsCheckpoint = false;
+					Destroy(checkpoint);
+				}
 				Time.timeScale = 1f;
 				stopTimer();
 				paused = false;
