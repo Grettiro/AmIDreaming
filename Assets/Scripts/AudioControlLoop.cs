@@ -133,7 +133,6 @@ public class AudioControlLoop : MonoBehaviour {
 
 	public void playNeuron()
 	{
-
 		GetComponent<AudioSource>().PlayOneShot(neuronPickup);
 	}
 }

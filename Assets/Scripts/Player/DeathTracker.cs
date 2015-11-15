@@ -1,67 +1,62 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class DeathTracker : MonoBehaviour {
-
-	private static DeathTracker instance = null;
-	private static DifficultyAdjuster adjust;
+public class DeathTracker : MonoBehaviour
+{
+	/*
+	 * Not much of a deathtracker, more a difficulty adjuster. Rename and move to Difficulty directory?
+	 */
+	private static DeathTracker m_instance = null;
 	public static DeathTracker Instance 
 	{
-		get { return instance; }
+		get { return m_instance; }
 	}
-	private int nDeaths = 0;
-	private int deathMarker;
-	private int dLevel = 10;
-	private int totalDeaths = 0;
 
-	void Awake () {
-		if(instance != null && instance != this)
+	private int m_numDeaths = 0;
+	private int m_deathMarker = 20;
+	private int m_diffLevel = 10;
+
+	private void Awake()
+	{
+		if(m_instance != null && m_instance != this)
 		{
-			Destroy (this.gameObject);
+			Destroy(this.gameObject);
 			return;
 		}
 		else
-			instance = this;
-		
-		DontDestroyOnLoad (this.gameObject);
+			m_instance = this;
 	}
 
 
-	void Update () {
-		if (nDeaths > deathMarker) 
+	private void Update()
+	{
+		if(m_numDeaths > m_deathMarker)
 		{
-			nDeaths = 0;
-			if(dLevel > 0)
-				dLevel -= 1;
+			m_numDeaths = 0;
+			if(m_diffLevel > 0)
+				m_diffLevel -= 1;
 		}
 	}
-	void LateUpdate() {
-		deathMarker = 20 + ((10 - dLevel) * 5);
+
+	private void LateUpdate()
+	{
+		m_deathMarker = 20 + ((10 - m_diffLevel) * 5);
 	}
 
-	[SerializeField]
 	public int Deaths
 	{
-		get {return nDeaths; }
-		set {nDeaths = value; }
+		get { return m_numDeaths; }
+		set { m_numDeaths = value; }
 	}
 
-	public int TotalDeaths
-	{
-		get {return totalDeaths; }
-		set {totalDeaths = value; }
-	}
-
-	[SerializeField]
 	public int Difficulty
 	{
-		get {return dLevel; }
-		set {dLevel = value; }
+		get { return m_diffLevel; }
+		set { m_diffLevel = value; }
 	}
 
 	public int DeathMarker
 	{
-		get {return deathMarker; }
-		set {deathMarker = value; }
+		get { return m_deathMarker; }
 	}
 }

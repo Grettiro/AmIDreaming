@@ -7,11 +7,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 	[SerializeField] private static Vector3 m_startingPosition;
 	
 	// Layer masks to determine what colliders to use.
-	[SerializeField] private LayerMask whatIsGround; 		// A mask determining what is ground to the character
-	[SerializeField] private LayerMask whatIsWall; 			// A mask determining what is a wall to the character
-	[SerializeField] private LayerMask whatIsCeiling; 		// A mask determining what is a wall to the character
-	[SerializeField] private LayerMask whatIsImpassable; 	// A mask determining what is impassable (teleporting)
-	[SerializeField] private LayerMask whatIsCheckpoint; 	// A mask determining what is a checkpoint object
+	[SerializeField] private LayerMask m_whatIsGround; 		// A mask determining what is ground to the character
+	[SerializeField] private LayerMask m_whatIsWall; 			// A mask determining what is a wall to the character
+	[SerializeField] private LayerMask m_whatIsCeiling; 		// A mask determining what is a wall to the character
+	[SerializeField] private LayerMask m_whatIsImpassable; 	// A mask determining what is impassable (teleporting)
+	[SerializeField] private LayerMask m_whatIsCheckpoint; 	// A mask determining what is a checkpoint object
 
 	private Platformer2DUserControl m_characterControl;
 
@@ -24,7 +24,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	
 	private Rigidbody2D m_rigidbody;						// Reference to the player's rigidbody2D component.
 	private Animator m_animator; 							// Reference to the player's animator component.
-	private LevelManager m_levelManager;
+	private static LevelManager m_levelManager;
 
 	// TODO: Figure out if this is needed.
 	GameObject m_checkpoint;
@@ -33,7 +33,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 	// Checking if grounded.
 	private Transform m_groundCheck; 						// A position marking where to check if the player is grounded.
 	private bool m_isGrounded = false; 						// Whether or not the player is grounded.
-	private float m_transformRadius = 0.1f; 					// Radius of the overlap circle to determine if grounded
+	private float m_transformRadius = 0.21f; 					// Radius of the overlap circle to determine if grounded
 	// Checking if teleporting into a wall.
 	private Transform m_teleportCheck;						// A position to determine how far the player can teleport.
 	private Transform m_wallCheckUpper;	 					// A position marking where to check if the player is inside a wall.
@@ -73,44 +73,27 @@ public class PlatformerCharacter2D : MonoBehaviour
 		m_teleportCheck = transform.Find("TeleportCheck");
 	    m_ceilingCheck = transform.Find("CeilingCheck");
 
-
+		// Reference for checkpoint object if it's there.
 		m_checkpoint = GameObject.FindGameObjectWithTag("Checkpoint");
 		if(m_checkpoint != null)
-		{
-			m_checkpointObj = GameObject.Find("CheckPoint").GetComponent<CheckpointObject>();
-			if(m_checkpointObj.IsCheckpoint)
-			{
-				Debug.Log("starting pos: " + m_startingPosition);
-				if(m_checkpointObj.m_gravityFlipped)
-				{
-					// Reverse the y position so you don't start on the other end, in a way.
-					Gravity(true);
-				}
-			}
-			else
-				m_startingPosition = m_levelManager.CharacterPosition;
+			m_checkpointObj = m_checkpoint.GetComponent<CheckpointObject>();
 
-			this.transform.position = m_startingPosition;
-		}
-	}
+		m_startingPosition = m_levelManager.CharacterPosition;
 
-	private void OnEnable()
-	{
-		m_rigidbody.isKinematic = false;
-	}
+		if(m_levelManager.CheckpointReached && m_levelManager.CheckpointGravity)
+			Gravity(true);
 
-	private void OnDisable()
-	{
-		m_rigidbody.isKinematic = true;
+		this.transform.position = m_startingPosition;
+		
 	}
 
 	private void FixedUpdate()
 	{
 		// The player is grounded if a circlecast to the groundcheck position hits anything designated as ground
-		m_isGrounded = Physics2D.OverlapCircle(m_groundCheck.position, m_transformRadius, whatIsGround);
+		m_isGrounded = Physics2D.OverlapCircle(m_groundCheck.position, m_transformRadius, m_whatIsGround);
 		m_animator.SetBool("Ground", m_isGrounded);
-		m_isAtWall = Physics2D.OverlapArea(m_wallCheckLower.position, m_wallCheckUpper.position, whatIsWall);
-		m_isAtCeiling = Physics2D.OverlapCircle(m_ceilingCheck.position, m_transformRadius, whatIsCeiling);
+		m_isAtWall = Physics2D.OverlapArea(m_wallCheckLower.position, m_wallCheckUpper.position, m_whatIsWall);
+		m_isAtCeiling = Physics2D.OverlapCircle(m_ceilingCheck.position, m_transformRadius, m_whatIsCeiling);
 
 		// Set the vertical animation
 		if(m_rigidbody.gravityScale < 0)
@@ -212,7 +195,7 @@ public class PlatformerCharacter2D : MonoBehaviour
 			float wallCounter = 0.0f;
 			float distanceCounter = 0.0f;
 			bool impassableObject = false;
-		
+
 			if(m_isFacingRight)
 			{
 				// Check how many collisions there will be along the way (how many units into the wall,
@@ -220,19 +203,19 @@ public class PlatformerCharacter2D : MonoBehaviour
 				for(loopCheck.x = 0.0f; loopCheck.x < 10.0f; loopCheck.x += 0.1f)
 				{
 					// Check for checkpoints while teleporting. Is only accessed if a checkpoint is detected.
-					if(Physics2D.OverlapCircle((m_teleportCheck.position + loopCheck), m_transformRadius, whatIsCheckpoint))
+					if(Physics2D.OverlapCircle((m_teleportCheck.position + loopCheck), m_transformRadius, m_whatIsCheckpoint))
 					{
-						m_checkpointObj.IsCheckpoint = true;
-						// What is the purpose of this?
-						m_checkpointObj.Checkpoint = m_checkpointObj.transform.position;
+						// TODO: Need to destroy the checkpoint and set gravity flipped variable.
+						m_levelManager.CheckpointReached = true;
+						m_levelManager.CharacterPosition = m_checkpointObj.transform.position;
 					}
 
-					if(Physics2D.OverlapCircle((m_teleportCheck.position + loopCheck), m_transformRadius, whatIsImpassable))
+					if(Physics2D.OverlapCircle((m_teleportCheck.position + loopCheck), m_transformRadius, m_whatIsImpassable))
 					{
 						impassableObject = true;
 						break;
 					}
-					if(Physics2D.OverlapCircle((m_teleportCheck.position + loopCheck), m_transformRadius, whatIsWall))
+					if(Physics2D.OverlapCircle((m_teleportCheck.position + loopCheck), m_transformRadius, m_whatIsWall))
 						wallCounter++;
 					else
 						distanceCounter++;
@@ -259,18 +242,18 @@ public class PlatformerCharacter2D : MonoBehaviour
 			{
 				for(loopCheck.x = 0.0f; loopCheck.x < 10.0f; loopCheck.x += 0.1f)
 				{
-					if(Physics2D.OverlapCircle((m_teleportCheck.position - loopCheck), m_transformRadius, whatIsCheckpoint))
+					if(Physics2D.OverlapCircle((m_teleportCheck.position - loopCheck), m_transformRadius, m_whatIsCheckpoint))
 					{
-						m_checkpointObj.IsCheckpoint = true;
-						m_checkpointObj.Checkpoint = m_checkpointObj.transform.position;
+						m_levelManager.CheckpointReached = true;
+						m_levelManager.CharacterPosition = m_checkpointObj.transform.position;
 					}
 
-					if(Physics2D.OverlapCircle((m_teleportCheck.position - loopCheck), m_transformRadius, whatIsImpassable))
+					if(Physics2D.OverlapCircle((m_teleportCheck.position - loopCheck), m_transformRadius, m_whatIsImpassable))
 					{
 						impassableObject = true;
 						break;
 					}
-					if(Physics2D.OverlapCircle((m_teleportCheck.position - loopCheck), m_transformRadius, whatIsWall))
+					if(Physics2D.OverlapCircle((m_teleportCheck.position - loopCheck), m_transformRadius, m_whatIsWall))
 						wallCounter++;
 					else
 						distanceCounter++;
@@ -417,7 +400,11 @@ public class PlatformerCharacter2D : MonoBehaviour
 	    transform.localScale = theScale;
 	}
 
-	[SerializeField]
+	public LevelManager GetLevelManager()
+	{
+		return m_levelManager;
+	}
+
 	public int JumpCount
 	{
 		get { return m_jumpCount; }

@@ -3,44 +3,53 @@ using System.Collections;
 
 public class LevelEnter : MonoBehaviour 
 {
-	public int levelNumber;
-	public int neuronsRequired;
-	private bool nextLevel;
+	public int m_levelNumber;
+	public int m_neuronsRequired;
 
-	private NeuronTracker getNeurons;
+	private NeuronTracker m_neuronTracker;
 
-	void Awake()
+	private bool m_isAccessible = false;
+
+	private void Awake()
 	{
-		getNeurons = GameObject.Find("GameManager").GetComponent<NeuronTracker>();
+		m_neuronTracker = GameObject.Find("GameManager").GetComponent<NeuronTracker>();
 	}
 
-	void OnTriggerEnter2D(Collider2D other)
+	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if (getNeurons.Neurons < neuronsRequired)
+		if(other.tag.Equals("Player"))
 		{
-			UIUpdate update = GameObject.Find("Enough").GetComponent<UIUpdate>();
-			update.notEnoughNeurons(neuronsRequired);
+			if(m_neuronTracker.CollectedNeurons < m_neuronsRequired)
+			{
+				UIUpdate update = GameObject.Find("Enough").GetComponent<UIUpdate>();
+				update.notEnoughNeurons(m_neuronsRequired);
+			}
 		}
 	}
 
-	void OnTriggerStay2D(Collider2D other)
+	private void OnTriggerStay2D(Collider2D other)
 	{
-		if (getNeurons.Neurons >= neuronsRequired)
-			nextLevel = true;
+		if(other.tag.Equals("Player"))
+			if(m_neuronTracker.CollectedNeurons >= m_neuronsRequired)
+				m_isAccessible = true;
 	}
 
-	void OnTriggerExit2D(Collider2D other)
+	private void OnTriggerExit2D(Collider2D other)
 	{
-		nextLevel = false;
+		if(other.tag.Equals("Player"))
+			m_isAccessible = false;
 	}
 
-	void Update()
+	private void Update()
 	{
-		if(nextLevel)
-			if (Input.GetButtonDown("Enter")) // Enter or Circle button
+		if(m_isAccessible)
+		{
+			// Enter or circle.
+			if(Input.GetButtonDown("Enter"))
 			{
-				getNeurons.GetPrevLevel = Application.loadedLevel;
-				Application.LoadLevel(levelNumber);
+				m_neuronTracker.GetPrevLevel = Application.loadedLevel;
+				Application.LoadLevel(m_levelNumber);
 			}
+		}
 	}
 }

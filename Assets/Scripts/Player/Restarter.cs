@@ -3,63 +3,61 @@ using System.Collections;
 
 public class Restarter : MonoBehaviour
 {
-	private Platformer2DUserControl control;
-	private CheckpointObject checkpoint;
-	private DeathTracker deathCount;
+	private Platformer2DUserControl m_control;
+	private PlatformerCharacter2D m_character;
+	private LevelManager m_levelManager;
 	private NeuronTracker m_neuronTracker;
-	private bool dead = false;
-	private Animator anim;
-	private static int counter = 0;
+	private DeathTracker m_deathCount;
+	// Used for logging purposes.
+	//private static int m_counter = 0;
 
-	void Start ()
-	{
-		dead = false;
-	}
 	void Awake()
 	{
-		control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
-		m_neuronTracker = GameObject.Find("GameManager").GetComponent<NeuronTracker>();
+		GameObject player = GameObject.Find("Player");
+		GameObject gameManager = GameObject.Find("GameManager");
+
+		m_control = player.GetComponent<Platformer2DUserControl>();
+		m_character = player.GetComponent<PlatformerCharacter2D>();
+		m_levelManager = m_character.GetLevelManager();
+		m_neuronTracker = gameManager.GetComponent<NeuronTracker>();
+		m_deathCount = gameManager.GetComponent<DeathTracker> ();
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-    	if(other.tag == "Player" && !dead) 
-		{
-			dead = true;
-			control.Dead = true;
-			anim = control.getAnimator();
+    	if(other.tag == "Player" && !m_control.Dead) 
+			m_control.Dead = true;
 
-			// Play the death animation and let it play until continuing.
-			StartCoroutine(DoAnimation(other));
-		}
-		/*
+		// Play the death animation and let it play until continuing.
+		StartCoroutine(DoAnimation(other));/*
 		 * Check for other tags, i.e. enemies that would be killed by environment
-		 * as well and could remove them from the level.
+		 * as well and could remove them from the level. Play their death animations.
 		 */	
 	}
 
 	private IEnumerator DoAnimation(Collider2D other)
 	{
-		other.GetComponent<Rigidbody2D>().isKinematic = true;
-		anim.SetTrigger("Die");
-		//checkpoint = GameObject.Find ("CheckPoint").GetComponent<CheckpointObject> ();
-		yield return new WaitForSeconds(0.5f); // wait for two seconds.
-		if(!Application.loadedLevelName.Contains("World"))
+		if(other.tag.Equals("Player"))
 		{
-			// Reset neuron if the neuron has been collected and a checkpoint hasn't been reached.
-			if(!Application.loadedLevelName.Contains("Tutorial"))
-				m_neuronTracker.ResetNeuron();
+			other.GetComponent<Rigidbody2D>().isKinematic = true;
+			other.GetComponent<Animator>().SetTrigger("Die");
 
-			deathCount = GameObject.Find("GameManager").GetComponent<DeathTracker> ();
-			deathCount.Deaths += 1;
-			deathCount.TotalDeaths += 1;
-			counter++;
-			//control.LogDeath(counter);
+			yield return new WaitForSeconds(0.5f);
+
+			if(!Application.loadedLevelName.Contains("Overworld") && !Application.loadedLevelName.Contains("Tutorial"))
+			{
+				// Reset neuron if the neuron has been collected and a checkpoint hasn't been reached.
+				// bool flag is for whether it is a level select menu option or not, since it's a death reset, we put false.
+				m_neuronTracker.ResetNeuron(false);
+				// Increase death counters
+				m_deathCount.Deaths += 1;
+				m_levelManager.TotalDeaths += 1;
+				// Logging
+				//m_counter++;
+				//control.LogDeath(m_counter);
+			}
+
+			Application.LoadLevel(Application.loadedLevelName);
 		}
-		/*if (checkpoint.GetComponent<CheckpointObject>().IsCheckpoint) 
-		{
-			other.transform.position = checkpoint.GetComponent<CheckpointObject>().Checkpoint;
-		}*/
-		Application.LoadLevel(Application.loadedLevelName);
 	}
 }

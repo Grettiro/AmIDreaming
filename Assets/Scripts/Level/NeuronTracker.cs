@@ -15,7 +15,8 @@ public class NeuronTracker : MonoBehaviour {
 	private int m_prevLevel;
 
 	private UpdateNeurons m_neuron;
-	private CheckpointObject m_checkpointObj;
+	private PlatformerCharacter2D m_character;
+	private LevelManager m_levelManager;
 
 	private static NeuronTracker m_instance = null;
 	public static NeuronTracker m_Instance 
@@ -25,13 +26,11 @@ public class NeuronTracker : MonoBehaviour {
 	
 	void Awake()
 	{
-		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
-		{
+		if(!Application.loadedLevelName.Contains("Overworld") && !Application.loadedLevelName.Contains("Tutorial"))
 			m_neuron = GameObject.Find("Neuron").GetComponent<UpdateNeurons>();
-			GameObject checkpoint = GameObject.FindGameObjectWithTag("Checkpoint");
-			if(checkpoint != null)
-				m_checkpointObj = GameObject.Find("CheckPoint").GetComponent<CheckpointObject>();
-		}
+
+		m_character = GameObject.Find("Player").GetComponent<PlatformerCharacter2D>();
+		m_levelManager = m_character.GetLevelManager();
 
 		if(m_instance != null && m_instance != this)
 		{
@@ -56,16 +55,20 @@ public class NeuronTracker : MonoBehaviour {
 			Debug.Log("Index out of bounds! Neuron index: " + index);
 	}
 
-	public void UpdateNeuronArray()
+	public void UpdateNeuronArray(bool levelFinish)
 	{
-		// Only update neuron count if it hasn't been increased already.
+		// Only update neuron count if it hasn't been increased already. To avoid possible weird bugs.
 		if(!m_neuronIncreased)
 		{
 			m_neurons[m_neuronIndex] = true;
 			m_collectedNeurons++;
-			m_neuronIncreased = true;
+
+			// Only set neuron increased to true if the call did not come from a level finish event.
+			// Avoids storing it as increased when you enter the next level.
+			if(!levelFinish)
+				m_neuronIncreased = true;
+
 			m_neuronSet = false;
-			Debug.Log("Neuron count increased to " + m_collectedNeurons);
 		}
 	}
 
@@ -77,36 +80,30 @@ public class NeuronTracker : MonoBehaviour {
 			return false;
 	}
 
-	public void ResetNeuron()
+	public void ResetNeuron(bool levelSelect)
 	{
-		/* Do not reset neuron if it's been collected before reaching a checkpoint.
-		 * Either figure out neuron's position relative to a checkpoint or just have a bool check?
-		 * Start with bool check, maybe later on have it position based if we decide to have more
-		 * than one neuron per level.
-		 */
+		// If being called from a level select menu option, decrease neuron count if it has been increased.
+		if(levelSelect)
+		{
+			if(m_neuronIncreased)
+			{
+				m_neuronIncreased = false;
+				m_neuronSet = false;
+				m_collectedNeurons--;
+				m_neurons[m_neuronIndex] = false;
+			}
 
-		// If the neuron count has been increased and a checkpoint has NOT been reached, 
-		// reset the neuron and decrease the counter.
-		bool checkpoint;
-		if(m_checkpointObj == null)
-			checkpoint = false;
-		else
-			checkpoint = m_checkpointObj.IsCheckpoint;
+			return;
+		}
 
+		// If the neuron has yet to be collected, do nothing.
 		if(m_neuron != null)
 			return;
+		// If the neuron has been set but not registered, reset it!
 		else if(m_neuronSet)
 		{
 			m_neuronSet = false;
-			m_neurons[m_neuron.m_neuronIndex] = false;
-		}
-		else if(m_neuronIncreased && !checkpoint)
-		{
-			m_neuronIncreased = false;
-			m_neuronSet = false;
-			m_collectedNeurons--;
-			m_neurons[m_neuron.m_neuronIndex] = false;
-			Debug.Log("Neuron count decreased to " + m_collectedNeurons);
+			m_neurons[m_neuronIndex] = false;
 		}
 	}
 
@@ -115,7 +112,7 @@ public class NeuronTracker : MonoBehaviour {
 		return m_neuronSet;
 	}
 
-	public int Neurons
+	public int CollectedNeurons
 	{
 		get { return m_collectedNeurons; }
 		set { m_collectedNeurons = value; }

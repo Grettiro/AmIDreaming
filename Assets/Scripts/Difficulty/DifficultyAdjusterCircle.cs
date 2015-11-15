@@ -17,8 +17,9 @@ public class DifficultyAdjusterCircle : MonoBehaviour {
 	void Update () {
 	}
 
-	private void ScaleSpeed() {
-		DeathTracker difficulty = GameObject.Find ("GameManager").GetComponent<DeathTracker> ();
+	private void ScaleSpeed()
+	{
+		DeathTracker difficulty = GameObject.Find("GameManager").GetComponent<DeathTracker> ();
 		speed = gameObject.GetComponent<EnemyCircleMovement> ();
 		if (!scaled) {
 			speed.speed -= (10 - difficulty.Difficulty) * 5;
@@ -27,7 +28,7 @@ public class DifficultyAdjusterCircle : MonoBehaviour {
 	}
 	private void ScaleObjects()
 	{
-		DeathTracker difficulty = GameObject.Find ("GameManager").GetComponent<DeathTracker> ();
+		DeathTracker difficulty = GameObject.Find("GameManager").GetComponent<DeathTracker> ();
 		if (!sizeScaled) {
 			foreach (Transform child in transform) {
 				if (child.name == "KillzoneOpeningBot") {

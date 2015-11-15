@@ -3,40 +3,46 @@ using System.Collections;
 	
 public class LevelFinish : MonoBehaviour
 {
-	private PlatformerCharacter2D player;
-	private Platformer2DUserControl control;
-	private NeuronTracker neuronTracker;
+	private PlatformerCharacter2D m_player;
+	private Platformer2DUserControl m_control;
+	private NeuronTracker m_neuronTracker;
+	private DeathTracker m_difficulty;
+	private LevelManager m_levelManager;
+	private AudioManager m_audioManager;
 
-	private Rigidbody2D m_rigidbody;
-	private bool finished = false;
-
-	private GameObject checkpoint;
-	private CheckpointObject setPos;
+	private bool m_levelFinished = false;
 
 	private void Awake()
 	{
-		control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
-		neuronTracker = GameObject.Find("GameManager").GetComponent<NeuronTracker>();
+		GameObject player = GameObject.Find("Player");
+		GameObject gameManager = GameObject.Find("GameManager");
+
+		m_player = player.GetComponent<PlatformerCharacter2D>();
+		m_control = player.GetComponent<Platformer2DUserControl>();
+		m_neuronTracker = gameManager.GetComponent<NeuronTracker>();
+		m_difficulty = gameManager.GetComponent<DeathTracker>();
+		m_levelManager = gameManager.GetComponent<LevelManager>();
+		m_audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 	}
 
 	private void OnTriggerEnter2D(Collider2D other)
 	{
-		if(other.tag.Equals("Player") && !finished)
+		if(other.tag.Equals("Player") && !m_levelFinished)
 		{
-			finished = true;
-			if((player = GameObject.Find("Player").GetComponent<PlatformerCharacter2D>()) != null)
-			{
-				control.Move = false;
+			m_levelFinished = true;
+			m_control.Move = false;
 
-				DeathTracker difficulty = GameObject.Find ("GameManager").GetComponent<DeathTracker> ();
+			if(m_difficulty.Deaths < m_difficulty.DeathMarker / 2)
+				if(m_difficulty.Difficulty < 10)
+					m_difficulty.Difficulty += 1;
 
-				if(difficulty.Deaths < difficulty.DeathMarker / 2)
-					if(difficulty.Difficulty < 10)
-						difficulty.Difficulty += 1;
-			}
+			// So bad but works for now.
+			m_levelManager.CheckpointReached = false;
+			m_levelManager.CheckpointGravity = false;
+			m_levelManager.ResetPosition();
 
-			if(neuronTracker.isSet()) 
-				neuronTracker.UpdateNeuronArray();
+			if(m_neuronTracker.isSet())
+				m_neuronTracker.UpdateNeuronArray(true);
 
 			//control.LogExit(true);
 
@@ -44,28 +50,23 @@ public class LevelFinish : MonoBehaviour
 			StartCoroutine(DoAnimation());
 		}
 	}
-	
+
+	// Currently there is no animation for entering doors.
 	private IEnumerator DoAnimation()
 	{
-		yield return new WaitForSeconds(0.3f); // wait for two seconds.
-		checkpoint = GameObject.FindGameObjectWithTag("Checkpoint");
+		yield return new WaitForSeconds(0.3f);
 
-		if (checkpoint != null)
-		{
-			setPos = checkpoint.GetComponent<CheckpointObject>();
-			setPos.IsCheckpoint = false;
-			Destroy(checkpoint);
-		}
+		m_levelManager.CheckpointReached = false;
 
-		if (Application.loadedLevelName.Contains("Medium") || Application.loadedLevel == 14) 
-			Application.LoadLevel (2);
-		else if (Application.loadedLevel == 3 || Application.loadedLevel == 4)
+		if(Application.loadedLevelName.Contains("World2") || Application.loadedLevel == 14) 
+			Application.LoadLevel(2);
+		else if(Application.loadedLevel == 3 || Application.loadedLevel == 4)
 			Application.LoadLevel(Application.loadedLevel + 1);
-		else if (Application.loadedLevel == 13)
+		else if(Application.loadedLevel == 13)
 			Application.LoadLevel(14);
-		else if (Application.loadedLevelName.Contains("Wind"))
+		else if(Application.loadedLevelName.Contains("Wind"))
 			Application.LoadLevel(2);
 		else
-			Application.LoadLevel (1);
+			Application.LoadLevel(1);
 	}
 }

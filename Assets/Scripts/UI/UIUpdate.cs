@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -22,14 +22,14 @@ public class UIUpdate : MonoBehaviour
 		updateNeurons = GameObject.Find("GameManager").GetComponent<NeuronTracker>();
 
 		txt = GameObject.Find("Neurons").GetComponent<Text>(); 
-		txt.text="Neurons: " + (0 + updateNeurons.Neurons);
+		txt.text="Neurons: " + (0 + updateNeurons.CollectedNeurons);
 	}
 	
 	// Update is called once per frame
 	void Update()
 	{
 		txt = GameObject.Find("Neurons").GetComponent<Text>(); 
-		txt.text="Neurons: " + (0 + updateNeurons.Neurons);
+		txt.text="Neurons: " + (0 + updateNeurons.CollectedNeurons);
 	}
 
 	private IEnumerator Wait()

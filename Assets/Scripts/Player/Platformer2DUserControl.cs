@@ -12,6 +12,8 @@ public class Platformer2DUserControl : MonoBehaviour
 	private PlatformerCharacter2D m_character;
 	private GameObject m_checkpoint;
 	private DeathTracker m_difficulty;
+	private LevelManager m_levelManager;
+	private AudioManager m_audioManager;
 	
 	private bool m_isDead = false;
 	private Animator m_animator;
@@ -70,7 +72,7 @@ public class Platformer2DUserControl : MonoBehaviour
 
 	private void Start()
 	{
-		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
+		if(!Application.loadedLevelName.Contains("Overworld") && !Application.loadedLevelName.Contains("Tutorial"))
 		{
 			m_levelTimer.Elapsed += new ElapsedEventHandler(levelTimerElapsed);
 			//m_pathTimer.Elapsed += new ElapsedEventHandler(pathTimerElapsed);
@@ -87,8 +89,10 @@ public class Platformer2DUserControl : MonoBehaviour
 		m_checkpoint = GameObject.FindGameObjectWithTag("Checkpoint");
 		m_character = GetComponent<PlatformerCharacter2D>();
 		m_animator = GetComponent<Animator>();
+		m_levelManager = m_character.GetLevelManager();
+		m_audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 		
-		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
+		if(!Application.loadedLevelName.Contains("Overworld") && !Application.loadedLevelName.Contains("Tutorial"))
 		{
 			m_levelTimer = new Timer(10);
 			m_pauseTimer = new Timer(10);
@@ -103,7 +107,7 @@ public class Platformer2DUserControl : MonoBehaviour
 				//m_diffLevelBegin = m_difficulty.Difficulty;
 			}
 		}
-		if(Application.loadedLevelName.Contains("Easy") || Application.loadedLevelName.Contains("World"))
+		if(Application.loadedLevelName.Contains("World1") || Application.loadedLevelName.Contains("Overworld"))
 			m_allowSlow = false;
 	}
 
@@ -178,7 +182,7 @@ public class Platformer2DUserControl : MonoBehaviour
 		//m_timeNow = DateTime.Now;
 		//charPos = m_character.transform.position;
 
-		if(!Application.loadedLevelName.Contains("World") && !Application.loadedLevelName.Contains("Tutorial"))
+		if(!Application.loadedLevelName.Contains("Overworld") && !Application.loadedLevelName.Contains("Tutorial"))
 		{
 			var ts = TimeSpan.FromSeconds(m_levelTime);
 			m_timerText = string.Format("{0:D2}:{1:D2}.{2:D3}", ts.Minutes, ts.Seconds, ts.Milliseconds);
@@ -186,7 +190,7 @@ public class Platformer2DUserControl : MonoBehaviour
 			// Update HUD texts
 			m_timer.text = m_timerText;
 			m_difficultyText.text = "Difficulty: " + m_difficulty.Difficulty.ToString();
-			m_deathCountText.text = "Deaths: " + m_difficulty.TotalDeaths.ToString();
+			m_deathCountText.text = "Deaths: " + m_levelManager.TotalDeaths.ToString();
 		}
 
 		// Escape key or start button
@@ -336,17 +340,13 @@ public class Platformer2DUserControl : MonoBehaviour
 			}
 		}
 
-		if(Application.loadedLevelName != "World1" && Application.loadedLevelName != "World2")
+		if(!Application.loadedLevelName.Contains("Overworld"))
 		{
 			if(GUILayout.Button("Level Select"))
 			{
 				// Reset checkpoint if it's there.
-				if(m_checkpoint != null)
-				{
-					CheckpointObject setPos = m_checkpoint.GetComponent<CheckpointObject> ();
-					setPos.IsCheckpoint = false;
-					Destroy(m_checkpoint);
-				}
+				m_levelManager.CheckpointReached = false;
+				m_levelManager.ResetPosition();
 
 				Time.timeScale = 1f;
 				stopTimer();
@@ -354,8 +354,7 @@ public class Platformer2DUserControl : MonoBehaviour
 				m_pauseTimer.Enabled = false;
 
 				NeuronTracker neuronTracker = GameObject.Find("GameManager").GetComponent<NeuronTracker>();
-				if(neuronTracker.isSet())
-					neuronTracker.ResetNeuron();
+				neuronTracker.ResetNeuron(true);
 
 				//LogExit(false);
 				//m_neuron = false;
@@ -363,14 +362,14 @@ public class Platformer2DUserControl : MonoBehaviour
 			}
 		}
 
-		if(Application.loadedLevelName.Equals("World1") || Application.loadedLevelName.Equals("World2"))
+		if(Application.loadedLevelName.Contains("Overworld"))
 		{
 			// TODO: Look more into this, this is broken as shit.
 			if(GUILayout.Button("Menu Screen"))
 			{
 				m_isPaused = false;
 				Time.timeScale = 1f;
-				Application.LoadLevel (0);
+				Application.LoadLevel(0);
 			}
 		}
 

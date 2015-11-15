@@ -6,6 +6,8 @@ public class UpdateNeurons : MonoBehaviour
 	private Platformer2DUserControl m_control;
 	private NeuronTracker m_neuronTracker;
 
+	private AudioManager m_audioManager;
+
 	public int m_neuronIndex;
 	public AudioClip m_neuronCollected;
 
@@ -19,6 +21,7 @@ public class UpdateNeurons : MonoBehaviour
 	{
 		m_control = GameObject.Find("Player").GetComponent<Platformer2DUserControl>();
 		m_neuronTracker = GameObject.Find("GameManager").GetComponent<NeuronTracker>();
+		m_audioManager = GameObject.Find("AudioManager").GetComponent<AudioManager>();
 
 		// If the neuron has been collected, destroy the game object.
 		if(m_neuronTracker.ReturnNeurons(m_neuronIndex))
@@ -27,38 +30,41 @@ public class UpdateNeurons : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D other)
 	{
-		// Temporary for tutorial text.
-		if(this.name.Equals("TutorialNeuron") && Application.loadedLevelName.Equals("Tutorial1"))
+		if(other.name.Equals("Player"))
 		{
-			m_control.Move = false;
-			textAllow = true;
-			other.attachedRigidbody.isKinematic = true;
+			// Temporary for tutorial text.
+			if(this.name.Equals("TutorialNeuron") && Application.loadedLevelName.Equals("Tutorial1"))
+			{
+				m_control.Move = false;
+				textAllow = true;
+				other.attachedRigidbody.isKinematic = true;
 
-			StartCoroutine(Delay(other));
-		}
-		else if(other.name.Equals("Player"))
-		{
-			GetComponent<AudioSource>().PlayOneShot(m_neuronCollected, 1f);
+				StartCoroutine(Delay(other));
+			}
+			else
+			{
+				m_audioManager.PlayNeuron();
+				// Reduntant check, but better be safe than sorry?
+				if(this.name.Equals("Neuron"))
+					m_neuronTracker.SetNeuron(m_neuronIndex);
 
-			// Reduntant check, but better be safe than sorry?
-			if(this.name.Equals("Neuron"))
-				m_neuronTracker.SetNeuron(m_neuronIndex);
+				// Used for logging. Unused at the moment.
+				//m_control.neuron = true;
 
-			// Used for logging. Unused at the moment.
-			//m_control.neuron = true;
-
-			Destroy(this.gameObject);
+				Destroy(this.gameObject);
+			}
 		}
 	}
 
 	// Coroutine and GUI methods used for displaying tutorial text.
 	private IEnumerator Delay(Collider2D other)
 	{
-			yield return new WaitForSeconds(3f);
-			m_control.Move = true;
-			other.attachedRigidbody.isKinematic = false;
-			textAllow = false;
-			Destroy(this.gameObject);
+		yield return new WaitForSeconds(3f);
+		m_audioManager.PlayNeuron();
+		m_control.Move = true;
+		other.attachedRigidbody.isKinematic = false;
+		textAllow = false;
+		Destroy(this.gameObject);
 	}
 	
 	private void OnGUI()
